@@ -56,11 +56,13 @@ class _StatusBarState extends State<StatusBar> {
   }
 
   void _getTime() {
-    final DateTime now = DateTime.now();
-    final String formattedDateTime = _formatDateTime(now);
-    setState(() {
-      _timeString = formattedDateTime;
-    });
+    if (this.mounted) {
+      final DateTime now = DateTime.now();
+      final String formattedDateTime = _formatDateTime(now);
+      setState(() {
+        _timeString = formattedDateTime;
+      });
+    }
   }
 
   String _formatDateTime(DateTime dateTime) {

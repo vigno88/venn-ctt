@@ -23,29 +23,32 @@ class _DashboardPageState extends State<DashboardPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Stack(
-      children: [
-        Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.centerLeft,
-                colors: [
-                  const Color(0xfff9fafe),
-                  const Color(0xfff4f4fc),
-                ],
-              ),
-            ),
-            child: Column(
-              children: [
-                MetricTitleBar(),
-                MetricPanel_(),
-              ],
-            )),
-        BottomBar(),
-        StatusBar(),
-      ],
-    ));
+    return Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.centerLeft,
+            colors: [
+              const Color(0xfff9fafe),
+              const Color(0xfff4f4fc),
+            ],
+          ),
+        ),
+        child: Scaffold(
+            body: Stack(
+          children: [
+            BottomBar(),
+            StatusBar(),
+            PageIndicator(),
+            Container(
+                color: Colors.transparent,
+                child: Column(
+                  children: [
+                    MetricTitleBar(),
+                    MetricPanel_(),
+                  ],
+                )),
+          ],
+        )));
   }
 }
 
@@ -59,32 +62,27 @@ class MetricPanel_ extends StatelessWidget {
         if (isLoading) {
           return Container();
         } else {
-          return Column(
-            children: [
-              SizedBox(
-                width: 1920,
-                height: 900,
-                child: Container(
-                  padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
-                  child: PageView(
-                    onPageChanged: (index) => context
-                        .read<WidgetGridProvider>()
-                        .setActivePageIndex(index),
-                    scrollDirection: Axis.horizontal,
-                    controller: PageController(),
-                    children: <Widget>[
-                      MetricPage(4, 8),
-                      MetricPage(4, 8),
-                      MetricPage(4, 8),
-                      MetricPage(4, 8),
-                      MetricPage(4, 8),
-                      MetricPage(4, 8),
-                    ],
-                  ),
-                ),
+          return SizedBox(
+            width: 1920,
+            height: 930,
+            child: Container(
+              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+              child: PageView(
+                onPageChanged: (index) => context
+                    .read<WidgetGridProvider>()
+                    .setActivePageIndex(index),
+                scrollDirection: Axis.horizontal,
+                controller: PageController(),
+                children: <Widget>[
+                  MetricPage(4, 8),
+                  MetricPage(4, 8),
+                  MetricPage(4, 8),
+                  MetricPage(4, 8),
+                  MetricPage(4, 8),
+                  MetricPage(4, 8),
+                ],
               ),
-              PageIndicator(),
-            ],
+            ),
           );
         }
       },
@@ -95,15 +93,19 @@ class MetricPanel_ extends StatelessWidget {
 class PageIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return AnimatedSmoothIndicator(
-      count: context.watch<WidgetGridProvider>().numPages,
-      effect: WormEffect(
-        dotColor: paleColor.withOpacity(0.6),
-        activeDotColor: infoColor,
-        dotHeight: 12,
-        dotWidth: 12,
+    return Container(
+      alignment: Alignment.bottomCenter,
+      padding: EdgeInsets.fromLTRB(0, 0, 0, 30),
+      child: AnimatedSmoothIndicator(
+        count: context.watch<WidgetGridProvider>().numPages,
+        effect: WormEffect(
+          dotColor: paleColor.withOpacity(0.6),
+          activeDotColor: infoColor,
+          dotHeight: 12,
+          dotWidth: 12,
+        ),
+        activeIndex: context.watch<WidgetGridProvider>().activeIndex,
       ),
-      activeIndex: context.watch<WidgetGridProvider>().activeIndex,
     );
   }
 }
@@ -122,7 +124,7 @@ class MetricPage extends StatelessWidget {
     return Container(
       padding: EdgeInsets.fromLTRB(40, 0, 40, 0),
       child: Stack(
-        children: context.watch<WidgetGridProvider>().getDragTargets(),
+        children: context.watch<WidgetGridProvider>().getWidgets(),
       ),
     );
   }
@@ -195,7 +197,7 @@ class MetricTitleBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: EdgeInsets.fromLTRB(40, 60, 40, 0),
+        padding: EdgeInsets.fromLTRB(55, 60, 40, 0),
         child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.end,

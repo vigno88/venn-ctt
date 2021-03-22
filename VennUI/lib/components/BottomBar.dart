@@ -5,7 +5,7 @@ class BottomBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Positioned.fill(
-        bottom: 10,
+        bottom: 5,
         child: Align(
             alignment: Alignment.bottomCenter,
             child: Container(
@@ -15,7 +15,7 @@ class BottomBar extends StatelessWidget {
               child: Text(
                 'vennhq.com & uneed.ca',
                 style:
-                    TextStyle(fontSize: 20, color: paleColor.withOpacity(0.8)),
+                    TextStyle(fontSize: 19, color: paleColor.withOpacity(0.8)),
                 textAlign: TextAlign.center,
               ),
             )));
