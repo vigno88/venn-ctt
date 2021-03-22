@@ -1,0 +1,124 @@
+defaultRecipe:
+  - setting:
+      type: "slider" 
+      value: 0
+      max: 100
+      min: 0
+      name: "Temperature"
+      info: "Ce slider controle la temperature de l'air en pourcentage "
+      smallName: "1"
+      goalName: "Temperature 1"
+  - setting:
+      type: "slider" 
+      value: 0
+      max: 100
+      min: 0
+      name: "Vitesse"
+      info: "Ce slider controle la vitesse de rotation du tonneau."
+      smallName: "2"
+  - setting:
+      type: "slider" 
+      value: 1
+      max: 600
+      min: 30
+      name: "Temps"
+      info: "Ce slider controle le temps de rotation du tonnean en seconde."
+      smallName: "3"
+  # - setting:
+  #     type: "slider"
+  #     value: 10
+  #     max: 100
+  #     min: 30
+  #     name: "Air"
+  #     info: "Ce Slider controle la vitesse de l'air chaud en pourcentage."
+  #     smallName: "4"
+metrics:
+  - metric:
+      unit: "°c"
+      goal: 20
+      type: "temperature"
+      name: "Temperature 1"
+      info: "La temperature 1"
+      smallName: "t1"
+      hasGoal: true
+  - metric:
+      unit: "%"
+      goal: 50
+      type: "humidity"
+      name: "Humidity 1"
+      info: "L'humidite 1"
+      smallName: "h1"
+      hasGoal: false
+  - metric:
+      unit: "°c"
+      goal: 20
+      type: "temperature"
+      name: "Temperature 2"
+      info: "La temperature 2"
+      smallName: "t2"
+      hasGoal: false
+  - metric:
+      unit: "%"
+      goal: 50
+      type: "humidity"
+      name: "Humidity 2"
+      info: "L'humidite 2"
+      smallName: "h2"
+      hasGoal: false
+  - metric:
+      unit: "%"
+      goal: 50
+      type: "humidity"
+      name: "Humidity 2"
+      info: "L'humidite 2"
+      smallName: "h2"
+      hasGoal: false
+  - metric:
+      unit: "%"
+      goal: 50
+      type: "humidity"
+      name: "Humidity 2"
+      info: "L'humidite 2"
+      smallName: "h2"
+      hasGoal: false
+  - metric:
+      unit: "%"
+      goal: 50
+      type: "humidity"
+      name: "Humidity 2"
+      info: "L'humidite 2"
+      smallName: "h2"
+      hasGoal: false
+  - metric:
+      unit: "%"
+      goal: 50
+      type: "humidity"
+      name: "Humidity 2"
+      info: "L'humidite 2"
+      smallName: "h2"
+      hasGoal: false
+  - metric:
+      unit: "%"
+      goal: 50
+      type: "humidity"
+      name: "Humidity 2"
+      info: "L'humidite 2"
+      smallName: "h2"
+      hasGoal: false
+  - metric:
+      unit: "%"
+      goal: 50
+      type: "humidity"
+      name: "Humidity 2"
+      info: "L'humidite 2"
+      smallName: "h2"
+      hasGoal: false
+  - metric:
+      unit: "%"
+      goal: 50
+      type: "humidity"
+      name: "Humidity 2"
+      info: "L'humidite 2"
+      smallName: "h2"
+      hasGoal: false
+

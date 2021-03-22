@@ -1,0 +1,228 @@
+syntax = "proto3";
+
+package v1;
+
+option go_package = ".;proto";
+
+//=============================================================================
+// Metric Service 
+//=============================================================================
+
+
+message Metric {
+  string name = 1;
+  double value = 2;
+  double average = 3;
+  double goal = 4;
+}
+
+message Metrics {
+  repeated Metric metrics = 1;
+}
+
+service MetricService {
+  // Get the list of all the metrics
+  rpc Get(Empty) returns (Metrics) {}
+
+  // Subscribe is streaming the updated metrics as time goes
+  rpc Subscribe(Empty) returns (stream Metrics) {}
+}
+
+//=============================================================================
+// Setting Service 
+//=============================================================================
+
+message Setting {
+  string type = 1;
+  double value = 2;
+  double max = 3;
+  double min = 4;
+  string name = 5;
+  string info = 6;
+  string goalName = 7;
+}
+
+message Recipe {
+  string uuid = 1;
+  repeated Setting settings = 2;
+}
+
+message UUIDS {
+  repeated string uuids = 1;
+}
+
+service SettingService {
+  // SetSetting send a single setting to backend
+  rpc SetSetting(Setting) returns (Empty) {}
+  
+  // GetRecipsUUID get a list of the recipes UUID
+  rpc GetRecipesUUID(Empty) returns (UUIDS) {}
+
+  // GetRecipe gets a single recipe from the backend 
+  rpc GetRecipe(StringValue) returns (Recipe) {}
+
+  // CreateRecipe asks the server to create a new recipe in the backend 
+  rpc CreateRecipe(Empty) returns (Recipe) {}
+  
+  // SelectRecipe tells the backend what is the active recipe
+  rpc SelectRecipe(StringValue) returns (Empty) {}
+}
+
+//=============================================================================
+// Authentification Service 
+//=============================================================================
+
+message Credentials {
+  string user = 1;
+  string password = 2;
+}
+
+service AuthentificationService {
+  // authentificate verify with the server that password is valid 
+  rpc Authentificate(Credentials) returns (Empty) {}
+}
+
+//=============================================================================
+// Network Service 
+//=============================================================================
+
+message WifiCredentials {
+  string name = 1;
+  string password = 2;
+}
+
+service NetworkService {
+  // connectWifi attempts to connect to a wifi
+  rpc ConnectWifi(WifiCredentials) returns (Empty) {}
+}
+
+
+//=============================================================================
+// Configuration Service 
+//=============================================================================
+
+message MetricConfig {
+  string unit = 1;
+  float goal = 2;
+  string type = 3;
+  string name = 4;
+  string info = 5;
+  bool hasGoal = 6;
+}
+message Configuration {
+  repeated MetricConfig metricsConfig = 1;
+}
+
+service ConfigurationService {
+  //getConfig returns the configuration stored in the server
+  rpc GetConfig(Empty) returns (Configuration) {}
+  rpc SetConfig(Configuration) returns (Empty) {}
+}
+
+
+//=============================================================================
+// Control Service 
+//=============================================================================
+
+message Action {
+  string name = 1;
+  string payload = 2;
+}
+
+message ControlEvent {
+  string name = 1;
+  string payload = 2;
+}
+
+service ControlService {
+  rpc Send(Action) returns (Empty) {}
+  rpc Subscribe(Empty) returns (stream ControlEvent) {} 
+}
+
+//=============================================================================
+// Types definition 
+//=============================================================================
+
+// A generic empty message that you can re-use to avoid defining duplicated
+// empty messages in your APIs. A typical example is to use it as the request
+// or the response type of an API method. For instance:
+//
+//     service Foo {
+//       rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty);
+//     }
+//
+// The JSON representation for `Empty` is empty JSON object `{}`.
+message Empty {}
+
+
+// Wrapper message for `double`.
+//
+// The JSON representation for `DoubleValue` is JSON number.
+message DoubleValue {
+  // The double value.
+  double value = 1;
+}
+
+// Wrapper message for `float`.
+//
+// The JSON representation for `FloatValue` is JSON number.
+message FloatValue {
+  // The float value.
+  float value = 1;
+}
+
+// Wrapper message for `int64`.
+//
+// The JSON representation for `Int64Value` is JSON string.
+message Int64Value {
+  // The int64 value.
+  int64 value = 1;
+}
+
+// Wrapper message for `uint64`.
+//
+// The JSON representation for `UInt64Value` is JSON string.
+message UInt64Value {
+  // The uint64 value.
+  uint64 value = 1;
+}
+
+// Wrapper message for `int32`.
+//
+// The JSON representation for `Int32Value` is JSON number.
+message Int32Value {
+  // The int32 value.
+  int32 value = 1;
+}
+
+// Wrapper message for `uint32`.
+//
+// The JSON representation for `UInt32Value` is JSON number.
+message UInt32Value {
+  // The uint32 value.
+  uint32 value = 1;
+}
+
+// Wrapper message for `bool`.
+//
+// The JSON representation for `BoolValue` is JSON `true` and `false`.
+message BoolValue {
+  // The bool value.
+  bool value = 1;
+}
+
+// Wrapper message for `string`.
+//
+// The JSON representation for `StringValue` is JSON string.
+message StringValue {
+  // The string value.
+  string value = 1;
+}
+
+// Wrapper message for `bytes`.
+//
+// The JSON representation for `BytesValue` is JSON string.
+message BytesValue {
+  // The bytes value.
+  bytes value = 1;
+}
