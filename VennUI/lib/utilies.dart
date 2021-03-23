@@ -33,3 +33,21 @@ int getYCoord(int i, int width) {
 int getXCoord(int i, int width) {
   return i % width;
 }
+
+List<BoxShadow> tileShadows(
+    double offset, double spreadRadius, double blurRadius) {
+  return [
+    BoxShadow(
+      color: paleColor.withOpacity(0.3),
+      spreadRadius: spreadRadius,
+      blurRadius: blurRadius,
+      offset: Offset(0, offset),
+    ),
+    BoxShadow(
+      color: Colors.white.withOpacity(0.5),
+      spreadRadius: spreadRadius,
+      blurRadius: blurRadius,
+      offset: Offset(0, -offset),
+    ),
+  ];
+}

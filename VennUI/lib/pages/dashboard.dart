@@ -23,32 +23,30 @@ class _DashboardPageState extends State<DashboardPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.centerLeft,
-            colors: [
-              const Color(0xfff9fafe),
-              const Color(0xfff4f4fc),
-            ],
-          ),
-        ),
-        child: Scaffold(
-            body: Stack(
-          children: [
-            BottomBar(),
-            StatusBar(),
-            PageIndicator(),
-            Container(
-                color: Colors.transparent,
-                child: Column(
-                  children: [
-                    MetricTitleBar(),
-                    MetricPanel_(),
-                  ],
-                )),
-          ],
-        )));
+    return Scaffold(
+        body: Stack(
+      children: [
+        Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.centerLeft,
+                colors: [
+                  const Color(0xfff9fafe),
+                  const Color(0xfff4f4fc),
+                ],
+              ),
+            ),
+            child: Column(
+              children: [
+                MetricTitleBar(),
+                MetricPanel_(),
+              ],
+            )),
+        PageIndicator(),
+        StatusBar(),
+        BottomBar(),
+      ],
+    ));
   }
 }
 
@@ -66,13 +64,12 @@ class MetricPanel_ extends StatelessWidget {
             width: 1920,
             height: 930,
             child: Container(
-              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
               child: PageView(
                 onPageChanged: (index) => context
                     .read<WidgetGridProvider>()
                     .setActivePageIndex(index),
                 scrollDirection: Axis.horizontal,
-                controller: PageController(),
+                controller: PageController(viewportFraction: 0.999),
                 children: <Widget>[
                   MetricPage(4, 8),
                   MetricPage(4, 8),

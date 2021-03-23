@@ -2,12 +2,35 @@ import 'package:VennUI/components/Grid.dart';
 import 'package:flutter/material.dart';
 
 import 'package:VennUI/utilies.dart';
+import 'package:tuple/tuple.dart';
 
 class WidgetGridProvider with ChangeNotifier {
   final grid = Grid();
 
   List<Widget> dragTargets = [];
-  // List<Widget> dashboardWidgets =
+  List<Widget> dashboardTiles = [
+    Tile(false, 2, 2),
+    Tile(false, 2, 2),
+    Tile(false, 1, 2),
+    Tile(false, 1, 2),
+    Tile(false, 2, 1),
+    Tile(false, 2, 1),
+    Tile(false, 4, 2),
+    Tile(false, 1, 1),
+    Tile(false, 1, 1),
+  ];
+
+  List<Tuple2> tilePositions = [
+    Tuple2(0, 0),
+    Tuple2(2, 2),
+    Tuple2(0, 2),
+    Tuple2(1, 2),
+    Tuple2(2, 0),
+    Tuple2(2, 1),
+    Tuple2(4, 0),
+    Tuple2(6, 2),
+    Tuple2(6, 3),
+  ];
 
   int numPages = 6;
   int activeIndex = 1;
@@ -39,15 +62,19 @@ class WidgetGridProvider with ChangeNotifier {
 
   List<Widget> getDashboardWidgets() {
     List<Widget> dashboardWidgets = [];
-    dashboardWidgets.add(DashboardWidget(0, 0, 2, 2, grid, Tile(false)));
-    dashboardWidgets.add(DashboardWidget(2, 2, 2, 2, grid, Tile(false)));
-    dashboardWidgets.add(DashboardWidget(0, 2, 2, 1, grid, Tile(false)));
-    dashboardWidgets.add(DashboardWidget(1, 2, 2, 1, grid, Tile(false)));
-    dashboardWidgets.add(DashboardWidget(2, 0, 1, 2, grid, Tile(false)));
-    dashboardWidgets.add(DashboardWidget(2, 1, 1, 2, grid, Tile(false)));
-    dashboardWidgets.add(DashboardWidget(4, 0, 2, 4, grid, Tile(false)));
-    dashboardWidgets.add(DashboardWidget(6, 2, 1, 1, grid, Tile(false)));
-    dashboardWidgets.add(DashboardWidget(6, 3, 1, 1, grid, Tile(false)));
+    for (int i = 0; i < dashboardTiles.length; i++) {
+      dashboardWidgets.add(DashboardWidget(tilePositions[i].item1,
+          tilePositions[i].item2, grid, dashboardTiles[i]));
+    }
+    // dashboardWidgets.add(DashboardWidget(0, 0, grid, Tile(false, 2, 2)));
+    // dashboardWidgets.add(DashboardWidget(2, 2, grid, Tile(false, 2, 2)));
+    // dashboardWidgets.add(DashboardWidget(0, 2, grid, Tile(false, 1, 2)));
+    // dashboardWidgets.add(DashboardWidget(1, 2, grid, Tile(false, 1, 2)));
+    // dashboardWidgets.add(DashboardWidget(2, 0, grid, Tile(false, 2, 1)));
+    // dashboardWidgets.add(DashboardWidget(2, 1, grid, Tile(false, 2, 1)));
+    // dashboardWidgets.add(DashboardWidget(4, 0, grid, Tile(false, 4, 2)));
+    // dashboardWidgets.add(DashboardWidget(6, 2, grid, Tile(false, 1, 1)));
+    // dashboardWidgets.add(DashboardWidget(6, 3, grid, Tile(false, 1, 1)));
     return dashboardWidgets;
   }
 }

@@ -26,17 +26,80 @@ class SettingsPage extends StatelessWidget {
                 ],
               ),
             ),
-            child: Column(
-              children: [
-                SettingsTitleBar(),
-                SettingsPanel(),
-                SizedBox(
-                  height: 10,
-                ),
-                SettingsBottomBar(),
-              ],
-            )),
+            child: Container(
+                padding: EdgeInsets.fromLTRB(55, 0, 40, 0),
+                child: Column(
+                  children: [
+                    SettingsTitleBar(),
+                    Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            children: [
+                              SettingsPanel(),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              SelectorPanel(),
+                            ],
+                          ),
+                          RecipePanel(),
+                        ]),
+                  ],
+                ))),
         StatusBar(),
+      ],
+    ));
+  }
+}
+
+class RecipePanel extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        margin: EdgeInsets.fromLTRB(0, 0, 15, 0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: 470,
+              height: 910,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(Radius.circular(20)),
+                boxShadow: tileShadows(3, 1, 3),
+              ),
+            ),
+            RecipeButtons(),
+          ],
+        ));
+  }
+}
+
+class SelectorPanel extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Column(children: [
+          Container(
+            width: 1000,
+            height: 410,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all(Radius.circular(20)),
+              boxShadow: tileShadows(3, 1, 3),
+            ),
+          ),
+          SizedBox(
+            height: 15,
+          ),
+          SelectorPageIndicator(),
+        ]),
+        SelectorButtons(),
       ],
     ));
   }
@@ -46,7 +109,7 @@ class SettingsTitleBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: EdgeInsets.fromLTRB(40, 50, 40, 0),
+        padding: EdgeInsets.fromLTRB(0, 60, 0, 15),
         child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.end,
@@ -91,12 +154,25 @@ class SettingsTitleBar extends StatelessWidget {
   }
 }
 
-class SettingsBottomBar extends StatelessWidget {
+class SettingsPageIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
         height: 10,
-        padding: EdgeInsets.fromLTRB(0, 15, 145, 0),
+        child: AnimatedSmoothIndicator(
+          count: context.watch<SettingsProvider>().numPages,
+          effect: WormEffect(
+              dotColor: paleColor.withOpacity(0.6), activeDotColor: infoColor),
+          activeIndex: context.watch<SettingsProvider>().activeIndex,
+        ));
+  }
+}
+
+class SelectorPageIndicator extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        height: 10,
         child: AnimatedSmoothIndicator(
           count: context.watch<SettingsProvider>().numPages,
           effect: WormEffect(
@@ -109,47 +185,52 @@ class SettingsBottomBar extends StatelessWidget {
 class SettingsPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-      Container(
-        decoration: BoxDecoration(
-          color: Colors.white.withOpacity(0.9),
-          borderRadius: BorderRadius.all(Radius.circular(40)),
-          boxShadow: [
-            BoxShadow(
-              color: paleColor.withOpacity(0.3),
-              spreadRadius: 3,
-              blurRadius: 15,
-              offset: Offset(0, 10), // changes position of shadow
-            ),
-          ],
-        ),
-        margin: EdgeInsets.fromLTRB(40, 15, 0, 0),
-        height: 900,
-        width: 800,
-        child: Selector<SettingsProvider, bool>(
-          selector: (BuildContext context, SettingsProvider provider) =>
-              provider.isLoading,
-          builder: (context, bool isLoading, _) {
-            if (isLoading) {
-              return Container();
-            } else {
-              return ClipRRect(
-                  borderRadius: BorderRadius.all(Radius.circular(40)),
-                  child: PageView(
-                    controller: PageController(
-                      viewportFraction: 0.99,
-                    ),
-                    children: getSliderPages(context),
-                    onPageChanged: (index) => context
-                        .read<SettingsProvider>()
-                        .setActivePageIndex(index),
-                  ));
-            }
-          },
-        ),
-      ),
-      SettingsButtons(),
-    ]);
+    return Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                    boxShadow: tileShadows(3, 1, 3),
+                  ),
+                  height: 460,
+                  width: 1000,
+                  child: Selector<SettingsProvider, bool>(
+                    selector:
+                        (BuildContext context, SettingsProvider provider) =>
+                            provider.isLoading,
+                    builder: (context, bool isLoading, _) {
+                      if (isLoading) {
+                        return Container();
+                      } else {
+                        return ClipRRect(
+                            borderRadius: BorderRadius.all(Radius.circular(40)),
+                            child: PageView(
+                              controller: PageController(
+                                viewportFraction: 0.99,
+                              ),
+                              children: getSliderPages(context),
+                              onPageChanged: (index) => context
+                                  .read<SettingsProvider>()
+                                  .setActivePageIndex(index),
+                            ));
+                      }
+                    },
+                  ),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                SettingsPageIndicator(),
+              ]),
+          SettingsButtons(),
+        ]);
   }
 
   List<Widget> getSliderPages(BuildContext context) {
@@ -161,8 +242,6 @@ class SettingsPanel extends StatelessWidget {
         Provider.of<SettingsProvider>(context, listen: false).sliderPerPage;
     List<Container> pagesContainer = [];
     for (int indexPage = 0; indexPage < numPages; indexPage++) {
-      List<Widget> slidersRow1 = [];
-      List<Widget> slidersRow2 = [];
       List<Widget> sliders = [];
       for (int indexSlider = indexPage * sliderPerPage;
           indexSlider < (indexPage + 1) * sliderPerPage;
@@ -170,7 +249,6 @@ class SettingsPanel extends StatelessWidget {
         if (indexSlider > numSettings - 1) {
           break;
         }
-        // if()
         sliders.add(
           Selector<SettingsProvider, Tuple3<proto.Setting, int, int>>(
             shouldRebuild: (Tuple3<proto.Setting, int, int> prev,
@@ -202,11 +280,71 @@ class SettingsPanel extends StatelessWidget {
   }
 }
 
+class RecipeButtons extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        padding: EdgeInsets.fromLTRB(20, 15, 0, 0),
+        child: Column(
+          children: [
+            SettingButton('Select', (arg) {
+              context.read<SettingsProvider>().saveRecipe();
+            }),
+            SizedBox(
+              height: 15,
+            ),
+            SettingButton('Edit', (arg) {
+              context.read<SettingsProvider>().saveRecipe();
+            }),
+            SizedBox(
+              height: 15,
+            ),
+            SettingButton('Create', (arg) {
+              context.read<SettingsProvider>().loadRecipe();
+            }),
+            SizedBox(
+              height: 15,
+            ),
+            SettingButton('Delete', (arg) {
+              context.read<SettingsProvider>().showInfoModal(arg);
+            }),
+          ],
+        ));
+  }
+}
+
+class SelectorButtons extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        padding: EdgeInsets.fromLTRB(20, 15, 0, 0),
+        child: Column(
+          children: [
+            SettingButton('Save', (arg) {
+              context.read<SettingsProvider>().saveRecipe();
+            }),
+            SizedBox(
+              height: 15,
+            ),
+            SettingButton('Load', (arg) {
+              context.read<SettingsProvider>().loadRecipe();
+            }),
+            SizedBox(
+              height: 15,
+            ),
+            SettingButton('Edit', (arg) {
+              context.read<SettingsProvider>().showInfoModal(arg);
+            }),
+          ],
+        ));
+  }
+}
+
 class SettingsButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: EdgeInsets.fromLTRB(20, 0, 0, 200),
+        padding: EdgeInsets.fromLTRB(20, 15, 0, 0),
         child: Column(
           children: [
             SettingButton('Save', (arg) {
@@ -229,38 +367,66 @@ class SettingsButtons extends StatelessWidget {
   }
 }
 
-class SettingButton extends StatelessWidget {
+class SettingButton extends StatefulWidget {
   final String text;
   final Function f;
 
   SettingButton(this.text, this.f);
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 60,
-      width: 140,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(10)),
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: paleColor.withOpacity(0.3),
-            spreadRadius: 4,
-            blurRadius: 18,
-            offset: Offset(0, 10), // changes position of shadow
-          ),
-        ],
+  _SettingButtonState createState() => _SettingButtonState();
+}
+
+class _SettingButtonState extends State<SettingButton>
+    with SingleTickerProviderStateMixin {
+  double _scale;
+  AnimationController _controller;
+  @override
+  void initState() {
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(
+        milliseconds: 2,
       ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-            onTap: () => f(context),
+      lowerBound: 0.5,
+      upperBound: 1,
+    )..addListener(() {
+        setState(() {});
+      });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    _scale = 1 - _controller.value;
+    return GestureDetector(
+      onTapDown: _tapDown,
+      onTapUp: _tapUp,
+      onTap: () => widget.f(context),
+      child: Container(
+        height: 60,
+        width: 140,
+        decoration: BoxDecoration(
+            color: Colors.white,
             borderRadius: BorderRadius.all(Radius.circular(10)),
-            splashColor: Colors.grey[500],
+            boxShadow: tileShadows(5 * _scale, 1 * _scale, 3 * _scale)),
+        child: Material(
+            color: Colors.transparent,
+            // child: GestureDetector(
+            //     onTapDown: _tapDown,
+            //     onTapUp: _tapUp,
+            //     onTap: () => widget.f(context),
+            // borderRadius: BorderRadius.all(Radius.circular(10)),
+            // splashColor: Colors.grey[500],
             child: Center(
               child: Text(
-                this.text,
+                this.widget.text,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontSize: 27,
@@ -270,6 +436,14 @@ class SettingButton extends StatelessWidget {
             )),
       ),
     );
+  }
+
+  void _tapUp(TapUpDetails details) {
+    _controller.reverse();
+  }
+
+  void _tapDown(TapDownDetails details) {
+    _controller.forward();
   }
 }
 

@@ -5,15 +5,15 @@ import 'package:VennUI/api/v1/ui.pb.dart' as proto;
 import 'package:VennUI/utilies.dart';
 
 class SettingsProvider with ChangeNotifier {
-  final int sliderPerPage = 4;
+  final int sliderPerPage = 5;
 
   bool isLoading = true;
   int numPages = 1;
   int activeIndex = 0;
   int modifiedSlider = 0;
 
-  List<proto.Setting> settings = List<proto.Setting>();
-  List<double> oldSettings = List<double>();
+  List<proto.Setting> settings = [];
+  List<double> oldSettings = [];
   RecipeService recipeService;
   ConfigurationService configurationService;
 

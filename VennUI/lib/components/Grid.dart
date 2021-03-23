@@ -47,19 +47,15 @@ class CellDragTarget extends StatelessWidget {
 class DashboardWidget extends StatefulWidget {
   final posX;
   final posY;
-  final int width;
-  final int height;
   final Grid grid;
   final double padding = 15;
-  final Tile chip;
+  final Tile tile;
 
   DashboardWidget(
     this.posX,
     this.posY,
-    this.height,
-    this.width,
     this.grid,
-    this.chip,
+    this.tile,
   );
 
   @override
@@ -72,45 +68,47 @@ class _DashboardWidgetState extends State<DashboardWidget> {
     return Positioned(
       left: widget.posX * widget.grid.cellWidth,
       top: widget.posY * widget.grid.cellHeight,
-      child: Draggable(
-        child: Container(
-          width: widget.grid.cellWidth * widget.width,
-          height: widget.grid.cellHeight * widget.height,
-          padding: EdgeInsets.fromLTRB(
-              widget.padding, widget.padding, widget.padding, widget.padding),
-          child: widget.chip,
-        ),
-        feedback: Container(
-          width: widget.grid.cellWidth * widget.width,
-          height: widget.grid.cellHeight * widget.height,
-          padding: EdgeInsets.fromLTRB(
-              widget.padding, widget.padding, widget.padding, widget.padding),
-          // child: widget.chip,
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.all(Radius.circular(20)),
-              boxShadow: [
-                BoxShadow(
-                  color: paleColor.withOpacity(0.3),
-                  spreadRadius: 1,
-                  blurRadius: 5,
-                  offset: Offset(0, 15),
-                ),
-              ],
-            ),
-            child: widget.chip,
-          ),
-        ),
+      // child: Draggable(
+      child: Container(
+        width: widget.grid.cellWidth * widget.tile.width,
+        height: widget.grid.cellHeight * widget.tile.height,
+        padding: EdgeInsets.fromLTRB(
+            widget.padding, widget.padding, widget.padding, widget.padding),
+        child: widget.tile,
       ),
+      // feedback: Container(
+      //   width: widget.grid.cellWidth * widget.tile.width,
+      //   height: widget.grid.cellHeight * widget.tile.height,
+      //   padding: EdgeInsets.fromLTRB(
+      //       widget.padding, widget.padding, widget.padding, widget.padding),
+      //   child: Container(
+      //     decoration: BoxDecoration(
+      //       color: Colors.white,
+      //       borderRadius: BorderRadius.all(Radius.circular(20)),
+      //       boxShadow: [
+      //         BoxShadow(
+      //           color: paleColor.withOpacity(0.3),
+      //           spreadRadius: 1,
+      //           blurRadius: 5,
+      //           offset: Offset(0, 15),
+      //         ),
+      //       ],
+      //     ),
+      //     child: widget.tile,
+      //   ),
+      // ),
+      // childWhenDragging: Container(),
+      // ),
     );
   }
 }
 
 class Tile extends StatelessWidget {
   final bool isFeedBack;
+  final int width;
+  final int height;
 
-  Tile(this.isFeedBack);
+  Tile(this.isFeedBack, this.width, this.height);
 
   @override
   Widget build(BuildContext context) {
@@ -118,14 +116,8 @@ class Tile extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.all(Radius.circular(20)),
-        boxShadow: [
-          BoxShadow(
-            color: paleColor.withOpacity(0.3),
-            spreadRadius: 1,
-            blurRadius: 5,
-            offset: this.isFeedBack ? Offset(0, 15) : Offset(0, 5),
-          ),
-        ],
+        boxShadow:
+            this.isFeedBack ? tileShadows(10, 1, 3) : tileShadows(3, 1, 3),
       ),
     );
   }
