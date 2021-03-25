@@ -20,34 +20,32 @@ class MetricProvider with ChangeNotifier {
   List<proto.MetricConfig> config = [];
 
   // metricTiles is the list of MetricTile widget
-  List<MetricTile> metricTiles = List<MetricTile>();
+  List<MetricTile> metricTiles = [];
 
   // Configuration and metric service API object
-  ConfigurationService configService;
   MetricService metricService;
 
-  MetricProvider(ConfigurationService c, MetricService m) {
-    configService = c;
+  MetricProvider(MetricService m) {
     metricService = m;
     initiate();
   }
 
   void initiate() async {
     // Get the config from the server
-    var c = await configService.getConfiguration();
-    config = c.metricsConfig;
+    var c = await metricService.readConfig();
+    config = c.configs;
 
     // Create the set of tile providers
     var m = await metricService.getMetrics();
-    for (int i = 0; i < m.metrics.length; i++) {
+    for (int i = 0; i < m.updates.length; i++) {
       var t = MetricTile(
-        m.metrics[i].name,
-        m.metrics[i].value,
+        m.updates[i].name,
+        m.updates[i].value,
         config[0].unit,
         config[0].type,
         config[0].info,
-        m.metrics[i].goal,
-        config[0].hasGoal_6,
+        m.updates[i].target,
+        config[0].hasTarget_6,
       );
       metricTiles.add(t);
     }
@@ -61,11 +59,11 @@ class MetricProvider with ChangeNotifier {
     }
   }
 
-  void processNewMetric(proto.Metric metric) {
+  void processNewMetric(proto.MetricUpdate update) {
     // Update the required tile
     metricTiles.forEach((tile) {
-      if (tile.name == metric.name) {
-        tile.update(metric);
+      if (tile.name == update.name) {
+        tile.update(update);
         modifiedTileIndex = metricTiles.indexOf(tile);
         notifyListeners();
       }
@@ -91,10 +89,11 @@ class MetricTile {
   String _unit;
   String _type;
   String _info;
-  double _goal;
+  double _target;
   Icon _icon;
-  bool _hasGoal;
+  bool _hasTarget;
   bool _isAlert;
+  double _uncertainty = 2;
 
   MetricTile(
     String name,
@@ -103,15 +102,15 @@ class MetricTile {
     String type,
     String info,
     double goal,
-    bool hasGoal,
+    bool hasTarget,
   ) {
     _value = value;
     _name = name;
     _unit = unit;
     _type = type;
     _info = info;
-    _goal = goal;
-    _hasGoal = hasGoal;
+    _target = goal;
+    _hasTarget = hasTarget;
     _isAlert = false;
     // Set the right icon for the metric type
     switch (type) {
@@ -129,16 +128,17 @@ class MetricTile {
   String get unit => _unit;
   String get type => _type;
   String get info => _info;
-  double get goal => _goal;
-  bool get hasGoal => _hasGoal;
+  double get target => _target;
+  bool get hasTarget => _hasTarget;
   Icon get icon => _icon;
   bool get isAlert => _isAlert;
 
-  void update(proto.Metric m) {
-    _value = m.value;
-    _goal = m.goal;
+  void update(proto.MetricUpdate u) {
+    _value = u.value;
+    _target = u.target;
     _isAlert = false;
-    if (hasGoal && (value < goal - 2 || value > goal + 2)) {
+    if (hasTarget &&
+        (value < target - _uncertainty || value > target + _uncertainty)) {
       _isAlert = true;
     }
   }

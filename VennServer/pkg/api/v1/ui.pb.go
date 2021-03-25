@@ -24,19 +24,72 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type Metric struct {
+type User_Roles int32
+
+const (
+	User_USER    User_Roles = 0
+	User_ADMIN   User_Roles = 1
+	User_CREATOR User_Roles = 2
+)
+
+// Enum value maps for User_Roles.
+var (
+	User_Roles_name = map[int32]string{
+		0: "USER",
+		1: "ADMIN",
+		2: "CREATOR",
+	}
+	User_Roles_value = map[string]int32{
+		"USER":    0,
+		"ADMIN":   1,
+		"CREATOR": 2,
+	}
+)
+
+func (x User_Roles) Enum() *User_Roles {
+	p := new(User_Roles)
+	*p = x
+	return p
+}
+
+func (x User_Roles) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (User_Roles) Descriptor() protoreflect.EnumDescriptor {
+	return file_ui_proto_enumTypes[0].Descriptor()
+}
+
+func (User_Roles) Type() protoreflect.EnumType {
+	return &file_ui_proto_enumTypes[0]
+}
+
+func (x User_Roles) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use User_Roles.Descriptor instead.
+func (User_Roles) EnumDescriptor() ([]byte, []int) {
+	return file_ui_proto_rawDescGZIP(), []int{14, 0}
+}
+
+// MetricConfig is all the information required to display the metrics on the
+// dashboard
+type MetricConfig struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Name    string  `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	Value   float64 `protobuf:"fixed64,2,opt,name=value,proto3" json:"value,omitempty"`
-	Average float64 `protobuf:"fixed64,3,opt,name=average,proto3" json:"average,omitempty"`
-	Goal    float64 `protobuf:"fixed64,4,opt,name=goal,proto3" json:"goal,omitempty"`
+	Unit      string  `protobuf:"bytes,1,opt,name=unit,proto3" json:"unit,omitempty"`
+	Target    float32 `protobuf:"fixed32,2,opt,name=target,proto3" json:"target,omitempty"`
+	Type      string  `protobuf:"bytes,3,opt,name=type,proto3" json:"type,omitempty"`
+	Name      string  `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`
+	Info      string  `protobuf:"bytes,5,opt,name=info,proto3" json:"info,omitempty"`
+	HasTarget bool    `protobuf:"varint,6,opt,name=hasTarget,proto3" json:"hasTarget,omitempty"`
 }
 
-func (x *Metric) Reset() {
-	*x = Metric{}
+func (x *MetricConfig) Reset() {
+	*x = MetricConfig{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_ui_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -44,13 +97,13 @@ func (x *Metric) Reset() {
 	}
 }
 
-func (x *Metric) String() string {
+func (x *MetricConfig) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Metric) ProtoMessage() {}
+func (*MetricConfig) ProtoMessage() {}
 
-func (x *Metric) ProtoReflect() protoreflect.Message {
+func (x *MetricConfig) ProtoReflect() protoreflect.Message {
 	mi := &file_ui_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -62,49 +115,64 @@ func (x *Metric) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Metric.ProtoReflect.Descriptor instead.
-func (*Metric) Descriptor() ([]byte, []int) {
+// Deprecated: Use MetricConfig.ProtoReflect.Descriptor instead.
+func (*MetricConfig) Descriptor() ([]byte, []int) {
 	return file_ui_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *Metric) GetName() string {
+func (x *MetricConfig) GetUnit() string {
+	if x != nil {
+		return x.Unit
+	}
+	return ""
+}
+
+func (x *MetricConfig) GetTarget() float32 {
+	if x != nil {
+		return x.Target
+	}
+	return 0
+}
+
+func (x *MetricConfig) GetType() string {
+	if x != nil {
+		return x.Type
+	}
+	return ""
+}
+
+func (x *MetricConfig) GetName() string {
 	if x != nil {
 		return x.Name
 	}
 	return ""
 }
 
-func (x *Metric) GetValue() float64 {
+func (x *MetricConfig) GetInfo() string {
 	if x != nil {
-		return x.Value
+		return x.Info
 	}
-	return 0
+	return ""
 }
 
-func (x *Metric) GetAverage() float64 {
+func (x *MetricConfig) GetHasTarget() bool {
 	if x != nil {
-		return x.Average
+		return x.HasTarget
 	}
-	return 0
+	return false
 }
 
-func (x *Metric) GetGoal() float64 {
-	if x != nil {
-		return x.Goal
-	}
-	return 0
-}
-
-type Metrics struct {
+// MetricConfigs is one or many MetricConfig
+type MetricConfigs struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Metrics []*Metric `protobuf:"bytes,1,rep,name=metrics,proto3" json:"metrics,omitempty"`
+	Configs []*MetricConfig `protobuf:"bytes,1,rep,name=configs,proto3" json:"configs,omitempty"`
 }
 
-func (x *Metrics) Reset() {
-	*x = Metrics{}
+func (x *MetricConfigs) Reset() {
+	*x = MetricConfigs{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_ui_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -112,13 +180,13 @@ func (x *Metrics) Reset() {
 	}
 }
 
-func (x *Metrics) String() string {
+func (x *MetricConfigs) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Metrics) ProtoMessage() {}
+func (*MetricConfigs) ProtoMessage() {}
 
-func (x *Metrics) ProtoReflect() protoreflect.Message {
+func (x *MetricConfigs) ProtoReflect() protoreflect.Message {
 	mi := &file_ui_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -130,36 +198,150 @@ func (x *Metrics) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Metrics.ProtoReflect.Descriptor instead.
-func (*Metrics) Descriptor() ([]byte, []int) {
+// Deprecated: Use MetricConfigs.ProtoReflect.Descriptor instead.
+func (*MetricConfigs) Descriptor() ([]byte, []int) {
 	return file_ui_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *Metrics) GetMetrics() []*Metric {
+func (x *MetricConfigs) GetConfigs() []*MetricConfig {
 	if x != nil {
-		return x.Metrics
+		return x.Configs
 	}
 	return nil
 }
 
+// MetricUpdate is used to update a new metric that is received from the sensors
+type MetricUpdate struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Name   string  `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Value  float64 `protobuf:"fixed64,2,opt,name=value,proto3" json:"value,omitempty"`
+	Target float64 `protobuf:"fixed64,3,opt,name=target,proto3" json:"target,omitempty"`
+}
+
+func (x *MetricUpdate) Reset() {
+	*x = MetricUpdate{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_ui_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *MetricUpdate) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MetricUpdate) ProtoMessage() {}
+
+func (x *MetricUpdate) ProtoReflect() protoreflect.Message {
+	mi := &file_ui_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MetricUpdate.ProtoReflect.Descriptor instead.
+func (*MetricUpdate) Descriptor() ([]byte, []int) {
+	return file_ui_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *MetricUpdate) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *MetricUpdate) GetValue() float64 {
+	if x != nil {
+		return x.Value
+	}
+	return 0
+}
+
+func (x *MetricUpdate) GetTarget() float64 {
+	if x != nil {
+		return x.Target
+	}
+	return 0
+}
+
+// MetricUpdates is one or many MetricUpdate
+type MetricUpdates struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Updates []*MetricUpdate `protobuf:"bytes,1,rep,name=updates,proto3" json:"updates,omitempty"`
+}
+
+func (x *MetricUpdates) Reset() {
+	*x = MetricUpdates{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_ui_proto_msgTypes[3]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *MetricUpdates) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MetricUpdates) ProtoMessage() {}
+
+func (x *MetricUpdates) ProtoReflect() protoreflect.Message {
+	mi := &file_ui_proto_msgTypes[3]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MetricUpdates.ProtoReflect.Descriptor instead.
+func (*MetricUpdates) Descriptor() ([]byte, []int) {
+	return file_ui_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *MetricUpdates) GetUpdates() []*MetricUpdate {
+	if x != nil {
+		return x.Updates
+	}
+	return nil
+}
+
+// Setting represents everything required to display a setting as a slider in
+// the UI
 type Setting struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Type     string  `protobuf:"bytes,1,opt,name=type,proto3" json:"type,omitempty"`
-	Value    float64 `protobuf:"fixed64,2,opt,name=value,proto3" json:"value,omitempty"`
-	Max      float64 `protobuf:"fixed64,3,opt,name=max,proto3" json:"max,omitempty"`
-	Min      float64 `protobuf:"fixed64,4,opt,name=min,proto3" json:"min,omitempty"`
-	Name     string  `protobuf:"bytes,5,opt,name=name,proto3" json:"name,omitempty"`
-	Info     string  `protobuf:"bytes,6,opt,name=info,proto3" json:"info,omitempty"`
-	GoalName string  `protobuf:"bytes,7,opt,name=goalName,proto3" json:"goalName,omitempty"`
+	Type   string  `protobuf:"bytes,1,opt,name=type,proto3" json:"type,omitempty"`
+	Value  float64 `protobuf:"fixed64,2,opt,name=value,proto3" json:"value,omitempty"`
+	Max    float64 `protobuf:"fixed64,3,opt,name=max,proto3" json:"max,omitempty"`
+	Min    float64 `protobuf:"fixed64,4,opt,name=min,proto3" json:"min,omitempty"`
+	Name   string  `protobuf:"bytes,5,opt,name=name,proto3" json:"name,omitempty"`
+	Info   string  `protobuf:"bytes,6,opt,name=info,proto3" json:"info,omitempty"`
+	Target *Target `protobuf:"bytes,7,opt,name=target,proto3" json:"target,omitempty"`
 }
 
 func (x *Setting) Reset() {
 	*x = Setting{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_ui_proto_msgTypes[2]
+		mi := &file_ui_proto_msgTypes[4]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -172,7 +354,7 @@ func (x *Setting) String() string {
 func (*Setting) ProtoMessage() {}
 
 func (x *Setting) ProtoReflect() protoreflect.Message {
-	mi := &file_ui_proto_msgTypes[2]
+	mi := &file_ui_proto_msgTypes[4]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -185,7 +367,7 @@ func (x *Setting) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Setting.ProtoReflect.Descriptor instead.
 func (*Setting) Descriptor() ([]byte, []int) {
-	return file_ui_proto_rawDescGZIP(), []int{2}
+	return file_ui_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *Setting) GetType() string {
@@ -230,26 +412,435 @@ func (x *Setting) GetInfo() string {
 	return ""
 }
 
-func (x *Setting) GetGoalName() string {
+func (x *Setting) GetTarget() *Target {
 	if x != nil {
-		return x.GoalName
+		return x.Target
+	}
+	return nil
+}
+
+// Target is an optional field that is used when the setting is used as a target
+// for control
+type Target struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Name        string  `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Uncertainty float64 `protobuf:"fixed64,2,opt,name=uncertainty,proto3" json:"uncertainty,omitempty"`
+}
+
+func (x *Target) Reset() {
+	*x = Target{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_ui_proto_msgTypes[5]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *Target) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Target) ProtoMessage() {}
+
+func (x *Target) ProtoReflect() protoreflect.Message {
+	mi := &file_ui_proto_msgTypes[5]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Target.ProtoReflect.Descriptor instead.
+func (*Target) Descriptor() ([]byte, []int) {
+	return file_ui_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *Target) GetName() string {
+	if x != nil {
+		return x.Name
 	}
 	return ""
 }
 
+func (x *Target) GetUncertainty() float64 {
+	if x != nil {
+		return x.Uncertainty
+	}
+	return 0
+}
+
+// SettingUpdate is used to update the value of a setting by its name
+type SettingUpdate struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Name  string  `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Value float64 `protobuf:"fixed64,2,opt,name=value,proto3" json:"value,omitempty"`
+}
+
+func (x *SettingUpdate) Reset() {
+	*x = SettingUpdate{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_ui_proto_msgTypes[6]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *SettingUpdate) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SettingUpdate) ProtoMessage() {}
+
+func (x *SettingUpdate) ProtoReflect() protoreflect.Message {
+	mi := &file_ui_proto_msgTypes[6]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SettingUpdate.ProtoReflect.Descriptor instead.
+func (*SettingUpdate) Descriptor() ([]byte, []int) {
+	return file_ui_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *SettingUpdate) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *SettingUpdate) GetValue() float64 {
+	if x != nil {
+		return x.Value
+	}
+	return 0
+}
+
+// TargetUpdate is used to update the value of the uncertainty of a target by
+// its name
+type TargetUpdate struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Name  string  `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Value float64 `protobuf:"fixed64,2,opt,name=value,proto3" json:"value,omitempty"`
+}
+
+func (x *TargetUpdate) Reset() {
+	*x = TargetUpdate{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_ui_proto_msgTypes[7]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *TargetUpdate) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TargetUpdate) ProtoMessage() {}
+
+func (x *TargetUpdate) ProtoReflect() protoreflect.Message {
+	mi := &file_ui_proto_msgTypes[7]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TargetUpdate.ProtoReflect.Descriptor instead.
+func (*TargetUpdate) Descriptor() ([]byte, []int) {
+	return file_ui_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *TargetUpdate) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *TargetUpdate) GetValue() float64 {
+	if x != nil {
+		return x.Value
+	}
+	return 0
+}
+
+// Choice is used to represent a possible choice in a selector, by default
+// all choices have an associated list of settings.
+type Choice struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Name     string     `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	Settings []*Setting `protobuf:"bytes,2,rep,name=settings,proto3" json:"settings,omitempty"`
+}
+
+func (x *Choice) Reset() {
+	*x = Choice{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_ui_proto_msgTypes[8]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *Choice) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Choice) ProtoMessage() {}
+
+func (x *Choice) ProtoReflect() protoreflect.Message {
+	mi := &file_ui_proto_msgTypes[8]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Choice.ProtoReflect.Descriptor instead.
+func (*Choice) Descriptor() ([]byte, []int) {
+	return file_ui_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *Choice) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *Choice) GetSettings() []*Setting {
+	if x != nil {
+		return x.Settings
+	}
+	return nil
+}
+
+// Selector represents all the information required to display a selector on
+// the settings page
+type Selector struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Name            string    `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	SelectedChoice  *Choice   `protobuf:"bytes,2,opt,name=selectedChoice,proto3" json:"selectedChoice,omitempty"`
+	PossibleChoices []*Choice `protobuf:"bytes,3,rep,name=possibleChoices,proto3" json:"possibleChoices,omitempty"`
+}
+
+func (x *Selector) Reset() {
+	*x = Selector{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_ui_proto_msgTypes[9]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *Selector) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Selector) ProtoMessage() {}
+
+func (x *Selector) ProtoReflect() protoreflect.Message {
+	mi := &file_ui_proto_msgTypes[9]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Selector.ProtoReflect.Descriptor instead.
+func (*Selector) Descriptor() ([]byte, []int) {
+	return file_ui_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *Selector) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *Selector) GetSelectedChoice() *Choice {
+	if x != nil {
+		return x.SelectedChoice
+	}
+	return nil
+}
+
+func (x *Selector) GetPossibleChoices() []*Choice {
+	if x != nil {
+		return x.PossibleChoices
+	}
+	return nil
+}
+
+// SelectorUpdate is used to update the choice of a selector in the backend
+type SelectorUpdate struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Name       string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	ChoiceName string `protobuf:"bytes,2,opt,name=choiceName,proto3" json:"choiceName,omitempty"`
+}
+
+func (x *SelectorUpdate) Reset() {
+	*x = SelectorUpdate{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_ui_proto_msgTypes[10]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *SelectorUpdate) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SelectorUpdate) ProtoMessage() {}
+
+func (x *SelectorUpdate) ProtoReflect() protoreflect.Message {
+	mi := &file_ui_proto_msgTypes[10]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SelectorUpdate.ProtoReflect.Descriptor instead.
+func (*SelectorUpdate) Descriptor() ([]byte, []int) {
+	return file_ui_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *SelectorUpdate) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *SelectorUpdate) GetChoiceName() string {
+	if x != nil {
+		return x.ChoiceName
+	}
+	return ""
+}
+
+// ChoiceUpdate is used to update a choice and all its associated settings
+type ChoiceUpdate struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	NameSelector string  `protobuf:"bytes,1,opt,name=nameSelector,proto3" json:"nameSelector,omitempty"`
+	NewChoice    *Choice `protobuf:"bytes,2,opt,name=newChoice,proto3" json:"newChoice,omitempty"`
+}
+
+func (x *ChoiceUpdate) Reset() {
+	*x = ChoiceUpdate{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_ui_proto_msgTypes[11]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ChoiceUpdate) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ChoiceUpdate) ProtoMessage() {}
+
+func (x *ChoiceUpdate) ProtoReflect() protoreflect.Message {
+	mi := &file_ui_proto_msgTypes[11]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ChoiceUpdate.ProtoReflect.Descriptor instead.
+func (*ChoiceUpdate) Descriptor() ([]byte, []int) {
+	return file_ui_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *ChoiceUpdate) GetNameSelector() string {
+	if x != nil {
+		return x.NameSelector
+	}
+	return ""
+}
+
+func (x *ChoiceUpdate) GetNewChoice() *Choice {
+	if x != nil {
+		return x.NewChoice
+	}
+	return nil
+}
+
+// Recipe represents a collection of settings and selector choices that
+// dictates the behavior of the machine
 type Recipe struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Uuid     string     `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
-	Settings []*Setting `protobuf:"bytes,2,rep,name=settings,proto3" json:"settings,omitempty"`
+	Uuid      string      `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
+	Title     string      `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
+	Info      string      `protobuf:"bytes,3,opt,name=info,proto3" json:"info,omitempty"`
+	Settings  []*Setting  `protobuf:"bytes,4,rep,name=settings,proto3" json:"settings,omitempty"`
+	Selectors []*Selector `protobuf:"bytes,5,rep,name=selectors,proto3" json:"selectors,omitempty"`
 }
 
 func (x *Recipe) Reset() {
 	*x = Recipe{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_ui_proto_msgTypes[3]
+		mi := &file_ui_proto_msgTypes[12]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -262,7 +853,7 @@ func (x *Recipe) String() string {
 func (*Recipe) ProtoMessage() {}
 
 func (x *Recipe) ProtoReflect() protoreflect.Message {
-	mi := &file_ui_proto_msgTypes[3]
+	mi := &file_ui_proto_msgTypes[12]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -275,12 +866,26 @@ func (x *Recipe) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Recipe.ProtoReflect.Descriptor instead.
 func (*Recipe) Descriptor() ([]byte, []int) {
-	return file_ui_proto_rawDescGZIP(), []int{3}
+	return file_ui_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *Recipe) GetUuid() string {
 	if x != nil {
 		return x.Uuid
+	}
+	return ""
+}
+
+func (x *Recipe) GetTitle() string {
+	if x != nil {
+		return x.Title
+	}
+	return ""
+}
+
+func (x *Recipe) GetInfo() string {
+	if x != nil {
+		return x.Info
 	}
 	return ""
 }
@@ -292,6 +897,14 @@ func (x *Recipe) GetSettings() []*Setting {
 	return nil
 }
 
+func (x *Recipe) GetSelectors() []*Selector {
+	if x != nil {
+		return x.Selectors
+	}
+	return nil
+}
+
+// UUIDS is a collection of UUID string
 type UUIDS struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -303,7 +916,7 @@ type UUIDS struct {
 func (x *UUIDS) Reset() {
 	*x = UUIDS{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_ui_proto_msgTypes[4]
+		mi := &file_ui_proto_msgTypes[13]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -316,7 +929,7 @@ func (x *UUIDS) String() string {
 func (*UUIDS) ProtoMessage() {}
 
 func (x *UUIDS) ProtoReflect() protoreflect.Message {
-	mi := &file_ui_proto_msgTypes[4]
+	mi := &file_ui_proto_msgTypes[13]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -329,7 +942,7 @@ func (x *UUIDS) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UUIDS.ProtoReflect.Descriptor instead.
 func (*UUIDS) Descriptor() ([]byte, []int) {
-	return file_ui_proto_rawDescGZIP(), []int{4}
+	return file_ui_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *UUIDS) GetUuids() []string {
@@ -339,32 +952,32 @@ func (x *UUIDS) GetUuids() []string {
 	return nil
 }
 
-type Credentials struct {
+type User struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	User     string `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
-	Password string `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
+	Title string     `protobuf:"bytes,1,opt,name=title,proto3" json:"title,omitempty"`
+	Role  User_Roles `protobuf:"varint,2,opt,name=role,proto3,enum=v1.User_Roles" json:"role,omitempty"`
 }
 
-func (x *Credentials) Reset() {
-	*x = Credentials{}
+func (x *User) Reset() {
+	*x = User{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_ui_proto_msgTypes[5]
+		mi := &file_ui_proto_msgTypes[14]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
 }
 
-func (x *Credentials) String() string {
+func (x *User) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Credentials) ProtoMessage() {}
+func (*User) ProtoMessage() {}
 
-func (x *Credentials) ProtoReflect() protoreflect.Message {
-	mi := &file_ui_proto_msgTypes[5]
+func (x *User) ProtoReflect() protoreflect.Message {
+	mi := &file_ui_proto_msgTypes[14]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -375,23 +988,70 @@ func (x *Credentials) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Credentials.ProtoReflect.Descriptor instead.
-func (*Credentials) Descriptor() ([]byte, []int) {
-	return file_ui_proto_rawDescGZIP(), []int{5}
+// Deprecated: Use User.ProtoReflect.Descriptor instead.
+func (*User) Descriptor() ([]byte, []int) {
+	return file_ui_proto_rawDescGZIP(), []int{14}
 }
 
-func (x *Credentials) GetUser() string {
+func (x *User) GetTitle() string {
 	if x != nil {
-		return x.User
+		return x.Title
 	}
 	return ""
 }
 
-func (x *Credentials) GetPassword() string {
+func (x *User) GetRole() User_Roles {
 	if x != nil {
-		return x.Password
+		return x.Role
 	}
-	return ""
+	return User_USER
+}
+
+type Users struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Users []*User `protobuf:"bytes,1,rep,name=users,proto3" json:"users,omitempty"`
+}
+
+func (x *Users) Reset() {
+	*x = Users{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_ui_proto_msgTypes[15]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *Users) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Users) ProtoMessage() {}
+
+func (x *Users) ProtoReflect() protoreflect.Message {
+	mi := &file_ui_proto_msgTypes[15]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Users.ProtoReflect.Descriptor instead.
+func (*Users) Descriptor() ([]byte, []int) {
+	return file_ui_proto_rawDescGZIP(), []int{15}
+}
+
+func (x *Users) GetUsers() []*User {
+	if x != nil {
+		return x.Users
+	}
+	return nil
 }
 
 type WifiCredentials struct {
@@ -399,14 +1059,14 @@ type WifiCredentials struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Name     string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
+	SSID     string `protobuf:"bytes,1,opt,name=SSID,proto3" json:"SSID,omitempty"`
 	Password string `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
 }
 
 func (x *WifiCredentials) Reset() {
 	*x = WifiCredentials{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_ui_proto_msgTypes[6]
+		mi := &file_ui_proto_msgTypes[16]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -419,7 +1079,7 @@ func (x *WifiCredentials) String() string {
 func (*WifiCredentials) ProtoMessage() {}
 
 func (x *WifiCredentials) ProtoReflect() protoreflect.Message {
-	mi := &file_ui_proto_msgTypes[6]
+	mi := &file_ui_proto_msgTypes[16]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -432,12 +1092,12 @@ func (x *WifiCredentials) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WifiCredentials.ProtoReflect.Descriptor instead.
 func (*WifiCredentials) Descriptor() ([]byte, []int) {
-	return file_ui_proto_rawDescGZIP(), []int{6}
+	return file_ui_proto_rawDescGZIP(), []int{16}
 }
 
-func (x *WifiCredentials) GetName() string {
+func (x *WifiCredentials) GetSSID() string {
 	if x != nil {
-		return x.Name
+		return x.SSID
 	}
 	return ""
 }
@@ -449,36 +1109,31 @@ func (x *WifiCredentials) GetPassword() string {
 	return ""
 }
 
-type MetricConfig struct {
+type WifiNames struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Unit    string  `protobuf:"bytes,1,opt,name=unit,proto3" json:"unit,omitempty"`
-	Goal    float32 `protobuf:"fixed32,2,opt,name=goal,proto3" json:"goal,omitempty"`
-	Type    string  `protobuf:"bytes,3,opt,name=type,proto3" json:"type,omitempty"`
-	Name    string  `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`
-	Info    string  `protobuf:"bytes,5,opt,name=info,proto3" json:"info,omitempty"`
-	HasGoal bool    `protobuf:"varint,6,opt,name=hasGoal,proto3" json:"hasGoal,omitempty"`
+	SSIDs []string `protobuf:"bytes,1,rep,name=SSIDs,proto3" json:"SSIDs,omitempty"`
 }
 
-func (x *MetricConfig) Reset() {
-	*x = MetricConfig{}
+func (x *WifiNames) Reset() {
+	*x = WifiNames{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_ui_proto_msgTypes[7]
+		mi := &file_ui_proto_msgTypes[17]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
 }
 
-func (x *MetricConfig) String() string {
+func (x *WifiNames) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*MetricConfig) ProtoMessage() {}
+func (*WifiNames) ProtoMessage() {}
 
-func (x *MetricConfig) ProtoReflect() protoreflect.Message {
-	mi := &file_ui_proto_msgTypes[7]
+func (x *WifiNames) ProtoReflect() protoreflect.Message {
+	mi := &file_ui_proto_msgTypes[17]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -489,96 +1144,14 @@ func (x *MetricConfig) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use MetricConfig.ProtoReflect.Descriptor instead.
-func (*MetricConfig) Descriptor() ([]byte, []int) {
-	return file_ui_proto_rawDescGZIP(), []int{7}
+// Deprecated: Use WifiNames.ProtoReflect.Descriptor instead.
+func (*WifiNames) Descriptor() ([]byte, []int) {
+	return file_ui_proto_rawDescGZIP(), []int{17}
 }
 
-func (x *MetricConfig) GetUnit() string {
+func (x *WifiNames) GetSSIDs() []string {
 	if x != nil {
-		return x.Unit
-	}
-	return ""
-}
-
-func (x *MetricConfig) GetGoal() float32 {
-	if x != nil {
-		return x.Goal
-	}
-	return 0
-}
-
-func (x *MetricConfig) GetType() string {
-	if x != nil {
-		return x.Type
-	}
-	return ""
-}
-
-func (x *MetricConfig) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-func (x *MetricConfig) GetInfo() string {
-	if x != nil {
-		return x.Info
-	}
-	return ""
-}
-
-func (x *MetricConfig) GetHasGoal() bool {
-	if x != nil {
-		return x.HasGoal
-	}
-	return false
-}
-
-type Configuration struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	MetricsConfig []*MetricConfig `protobuf:"bytes,1,rep,name=metricsConfig,proto3" json:"metricsConfig,omitempty"`
-}
-
-func (x *Configuration) Reset() {
-	*x = Configuration{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_ui_proto_msgTypes[8]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
-}
-
-func (x *Configuration) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*Configuration) ProtoMessage() {}
-
-func (x *Configuration) ProtoReflect() protoreflect.Message {
-	mi := &file_ui_proto_msgTypes[8]
-	if protoimpl.UnsafeEnabled && x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use Configuration.ProtoReflect.Descriptor instead.
-func (*Configuration) Descriptor() ([]byte, []int) {
-	return file_ui_proto_rawDescGZIP(), []int{8}
-}
-
-func (x *Configuration) GetMetricsConfig() []*MetricConfig {
-	if x != nil {
-		return x.MetricsConfig
+		return x.SSIDs
 	}
 	return nil
 }
@@ -595,7 +1168,7 @@ type Action struct {
 func (x *Action) Reset() {
 	*x = Action{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_ui_proto_msgTypes[9]
+		mi := &file_ui_proto_msgTypes[18]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -608,7 +1181,7 @@ func (x *Action) String() string {
 func (*Action) ProtoMessage() {}
 
 func (x *Action) ProtoReflect() protoreflect.Message {
-	mi := &file_ui_proto_msgTypes[9]
+	mi := &file_ui_proto_msgTypes[18]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -621,7 +1194,7 @@ func (x *Action) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Action.ProtoReflect.Descriptor instead.
 func (*Action) Descriptor() ([]byte, []int) {
-	return file_ui_proto_rawDescGZIP(), []int{9}
+	return file_ui_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *Action) GetName() string {
@@ -650,7 +1223,7 @@ type ControlEvent struct {
 func (x *ControlEvent) Reset() {
 	*x = ControlEvent{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_ui_proto_msgTypes[10]
+		mi := &file_ui_proto_msgTypes[19]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -663,7 +1236,7 @@ func (x *ControlEvent) String() string {
 func (*ControlEvent) ProtoMessage() {}
 
 func (x *ControlEvent) ProtoReflect() protoreflect.Message {
-	mi := &file_ui_proto_msgTypes[10]
+	mi := &file_ui_proto_msgTypes[19]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -676,7 +1249,7 @@ func (x *ControlEvent) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ControlEvent.ProtoReflect.Descriptor instead.
 func (*ControlEvent) Descriptor() ([]byte, []int) {
-	return file_ui_proto_rawDescGZIP(), []int{10}
+	return file_ui_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *ControlEvent) GetName() string {
@@ -711,7 +1284,7 @@ type Empty struct {
 func (x *Empty) Reset() {
 	*x = Empty{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_ui_proto_msgTypes[11]
+		mi := &file_ui_proto_msgTypes[20]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -724,7 +1297,7 @@ func (x *Empty) String() string {
 func (*Empty) ProtoMessage() {}
 
 func (x *Empty) ProtoReflect() protoreflect.Message {
-	mi := &file_ui_proto_msgTypes[11]
+	mi := &file_ui_proto_msgTypes[20]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -737,7 +1310,7 @@ func (x *Empty) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Empty.ProtoReflect.Descriptor instead.
 func (*Empty) Descriptor() ([]byte, []int) {
-	return file_ui_proto_rawDescGZIP(), []int{11}
+	return file_ui_proto_rawDescGZIP(), []int{20}
 }
 
 // Wrapper message for `double`.
@@ -755,7 +1328,7 @@ type DoubleValue struct {
 func (x *DoubleValue) Reset() {
 	*x = DoubleValue{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_ui_proto_msgTypes[12]
+		mi := &file_ui_proto_msgTypes[21]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -768,7 +1341,7 @@ func (x *DoubleValue) String() string {
 func (*DoubleValue) ProtoMessage() {}
 
 func (x *DoubleValue) ProtoReflect() protoreflect.Message {
-	mi := &file_ui_proto_msgTypes[12]
+	mi := &file_ui_proto_msgTypes[21]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -781,7 +1354,7 @@ func (x *DoubleValue) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DoubleValue.ProtoReflect.Descriptor instead.
 func (*DoubleValue) Descriptor() ([]byte, []int) {
-	return file_ui_proto_rawDescGZIP(), []int{12}
+	return file_ui_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *DoubleValue) GetValue() float64 {
@@ -806,7 +1379,7 @@ type FloatValue struct {
 func (x *FloatValue) Reset() {
 	*x = FloatValue{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_ui_proto_msgTypes[13]
+		mi := &file_ui_proto_msgTypes[22]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -819,7 +1392,7 @@ func (x *FloatValue) String() string {
 func (*FloatValue) ProtoMessage() {}
 
 func (x *FloatValue) ProtoReflect() protoreflect.Message {
-	mi := &file_ui_proto_msgTypes[13]
+	mi := &file_ui_proto_msgTypes[22]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -832,7 +1405,7 @@ func (x *FloatValue) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FloatValue.ProtoReflect.Descriptor instead.
 func (*FloatValue) Descriptor() ([]byte, []int) {
-	return file_ui_proto_rawDescGZIP(), []int{13}
+	return file_ui_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *FloatValue) GetValue() float32 {
@@ -857,7 +1430,7 @@ type Int64Value struct {
 func (x *Int64Value) Reset() {
 	*x = Int64Value{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_ui_proto_msgTypes[14]
+		mi := &file_ui_proto_msgTypes[23]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -870,7 +1443,7 @@ func (x *Int64Value) String() string {
 func (*Int64Value) ProtoMessage() {}
 
 func (x *Int64Value) ProtoReflect() protoreflect.Message {
-	mi := &file_ui_proto_msgTypes[14]
+	mi := &file_ui_proto_msgTypes[23]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -883,7 +1456,7 @@ func (x *Int64Value) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Int64Value.ProtoReflect.Descriptor instead.
 func (*Int64Value) Descriptor() ([]byte, []int) {
-	return file_ui_proto_rawDescGZIP(), []int{14}
+	return file_ui_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *Int64Value) GetValue() int64 {
@@ -908,7 +1481,7 @@ type UInt64Value struct {
 func (x *UInt64Value) Reset() {
 	*x = UInt64Value{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_ui_proto_msgTypes[15]
+		mi := &file_ui_proto_msgTypes[24]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -921,7 +1494,7 @@ func (x *UInt64Value) String() string {
 func (*UInt64Value) ProtoMessage() {}
 
 func (x *UInt64Value) ProtoReflect() protoreflect.Message {
-	mi := &file_ui_proto_msgTypes[15]
+	mi := &file_ui_proto_msgTypes[24]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -934,7 +1507,7 @@ func (x *UInt64Value) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UInt64Value.ProtoReflect.Descriptor instead.
 func (*UInt64Value) Descriptor() ([]byte, []int) {
-	return file_ui_proto_rawDescGZIP(), []int{15}
+	return file_ui_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *UInt64Value) GetValue() uint64 {
@@ -959,7 +1532,7 @@ type Int32Value struct {
 func (x *Int32Value) Reset() {
 	*x = Int32Value{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_ui_proto_msgTypes[16]
+		mi := &file_ui_proto_msgTypes[25]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -972,7 +1545,7 @@ func (x *Int32Value) String() string {
 func (*Int32Value) ProtoMessage() {}
 
 func (x *Int32Value) ProtoReflect() protoreflect.Message {
-	mi := &file_ui_proto_msgTypes[16]
+	mi := &file_ui_proto_msgTypes[25]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -985,7 +1558,7 @@ func (x *Int32Value) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Int32Value.ProtoReflect.Descriptor instead.
 func (*Int32Value) Descriptor() ([]byte, []int) {
-	return file_ui_proto_rawDescGZIP(), []int{16}
+	return file_ui_proto_rawDescGZIP(), []int{25}
 }
 
 func (x *Int32Value) GetValue() int32 {
@@ -1010,7 +1583,7 @@ type UInt32Value struct {
 func (x *UInt32Value) Reset() {
 	*x = UInt32Value{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_ui_proto_msgTypes[17]
+		mi := &file_ui_proto_msgTypes[26]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1023,7 +1596,7 @@ func (x *UInt32Value) String() string {
 func (*UInt32Value) ProtoMessage() {}
 
 func (x *UInt32Value) ProtoReflect() protoreflect.Message {
-	mi := &file_ui_proto_msgTypes[17]
+	mi := &file_ui_proto_msgTypes[26]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1036,7 +1609,7 @@ func (x *UInt32Value) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UInt32Value.ProtoReflect.Descriptor instead.
 func (*UInt32Value) Descriptor() ([]byte, []int) {
-	return file_ui_proto_rawDescGZIP(), []int{17}
+	return file_ui_proto_rawDescGZIP(), []int{26}
 }
 
 func (x *UInt32Value) GetValue() uint32 {
@@ -1061,7 +1634,7 @@ type BoolValue struct {
 func (x *BoolValue) Reset() {
 	*x = BoolValue{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_ui_proto_msgTypes[18]
+		mi := &file_ui_proto_msgTypes[27]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1074,7 +1647,7 @@ func (x *BoolValue) String() string {
 func (*BoolValue) ProtoMessage() {}
 
 func (x *BoolValue) ProtoReflect() protoreflect.Message {
-	mi := &file_ui_proto_msgTypes[18]
+	mi := &file_ui_proto_msgTypes[27]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1087,7 +1660,7 @@ func (x *BoolValue) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BoolValue.ProtoReflect.Descriptor instead.
 func (*BoolValue) Descriptor() ([]byte, []int) {
-	return file_ui_proto_rawDescGZIP(), []int{18}
+	return file_ui_proto_rawDescGZIP(), []int{27}
 }
 
 func (x *BoolValue) GetValue() bool {
@@ -1112,7 +1685,7 @@ type StringValue struct {
 func (x *StringValue) Reset() {
 	*x = StringValue{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_ui_proto_msgTypes[19]
+		mi := &file_ui_proto_msgTypes[28]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1125,7 +1698,7 @@ func (x *StringValue) String() string {
 func (*StringValue) ProtoMessage() {}
 
 func (x *StringValue) ProtoReflect() protoreflect.Message {
-	mi := &file_ui_proto_msgTypes[19]
+	mi := &file_ui_proto_msgTypes[28]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1138,7 +1711,7 @@ func (x *StringValue) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StringValue.ProtoReflect.Descriptor instead.
 func (*StringValue) Descriptor() ([]byte, []int) {
-	return file_ui_proto_rawDescGZIP(), []int{19}
+	return file_ui_proto_rawDescGZIP(), []int{28}
 }
 
 func (x *StringValue) GetValue() string {
@@ -1163,7 +1736,7 @@ type BytesValue struct {
 func (x *BytesValue) Reset() {
 	*x = BytesValue{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_ui_proto_msgTypes[20]
+		mi := &file_ui_proto_msgTypes[29]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1176,7 +1749,7 @@ func (x *BytesValue) String() string {
 func (*BytesValue) ProtoMessage() {}
 
 func (x *BytesValue) ProtoReflect() protoreflect.Message {
-	mi := &file_ui_proto_msgTypes[20]
+	mi := &file_ui_proto_msgTypes[29]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1189,7 +1762,7 @@ func (x *BytesValue) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BytesValue.ProtoReflect.Descriptor instead.
 func (*BytesValue) Descriptor() ([]byte, []int) {
-	return file_ui_proto_rawDescGZIP(), []int{20}
+	return file_ui_proto_rawDescGZIP(), []int{29}
 }
 
 func (x *BytesValue) GetValue() []byte {
@@ -1202,17 +1775,30 @@ func (x *BytesValue) GetValue() []byte {
 var File_ui_proto protoreflect.FileDescriptor
 
 var file_ui_proto_rawDesc = []byte{
-	0x0a, 0x08, 0x75, 0x69, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x02, 0x76, 0x31, 0x22, 0x60,
-	0x0a, 0x06, 0x4d, 0x65, 0x74, 0x72, 0x69, 0x63, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65,
-	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x14, 0x0a, 0x05,
-	0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x01, 0x52, 0x05, 0x76, 0x61, 0x6c,
-	0x75, 0x65, 0x12, 0x18, 0x0a, 0x07, 0x61, 0x76, 0x65, 0x72, 0x61, 0x67, 0x65, 0x18, 0x03, 0x20,
-	0x01, 0x28, 0x01, 0x52, 0x07, 0x61, 0x76, 0x65, 0x72, 0x61, 0x67, 0x65, 0x12, 0x12, 0x0a, 0x04,
-	0x67, 0x6f, 0x61, 0x6c, 0x18, 0x04, 0x20, 0x01, 0x28, 0x01, 0x52, 0x04, 0x67, 0x6f, 0x61, 0x6c,
-	0x22, 0x2f, 0x0a, 0x07, 0x4d, 0x65, 0x74, 0x72, 0x69, 0x63, 0x73, 0x12, 0x24, 0x0a, 0x07, 0x6d,
-	0x65, 0x74, 0x72, 0x69, 0x63, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x0a, 0x2e, 0x76,
-	0x31, 0x2e, 0x4d, 0x65, 0x74, 0x72, 0x69, 0x63, 0x52, 0x07, 0x6d, 0x65, 0x74, 0x72, 0x69, 0x63,
-	0x73, 0x22, 0x9b, 0x01, 0x0a, 0x07, 0x53, 0x65, 0x74, 0x74, 0x69, 0x6e, 0x67, 0x12, 0x12, 0x0a,
+	0x0a, 0x08, 0x75, 0x69, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x02, 0x76, 0x31, 0x22, 0x94,
+	0x01, 0x0a, 0x0c, 0x4d, 0x65, 0x74, 0x72, 0x69, 0x63, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x12,
+	0x12, 0x0a, 0x04, 0x75, 0x6e, 0x69, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x75,
+	0x6e, 0x69, 0x74, 0x12, 0x16, 0x0a, 0x06, 0x74, 0x61, 0x72, 0x67, 0x65, 0x74, 0x18, 0x02, 0x20,
+	0x01, 0x28, 0x02, 0x52, 0x06, 0x74, 0x61, 0x72, 0x67, 0x65, 0x74, 0x12, 0x12, 0x0a, 0x04, 0x74,
+	0x79, 0x70, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x74, 0x79, 0x70, 0x65, 0x12,
+	0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e,
+	0x61, 0x6d, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x69, 0x6e, 0x66, 0x6f, 0x18, 0x05, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x04, 0x69, 0x6e, 0x66, 0x6f, 0x12, 0x1c, 0x0a, 0x09, 0x68, 0x61, 0x73, 0x54, 0x61,
+	0x72, 0x67, 0x65, 0x74, 0x18, 0x06, 0x20, 0x01, 0x28, 0x08, 0x52, 0x09, 0x68, 0x61, 0x73, 0x54,
+	0x61, 0x72, 0x67, 0x65, 0x74, 0x22, 0x3b, 0x0a, 0x0d, 0x4d, 0x65, 0x74, 0x72, 0x69, 0x63, 0x43,
+	0x6f, 0x6e, 0x66, 0x69, 0x67, 0x73, 0x12, 0x2a, 0x0a, 0x07, 0x63, 0x6f, 0x6e, 0x66, 0x69, 0x67,
+	0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x10, 0x2e, 0x76, 0x31, 0x2e, 0x4d, 0x65, 0x74,
+	0x72, 0x69, 0x63, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x52, 0x07, 0x63, 0x6f, 0x6e, 0x66, 0x69,
+	0x67, 0x73, 0x22, 0x50, 0x0a, 0x0c, 0x4d, 0x65, 0x74, 0x72, 0x69, 0x63, 0x55, 0x70, 0x64, 0x61,
+	0x74, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18,
+	0x02, 0x20, 0x01, 0x28, 0x01, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x12, 0x16, 0x0a, 0x06,
+	0x74, 0x61, 0x72, 0x67, 0x65, 0x74, 0x18, 0x03, 0x20, 0x01, 0x28, 0x01, 0x52, 0x06, 0x74, 0x61,
+	0x72, 0x67, 0x65, 0x74, 0x22, 0x3b, 0x0a, 0x0d, 0x4d, 0x65, 0x74, 0x72, 0x69, 0x63, 0x55, 0x70,
+	0x64, 0x61, 0x74, 0x65, 0x73, 0x12, 0x2a, 0x0a, 0x07, 0x75, 0x70, 0x64, 0x61, 0x74, 0x65, 0x73,
+	0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x10, 0x2e, 0x76, 0x31, 0x2e, 0x4d, 0x65, 0x74, 0x72,
+	0x69, 0x63, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x52, 0x07, 0x75, 0x70, 0x64, 0x61, 0x74, 0x65,
+	0x73, 0x22, 0xa3, 0x01, 0x0a, 0x07, 0x53, 0x65, 0x74, 0x74, 0x69, 0x6e, 0x67, 0x12, 0x12, 0x0a,
 	0x04, 0x74, 0x79, 0x70, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x74, 0x79, 0x70,
 	0x65, 0x12, 0x14, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x01,
 	0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x12, 0x10, 0x0a, 0x03, 0x6d, 0x61, 0x78, 0x18, 0x03,
@@ -1220,108 +1806,163 @@ var file_ui_proto_rawDesc = []byte{
 	0x18, 0x04, 0x20, 0x01, 0x28, 0x01, 0x52, 0x03, 0x6d, 0x69, 0x6e, 0x12, 0x12, 0x0a, 0x04, 0x6e,
 	0x61, 0x6d, 0x65, 0x18, 0x05, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12,
 	0x12, 0x0a, 0x04, 0x69, 0x6e, 0x66, 0x6f, 0x18, 0x06, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x69,
-	0x6e, 0x66, 0x6f, 0x12, 0x1a, 0x0a, 0x08, 0x67, 0x6f, 0x61, 0x6c, 0x4e, 0x61, 0x6d, 0x65, 0x18,
-	0x07, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x67, 0x6f, 0x61, 0x6c, 0x4e, 0x61, 0x6d, 0x65, 0x22,
-	0x45, 0x0a, 0x06, 0x52, 0x65, 0x63, 0x69, 0x70, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x75, 0x75, 0x69,
-	0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x75, 0x75, 0x69, 0x64, 0x12, 0x27, 0x0a,
-	0x08, 0x73, 0x65, 0x74, 0x74, 0x69, 0x6e, 0x67, 0x73, 0x18, 0x02, 0x20, 0x03, 0x28, 0x0b, 0x32,
-	0x0b, 0x2e, 0x76, 0x31, 0x2e, 0x53, 0x65, 0x74, 0x74, 0x69, 0x6e, 0x67, 0x52, 0x08, 0x73, 0x65,
-	0x74, 0x74, 0x69, 0x6e, 0x67, 0x73, 0x22, 0x1d, 0x0a, 0x05, 0x55, 0x55, 0x49, 0x44, 0x53, 0x12,
-	0x14, 0x0a, 0x05, 0x75, 0x75, 0x69, 0x64, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x09, 0x52, 0x05,
-	0x75, 0x75, 0x69, 0x64, 0x73, 0x22, 0x3d, 0x0a, 0x0b, 0x43, 0x72, 0x65, 0x64, 0x65, 0x6e, 0x74,
-	0x69, 0x61, 0x6c, 0x73, 0x12, 0x12, 0x0a, 0x04, 0x75, 0x73, 0x65, 0x72, 0x18, 0x01, 0x20, 0x01,
-	0x28, 0x09, 0x52, 0x04, 0x75, 0x73, 0x65, 0x72, 0x12, 0x1a, 0x0a, 0x08, 0x70, 0x61, 0x73, 0x73,
-	0x77, 0x6f, 0x72, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x70, 0x61, 0x73, 0x73,
-	0x77, 0x6f, 0x72, 0x64, 0x22, 0x41, 0x0a, 0x0f, 0x57, 0x69, 0x66, 0x69, 0x43, 0x72, 0x65, 0x64,
-	0x65, 0x6e, 0x74, 0x69, 0x61, 0x6c, 0x73, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18,
-	0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x1a, 0x0a, 0x08, 0x70,
-	0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x70,
-	0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x22, 0x8c, 0x01, 0x0a, 0x0c, 0x4d, 0x65, 0x74, 0x72,
-	0x69, 0x63, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x12, 0x12, 0x0a, 0x04, 0x75, 0x6e, 0x69, 0x74,
-	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x75, 0x6e, 0x69, 0x74, 0x12, 0x12, 0x0a, 0x04,
-	0x67, 0x6f, 0x61, 0x6c, 0x18, 0x02, 0x20, 0x01, 0x28, 0x02, 0x52, 0x04, 0x67, 0x6f, 0x61, 0x6c,
-	0x12, 0x12, 0x0a, 0x04, 0x74, 0x79, 0x70, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04,
-	0x74, 0x79, 0x70, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x04, 0x20, 0x01,
-	0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x69, 0x6e, 0x66, 0x6f,
-	0x18, 0x05, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x69, 0x6e, 0x66, 0x6f, 0x12, 0x18, 0x0a, 0x07,
-	0x68, 0x61, 0x73, 0x47, 0x6f, 0x61, 0x6c, 0x18, 0x06, 0x20, 0x01, 0x28, 0x08, 0x52, 0x07, 0x68,
-	0x61, 0x73, 0x47, 0x6f, 0x61, 0x6c, 0x22, 0x47, 0x0a, 0x0d, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67,
-	0x75, 0x72, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x36, 0x0a, 0x0d, 0x6d, 0x65, 0x74, 0x72, 0x69,
-	0x63, 0x73, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x10,
-	0x2e, 0x76, 0x31, 0x2e, 0x4d, 0x65, 0x74, 0x72, 0x69, 0x63, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67,
-	0x52, 0x0d, 0x6d, 0x65, 0x74, 0x72, 0x69, 0x63, 0x73, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x22,
-	0x36, 0x0a, 0x06, 0x41, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d,
-	0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x18, 0x0a,
-	0x07, 0x70, 0x61, 0x79, 0x6c, 0x6f, 0x61, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07,
-	0x70, 0x61, 0x79, 0x6c, 0x6f, 0x61, 0x64, 0x22, 0x3c, 0x0a, 0x0c, 0x43, 0x6f, 0x6e, 0x74, 0x72,
-	0x6f, 0x6c, 0x45, 0x76, 0x65, 0x6e, 0x74, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18,
-	0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x18, 0x0a, 0x07, 0x70,
-	0x61, 0x79, 0x6c, 0x6f, 0x61, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x70, 0x61,
-	0x79, 0x6c, 0x6f, 0x61, 0x64, 0x22, 0x07, 0x0a, 0x05, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x22, 0x23,
-	0x0a, 0x0b, 0x44, 0x6f, 0x75, 0x62, 0x6c, 0x65, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x12, 0x14, 0x0a,
-	0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x01, 0x52, 0x05, 0x76, 0x61,
-	0x6c, 0x75, 0x65, 0x22, 0x22, 0x0a, 0x0a, 0x46, 0x6c, 0x6f, 0x61, 0x74, 0x56, 0x61, 0x6c, 0x75,
-	0x65, 0x12, 0x14, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x02,
-	0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x22, 0x22, 0x0a, 0x0a, 0x49, 0x6e, 0x74, 0x36, 0x34,
-	0x56, 0x61, 0x6c, 0x75, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x01,
-	0x20, 0x01, 0x28, 0x03, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x22, 0x23, 0x0a, 0x0b, 0x55,
-	0x49, 0x6e, 0x74, 0x36, 0x34, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x76, 0x61,
-	0x6c, 0x75, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x04, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65,
-	0x22, 0x22, 0x0a, 0x0a, 0x49, 0x6e, 0x74, 0x33, 0x32, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x12, 0x14,
-	0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x05, 0x76,
-	0x61, 0x6c, 0x75, 0x65, 0x22, 0x23, 0x0a, 0x0b, 0x55, 0x49, 0x6e, 0x74, 0x33, 0x32, 0x56, 0x61,
-	0x6c, 0x75, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x01, 0x20, 0x01,
-	0x28, 0x0d, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x22, 0x21, 0x0a, 0x09, 0x42, 0x6f, 0x6f,
-	0x6c, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18,
-	0x01, 0x20, 0x01, 0x28, 0x08, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x22, 0x23, 0x0a, 0x0b,
-	0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x76,
-	0x61, 0x6c, 0x75, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75,
-	0x65, 0x22, 0x22, 0x0a, 0x0a, 0x42, 0x79, 0x74, 0x65, 0x73, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x12,
-	0x14, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x05,
-	0x76, 0x61, 0x6c, 0x75, 0x65, 0x32, 0x59, 0x0a, 0x0d, 0x4d, 0x65, 0x74, 0x72, 0x69, 0x63, 0x53,
-	0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x1f, 0x0a, 0x03, 0x47, 0x65, 0x74, 0x12, 0x09, 0x2e,
-	0x76, 0x31, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x1a, 0x0b, 0x2e, 0x76, 0x31, 0x2e, 0x4d, 0x65,
-	0x74, 0x72, 0x69, 0x63, 0x73, 0x22, 0x00, 0x12, 0x27, 0x0a, 0x09, 0x53, 0x75, 0x62, 0x73, 0x63,
-	0x72, 0x69, 0x62, 0x65, 0x12, 0x09, 0x2e, 0x76, 0x31, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x1a,
-	0x0b, 0x2e, 0x76, 0x31, 0x2e, 0x4d, 0x65, 0x74, 0x72, 0x69, 0x63, 0x73, 0x22, 0x00, 0x30, 0x01,
-	0x32, 0xe5, 0x01, 0x0a, 0x0e, 0x53, 0x65, 0x74, 0x74, 0x69, 0x6e, 0x67, 0x53, 0x65, 0x72, 0x76,
-	0x69, 0x63, 0x65, 0x12, 0x26, 0x0a, 0x0a, 0x53, 0x65, 0x74, 0x53, 0x65, 0x74, 0x74, 0x69, 0x6e,
-	0x67, 0x12, 0x0b, 0x2e, 0x76, 0x31, 0x2e, 0x53, 0x65, 0x74, 0x74, 0x69, 0x6e, 0x67, 0x1a, 0x09,
-	0x2e, 0x76, 0x31, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x22, 0x00, 0x12, 0x28, 0x0a, 0x0e, 0x47,
-	0x65, 0x74, 0x52, 0x65, 0x63, 0x69, 0x70, 0x65, 0x73, 0x55, 0x55, 0x49, 0x44, 0x12, 0x09, 0x2e,
+	0x6e, 0x66, 0x6f, 0x12, 0x22, 0x0a, 0x06, 0x74, 0x61, 0x72, 0x67, 0x65, 0x74, 0x18, 0x07, 0x20,
+	0x01, 0x28, 0x0b, 0x32, 0x0a, 0x2e, 0x76, 0x31, 0x2e, 0x54, 0x61, 0x72, 0x67, 0x65, 0x74, 0x52,
+	0x06, 0x74, 0x61, 0x72, 0x67, 0x65, 0x74, 0x22, 0x3e, 0x0a, 0x06, 0x54, 0x61, 0x72, 0x67, 0x65,
+	0x74, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52,
+	0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x20, 0x0a, 0x0b, 0x75, 0x6e, 0x63, 0x65, 0x72, 0x74, 0x61,
+	0x69, 0x6e, 0x74, 0x79, 0x18, 0x02, 0x20, 0x01, 0x28, 0x01, 0x52, 0x0b, 0x75, 0x6e, 0x63, 0x65,
+	0x72, 0x74, 0x61, 0x69, 0x6e, 0x74, 0x79, 0x22, 0x39, 0x0a, 0x0d, 0x53, 0x65, 0x74, 0x74, 0x69,
+	0x6e, 0x67, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x14, 0x0a, 0x05,
+	0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x01, 0x52, 0x05, 0x76, 0x61, 0x6c,
+	0x75, 0x65, 0x22, 0x38, 0x0a, 0x0c, 0x54, 0x61, 0x72, 0x67, 0x65, 0x74, 0x55, 0x70, 0x64, 0x61,
+	0x74, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18,
+	0x02, 0x20, 0x01, 0x28, 0x01, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x22, 0x45, 0x0a, 0x06,
+	0x43, 0x68, 0x6f, 0x69, 0x63, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x27, 0x0a, 0x08, 0x73, 0x65,
+	0x74, 0x74, 0x69, 0x6e, 0x67, 0x73, 0x18, 0x02, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x0b, 0x2e, 0x76,
+	0x31, 0x2e, 0x53, 0x65, 0x74, 0x74, 0x69, 0x6e, 0x67, 0x52, 0x08, 0x73, 0x65, 0x74, 0x74, 0x69,
+	0x6e, 0x67, 0x73, 0x22, 0x88, 0x01, 0x0a, 0x08, 0x53, 0x65, 0x6c, 0x65, 0x63, 0x74, 0x6f, 0x72,
+	0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04,
+	0x6e, 0x61, 0x6d, 0x65, 0x12, 0x32, 0x0a, 0x0e, 0x73, 0x65, 0x6c, 0x65, 0x63, 0x74, 0x65, 0x64,
+	0x43, 0x68, 0x6f, 0x69, 0x63, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x0a, 0x2e, 0x76,
+	0x31, 0x2e, 0x43, 0x68, 0x6f, 0x69, 0x63, 0x65, 0x52, 0x0e, 0x73, 0x65, 0x6c, 0x65, 0x63, 0x74,
+	0x65, 0x64, 0x43, 0x68, 0x6f, 0x69, 0x63, 0x65, 0x12, 0x34, 0x0a, 0x0f, 0x70, 0x6f, 0x73, 0x73,
+	0x69, 0x62, 0x6c, 0x65, 0x43, 0x68, 0x6f, 0x69, 0x63, 0x65, 0x73, 0x18, 0x03, 0x20, 0x03, 0x28,
+	0x0b, 0x32, 0x0a, 0x2e, 0x76, 0x31, 0x2e, 0x43, 0x68, 0x6f, 0x69, 0x63, 0x65, 0x52, 0x0f, 0x70,
+	0x6f, 0x73, 0x73, 0x69, 0x62, 0x6c, 0x65, 0x43, 0x68, 0x6f, 0x69, 0x63, 0x65, 0x73, 0x22, 0x44,
+	0x0a, 0x0e, 0x53, 0x65, 0x6c, 0x65, 0x63, 0x74, 0x6f, 0x72, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65,
+	0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04,
+	0x6e, 0x61, 0x6d, 0x65, 0x12, 0x1e, 0x0a, 0x0a, 0x63, 0x68, 0x6f, 0x69, 0x63, 0x65, 0x4e, 0x61,
+	0x6d, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x63, 0x68, 0x6f, 0x69, 0x63, 0x65,
+	0x4e, 0x61, 0x6d, 0x65, 0x22, 0x5c, 0x0a, 0x0c, 0x43, 0x68, 0x6f, 0x69, 0x63, 0x65, 0x55, 0x70,
+	0x64, 0x61, 0x74, 0x65, 0x12, 0x22, 0x0a, 0x0c, 0x6e, 0x61, 0x6d, 0x65, 0x53, 0x65, 0x6c, 0x65,
+	0x63, 0x74, 0x6f, 0x72, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0c, 0x6e, 0x61, 0x6d, 0x65,
+	0x53, 0x65, 0x6c, 0x65, 0x63, 0x74, 0x6f, 0x72, 0x12, 0x28, 0x0a, 0x09, 0x6e, 0x65, 0x77, 0x43,
+	0x68, 0x6f, 0x69, 0x63, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x0a, 0x2e, 0x76, 0x31,
+	0x2e, 0x43, 0x68, 0x6f, 0x69, 0x63, 0x65, 0x52, 0x09, 0x6e, 0x65, 0x77, 0x43, 0x68, 0x6f, 0x69,
+	0x63, 0x65, 0x22, 0x9b, 0x01, 0x0a, 0x06, 0x52, 0x65, 0x63, 0x69, 0x70, 0x65, 0x12, 0x12, 0x0a,
+	0x04, 0x75, 0x75, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x75, 0x75, 0x69,
+	0x64, 0x12, 0x14, 0x0a, 0x05, 0x74, 0x69, 0x74, 0x6c, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x05, 0x74, 0x69, 0x74, 0x6c, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x69, 0x6e, 0x66, 0x6f, 0x18,
+	0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x69, 0x6e, 0x66, 0x6f, 0x12, 0x27, 0x0a, 0x08, 0x73,
+	0x65, 0x74, 0x74, 0x69, 0x6e, 0x67, 0x73, 0x18, 0x04, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x0b, 0x2e,
+	0x76, 0x31, 0x2e, 0x53, 0x65, 0x74, 0x74, 0x69, 0x6e, 0x67, 0x52, 0x08, 0x73, 0x65, 0x74, 0x74,
+	0x69, 0x6e, 0x67, 0x73, 0x12, 0x2a, 0x0a, 0x09, 0x73, 0x65, 0x6c, 0x65, 0x63, 0x74, 0x6f, 0x72,
+	0x73, 0x18, 0x05, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x0c, 0x2e, 0x76, 0x31, 0x2e, 0x53, 0x65, 0x6c,
+	0x65, 0x63, 0x74, 0x6f, 0x72, 0x52, 0x09, 0x73, 0x65, 0x6c, 0x65, 0x63, 0x74, 0x6f, 0x72, 0x73,
+	0x22, 0x1d, 0x0a, 0x05, 0x55, 0x55, 0x49, 0x44, 0x53, 0x12, 0x14, 0x0a, 0x05, 0x75, 0x75, 0x69,
+	0x64, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x09, 0x52, 0x05, 0x75, 0x75, 0x69, 0x64, 0x73, 0x22,
+	0x6b, 0x0a, 0x04, 0x55, 0x73, 0x65, 0x72, 0x12, 0x14, 0x0a, 0x05, 0x74, 0x69, 0x74, 0x6c, 0x65,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x74, 0x69, 0x74, 0x6c, 0x65, 0x12, 0x22, 0x0a,
+	0x04, 0x72, 0x6f, 0x6c, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0e, 0x32, 0x0e, 0x2e, 0x76, 0x31,
+	0x2e, 0x55, 0x73, 0x65, 0x72, 0x2e, 0x52, 0x6f, 0x6c, 0x65, 0x73, 0x52, 0x04, 0x72, 0x6f, 0x6c,
+	0x65, 0x22, 0x29, 0x0a, 0x05, 0x52, 0x6f, 0x6c, 0x65, 0x73, 0x12, 0x08, 0x0a, 0x04, 0x55, 0x53,
+	0x45, 0x52, 0x10, 0x00, 0x12, 0x09, 0x0a, 0x05, 0x41, 0x44, 0x4d, 0x49, 0x4e, 0x10, 0x01, 0x12,
+	0x0b, 0x0a, 0x07, 0x43, 0x52, 0x45, 0x41, 0x54, 0x4f, 0x52, 0x10, 0x02, 0x22, 0x27, 0x0a, 0x05,
+	0x55, 0x73, 0x65, 0x72, 0x73, 0x12, 0x1e, 0x0a, 0x05, 0x75, 0x73, 0x65, 0x72, 0x73, 0x18, 0x01,
+	0x20, 0x03, 0x28, 0x0b, 0x32, 0x08, 0x2e, 0x76, 0x31, 0x2e, 0x55, 0x73, 0x65, 0x72, 0x52, 0x05,
+	0x75, 0x73, 0x65, 0x72, 0x73, 0x22, 0x41, 0x0a, 0x0f, 0x57, 0x69, 0x66, 0x69, 0x43, 0x72, 0x65,
+	0x64, 0x65, 0x6e, 0x74, 0x69, 0x61, 0x6c, 0x73, 0x12, 0x12, 0x0a, 0x04, 0x53, 0x53, 0x49, 0x44,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x53, 0x53, 0x49, 0x44, 0x12, 0x1a, 0x0a, 0x08,
+	0x70, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08,
+	0x70, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x22, 0x21, 0x0a, 0x09, 0x57, 0x69, 0x66, 0x69,
+	0x4e, 0x61, 0x6d, 0x65, 0x73, 0x12, 0x14, 0x0a, 0x05, 0x53, 0x53, 0x49, 0x44, 0x73, 0x18, 0x01,
+	0x20, 0x03, 0x28, 0x09, 0x52, 0x05, 0x53, 0x53, 0x49, 0x44, 0x73, 0x22, 0x36, 0x0a, 0x06, 0x41,
+	0x63, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20,
+	0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x18, 0x0a, 0x07, 0x70, 0x61, 0x79,
+	0x6c, 0x6f, 0x61, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x70, 0x61, 0x79, 0x6c,
+	0x6f, 0x61, 0x64, 0x22, 0x3c, 0x0a, 0x0c, 0x43, 0x6f, 0x6e, 0x74, 0x72, 0x6f, 0x6c, 0x45, 0x76,
+	0x65, 0x6e, 0x74, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x18, 0x0a, 0x07, 0x70, 0x61, 0x79, 0x6c, 0x6f,
+	0x61, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x70, 0x61, 0x79, 0x6c, 0x6f, 0x61,
+	0x64, 0x22, 0x07, 0x0a, 0x05, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x22, 0x23, 0x0a, 0x0b, 0x44, 0x6f,
+	0x75, 0x62, 0x6c, 0x65, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x76, 0x61, 0x6c,
+	0x75, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x01, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x22,
+	0x22, 0x0a, 0x0a, 0x46, 0x6c, 0x6f, 0x61, 0x74, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x12, 0x14, 0x0a,
+	0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x02, 0x52, 0x05, 0x76, 0x61,
+	0x6c, 0x75, 0x65, 0x22, 0x22, 0x0a, 0x0a, 0x49, 0x6e, 0x74, 0x36, 0x34, 0x56, 0x61, 0x6c, 0x75,
+	0x65, 0x12, 0x14, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03,
+	0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x22, 0x23, 0x0a, 0x0b, 0x55, 0x49, 0x6e, 0x74, 0x36,
+	0x34, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18,
+	0x01, 0x20, 0x01, 0x28, 0x04, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x22, 0x22, 0x0a, 0x0a,
+	0x49, 0x6e, 0x74, 0x33, 0x32, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x76, 0x61,
+	0x6c, 0x75, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x05, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65,
+	0x22, 0x23, 0x0a, 0x0b, 0x55, 0x49, 0x6e, 0x74, 0x33, 0x32, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x12,
+	0x14, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x05,
+	0x76, 0x61, 0x6c, 0x75, 0x65, 0x22, 0x21, 0x0a, 0x09, 0x42, 0x6f, 0x6f, 0x6c, 0x56, 0x61, 0x6c,
+	0x75, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x08, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x22, 0x23, 0x0a, 0x0b, 0x53, 0x74, 0x72, 0x69,
+	0x6e, 0x67, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x22, 0x22, 0x0a,
+	0x0a, 0x42, 0x79, 0x74, 0x65, 0x73, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x76,
+	0x61, 0x6c, 0x75, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x75,
+	0x65, 0x32, 0xc6, 0x01, 0x0a, 0x0d, 0x4d, 0x65, 0x74, 0x72, 0x69, 0x63, 0x53, 0x65, 0x72, 0x76,
+	0x69, 0x63, 0x65, 0x12, 0x28, 0x0a, 0x06, 0x47, 0x65, 0x74, 0x41, 0x6c, 0x6c, 0x12, 0x09, 0x2e,
+	0x76, 0x31, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x1a, 0x11, 0x2e, 0x76, 0x31, 0x2e, 0x4d, 0x65,
+	0x74, 0x72, 0x69, 0x63, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x73, 0x22, 0x00, 0x12, 0x2d, 0x0a,
+	0x09, 0x53, 0x75, 0x62, 0x73, 0x63, 0x72, 0x69, 0x62, 0x65, 0x12, 0x09, 0x2e, 0x76, 0x31, 0x2e,
+	0x45, 0x6d, 0x70, 0x74, 0x79, 0x1a, 0x11, 0x2e, 0x76, 0x31, 0x2e, 0x4d, 0x65, 0x74, 0x72, 0x69,
+	0x63, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x73, 0x22, 0x00, 0x30, 0x01, 0x12, 0x2c, 0x0a, 0x0a,
+	0x52, 0x65, 0x61, 0x64, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x12, 0x09, 0x2e, 0x76, 0x31, 0x2e,
+	0x45, 0x6d, 0x70, 0x74, 0x79, 0x1a, 0x11, 0x2e, 0x76, 0x31, 0x2e, 0x4d, 0x65, 0x74, 0x72, 0x69,
+	0x63, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x73, 0x22, 0x00, 0x12, 0x2e, 0x0a, 0x0c, 0x55, 0x70,
+	0x64, 0x61, 0x74, 0x65, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x12, 0x11, 0x2e, 0x76, 0x31, 0x2e,
+	0x4d, 0x65, 0x74, 0x72, 0x69, 0x63, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x73, 0x1a, 0x09, 0x2e,
+	0x76, 0x31, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x22, 0x00, 0x32, 0xbc, 0x03, 0x0a, 0x0e, 0x53,
+	0x65, 0x74, 0x74, 0x69, 0x6e, 0x67, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x2f, 0x0a,
+	0x0d, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x53, 0x65, 0x74, 0x74, 0x69, 0x6e, 0x67, 0x12, 0x11,
+	0x2e, 0x76, 0x31, 0x2e, 0x53, 0x65, 0x74, 0x74, 0x69, 0x6e, 0x67, 0x55, 0x70, 0x64, 0x61, 0x74,
+	0x65, 0x1a, 0x09, 0x2e, 0x76, 0x31, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x22, 0x00, 0x12, 0x32,
+	0x0a, 0x11, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x55, 0x6e, 0x63, 0x65, 0x72, 0x74, 0x61, 0x69,
+	0x6e, 0x74, 0x79, 0x12, 0x10, 0x2e, 0x76, 0x31, 0x2e, 0x54, 0x61, 0x72, 0x67, 0x65, 0x74, 0x55,
+	0x70, 0x64, 0x61, 0x74, 0x65, 0x1a, 0x09, 0x2e, 0x76, 0x31, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79,
+	0x22, 0x00, 0x12, 0x37, 0x0a, 0x14, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x53, 0x65, 0x6c, 0x65,
+	0x63, 0x74, 0x65, 0x64, 0x43, 0x68, 0x6f, 0x69, 0x63, 0x65, 0x12, 0x12, 0x2e, 0x76, 0x31, 0x2e,
+	0x53, 0x65, 0x6c, 0x65, 0x63, 0x74, 0x6f, 0x72, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x1a, 0x09,
+	0x2e, 0x76, 0x31, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x22, 0x00, 0x12, 0x2d, 0x0a, 0x0c, 0x55,
+	0x70, 0x64, 0x61, 0x74, 0x65, 0x43, 0x68, 0x6f, 0x69, 0x63, 0x65, 0x12, 0x10, 0x2e, 0x76, 0x31,
+	0x2e, 0x43, 0x68, 0x6f, 0x69, 0x63, 0x65, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x1a, 0x09, 0x2e,
+	0x76, 0x31, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x22, 0x00, 0x12, 0x29, 0x0a, 0x0f, 0x52, 0x65,
+	0x61, 0x64, 0x52, 0x65, 0x63, 0x69, 0x70, 0x65, 0x73, 0x55, 0x55, 0x49, 0x44, 0x12, 0x09, 0x2e,
 	0x76, 0x31, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x1a, 0x09, 0x2e, 0x76, 0x31, 0x2e, 0x55, 0x55,
-	0x49, 0x44, 0x53, 0x22, 0x00, 0x12, 0x2a, 0x0a, 0x09, 0x47, 0x65, 0x74, 0x52, 0x65, 0x63, 0x69,
+	0x49, 0x44, 0x53, 0x22, 0x00, 0x12, 0x2b, 0x0a, 0x0a, 0x52, 0x65, 0x61, 0x64, 0x52, 0x65, 0x63,
+	0x69, 0x70, 0x65, 0x12, 0x0f, 0x2e, 0x76, 0x31, 0x2e, 0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x56,
+	0x61, 0x6c, 0x75, 0x65, 0x1a, 0x0a, 0x2e, 0x76, 0x31, 0x2e, 0x52, 0x65, 0x63, 0x69, 0x70, 0x65,
+	0x22, 0x00, 0x12, 0x27, 0x0a, 0x0c, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x52, 0x65, 0x63, 0x69,
+	0x70, 0x65, 0x12, 0x09, 0x2e, 0x76, 0x31, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x1a, 0x0a, 0x2e,
+	0x76, 0x31, 0x2e, 0x52, 0x65, 0x63, 0x69, 0x70, 0x65, 0x22, 0x00, 0x12, 0x33, 0x0a, 0x13, 0x55,
+	0x70, 0x64, 0x61, 0x74, 0x65, 0x43, 0x75, 0x72, 0x72, 0x65, 0x6e, 0x74, 0x52, 0x65, 0x63, 0x69,
 	0x70, 0x65, 0x12, 0x0f, 0x2e, 0x76, 0x31, 0x2e, 0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x56, 0x61,
-	0x6c, 0x75, 0x65, 0x1a, 0x0a, 0x2e, 0x76, 0x31, 0x2e, 0x52, 0x65, 0x63, 0x69, 0x70, 0x65, 0x22,
-	0x00, 0x12, 0x27, 0x0a, 0x0c, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x52, 0x65, 0x63, 0x69, 0x70,
-	0x65, 0x12, 0x09, 0x2e, 0x76, 0x31, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x1a, 0x0a, 0x2e, 0x76,
-	0x31, 0x2e, 0x52, 0x65, 0x63, 0x69, 0x70, 0x65, 0x22, 0x00, 0x12, 0x2c, 0x0a, 0x0c, 0x53, 0x65,
-	0x6c, 0x65, 0x63, 0x74, 0x52, 0x65, 0x63, 0x69, 0x70, 0x65, 0x12, 0x0f, 0x2e, 0x76, 0x31, 0x2e,
-	0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x1a, 0x09, 0x2e, 0x76, 0x31,
-	0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x22, 0x00, 0x32, 0x49, 0x0a, 0x17, 0x41, 0x75, 0x74, 0x68,
-	0x65, 0x6e, 0x74, 0x69, 0x66, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x53, 0x65, 0x72, 0x76,
-	0x69, 0x63, 0x65, 0x12, 0x2e, 0x0a, 0x0e, 0x41, 0x75, 0x74, 0x68, 0x65, 0x6e, 0x74, 0x69, 0x66,
-	0x69, 0x63, 0x61, 0x74, 0x65, 0x12, 0x0f, 0x2e, 0x76, 0x31, 0x2e, 0x43, 0x72, 0x65, 0x64, 0x65,
-	0x6e, 0x74, 0x69, 0x61, 0x6c, 0x73, 0x1a, 0x09, 0x2e, 0x76, 0x31, 0x2e, 0x45, 0x6d, 0x70, 0x74,
-	0x79, 0x22, 0x00, 0x32, 0x41, 0x0a, 0x0e, 0x4e, 0x65, 0x74, 0x77, 0x6f, 0x72, 0x6b, 0x53, 0x65,
-	0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x2f, 0x0a, 0x0b, 0x43, 0x6f, 0x6e, 0x6e, 0x65, 0x63, 0x74,
-	0x57, 0x69, 0x66, 0x69, 0x12, 0x13, 0x2e, 0x76, 0x31, 0x2e, 0x57, 0x69, 0x66, 0x69, 0x43, 0x72,
-	0x65, 0x64, 0x65, 0x6e, 0x74, 0x69, 0x61, 0x6c, 0x73, 0x1a, 0x09, 0x2e, 0x76, 0x31, 0x2e, 0x45,
-	0x6d, 0x70, 0x74, 0x79, 0x22, 0x00, 0x32, 0x70, 0x0a, 0x14, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67,
-	0x75, 0x72, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x2b,
-	0x0a, 0x09, 0x47, 0x65, 0x74, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x12, 0x09, 0x2e, 0x76, 0x31,
-	0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x1a, 0x11, 0x2e, 0x76, 0x31, 0x2e, 0x43, 0x6f, 0x6e, 0x66,
-	0x69, 0x67, 0x75, 0x72, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x22, 0x00, 0x12, 0x2b, 0x0a, 0x09, 0x53,
-	0x65, 0x74, 0x43, 0x6f, 0x6e, 0x66, 0x69, 0x67, 0x12, 0x11, 0x2e, 0x76, 0x31, 0x2e, 0x43, 0x6f,
-	0x6e, 0x66, 0x69, 0x67, 0x75, 0x72, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x1a, 0x09, 0x2e, 0x76, 0x31,
-	0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x22, 0x00, 0x32, 0x5f, 0x0a, 0x0e, 0x43, 0x6f, 0x6e, 0x74,
-	0x72, 0x6f, 0x6c, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x1f, 0x0a, 0x04, 0x53, 0x65,
-	0x6e, 0x64, 0x12, 0x0a, 0x2e, 0x76, 0x31, 0x2e, 0x41, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x1a, 0x09,
-	0x2e, 0x76, 0x31, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x22, 0x00, 0x12, 0x2c, 0x0a, 0x09, 0x53,
-	0x75, 0x62, 0x73, 0x63, 0x72, 0x69, 0x62, 0x65, 0x12, 0x09, 0x2e, 0x76, 0x31, 0x2e, 0x45, 0x6d,
-	0x70, 0x74, 0x79, 0x1a, 0x10, 0x2e, 0x76, 0x31, 0x2e, 0x43, 0x6f, 0x6e, 0x74, 0x72, 0x6f, 0x6c,
-	0x45, 0x76, 0x65, 0x6e, 0x74, 0x22, 0x00, 0x30, 0x01, 0x42, 0x09, 0x5a, 0x07, 0x2e, 0x3b, 0x70,
-	0x72, 0x6f, 0x74, 0x6f, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x6c, 0x75, 0x65, 0x1a, 0x09, 0x2e, 0x76, 0x31, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x22, 0x00,
+	0x12, 0x27, 0x0a, 0x0c, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x52, 0x65, 0x63, 0x69, 0x70, 0x65,
+	0x12, 0x0a, 0x2e, 0x76, 0x31, 0x2e, 0x52, 0x65, 0x63, 0x69, 0x70, 0x65, 0x1a, 0x09, 0x2e, 0x76,
+	0x31, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x22, 0x00, 0x32, 0x6d, 0x0a, 0x17, 0x41, 0x75, 0x74,
+	0x68, 0x65, 0x6e, 0x74, 0x69, 0x66, 0x69, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x53, 0x65, 0x72,
+	0x76, 0x69, 0x63, 0x65, 0x12, 0x26, 0x0a, 0x0c, 0x52, 0x65, 0x61, 0x64, 0x55, 0x73, 0x65, 0x72,
+	0x4c, 0x69, 0x73, 0x74, 0x12, 0x09, 0x2e, 0x76, 0x31, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x1a,
+	0x09, 0x2e, 0x76, 0x31, 0x2e, 0x55, 0x73, 0x65, 0x72, 0x73, 0x22, 0x00, 0x12, 0x2a, 0x0a, 0x11,
+	0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x43, 0x75, 0x72, 0x72, 0x65, 0x6e, 0x74, 0x55, 0x73, 0x65,
+	0x72, 0x12, 0x08, 0x2e, 0x76, 0x31, 0x2e, 0x55, 0x73, 0x65, 0x72, 0x1a, 0x09, 0x2e, 0x76, 0x31,
+	0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x22, 0x00, 0x32, 0x6d, 0x0a, 0x0e, 0x4e, 0x65, 0x74, 0x77,
+	0x6f, 0x72, 0x6b, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x2a, 0x0a, 0x0c, 0x52, 0x65,
+	0x61, 0x64, 0x57, 0x69, 0x66, 0x69, 0x4c, 0x69, 0x73, 0x74, 0x12, 0x09, 0x2e, 0x76, 0x31, 0x2e,
+	0x45, 0x6d, 0x70, 0x74, 0x79, 0x1a, 0x0d, 0x2e, 0x76, 0x31, 0x2e, 0x57, 0x69, 0x66, 0x69, 0x4e,
+	0x61, 0x6d, 0x65, 0x73, 0x22, 0x00, 0x12, 0x2f, 0x0a, 0x0b, 0x43, 0x6f, 0x6e, 0x6e, 0x65, 0x63,
+	0x74, 0x57, 0x69, 0x66, 0x69, 0x12, 0x13, 0x2e, 0x76, 0x31, 0x2e, 0x57, 0x69, 0x66, 0x69, 0x43,
+	0x72, 0x65, 0x64, 0x65, 0x6e, 0x74, 0x69, 0x61, 0x6c, 0x73, 0x1a, 0x09, 0x2e, 0x76, 0x31, 0x2e,
+	0x45, 0x6d, 0x70, 0x74, 0x79, 0x22, 0x00, 0x32, 0x16, 0x0a, 0x14, 0x43, 0x6f, 0x6e, 0x66, 0x69,
+	0x67, 0x75, 0x72, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x32,
+	0x5f, 0x0a, 0x0e, 0x43, 0x6f, 0x6e, 0x74, 0x72, 0x6f, 0x6c, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63,
+	0x65, 0x12, 0x1f, 0x0a, 0x04, 0x53, 0x65, 0x6e, 0x64, 0x12, 0x0a, 0x2e, 0x76, 0x31, 0x2e, 0x41,
+	0x63, 0x74, 0x69, 0x6f, 0x6e, 0x1a, 0x09, 0x2e, 0x76, 0x31, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79,
+	0x22, 0x00, 0x12, 0x2c, 0x0a, 0x09, 0x53, 0x75, 0x62, 0x73, 0x63, 0x72, 0x69, 0x62, 0x65, 0x12,
+	0x09, 0x2e, 0x76, 0x31, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x1a, 0x10, 0x2e, 0x76, 0x31, 0x2e,
+	0x43, 0x6f, 0x6e, 0x74, 0x72, 0x6f, 0x6c, 0x45, 0x76, 0x65, 0x6e, 0x74, 0x22, 0x00, 0x30, 0x01,
+	0x42, 0x09, 0x5a, 0x07, 0x2e, 0x3b, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x06, 0x70, 0x72, 0x6f,
+	0x74, 0x6f, 0x33,
 }
 
 var (
@@ -1336,65 +1977,96 @@ func file_ui_proto_rawDescGZIP() []byte {
 	return file_ui_proto_rawDescData
 }
 
-var file_ui_proto_msgTypes = make([]protoimpl.MessageInfo, 21)
+var file_ui_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_ui_proto_msgTypes = make([]protoimpl.MessageInfo, 30)
 var file_ui_proto_goTypes = []interface{}{
-	(*Metric)(nil),          // 0: v1.Metric
-	(*Metrics)(nil),         // 1: v1.Metrics
-	(*Setting)(nil),         // 2: v1.Setting
-	(*Recipe)(nil),          // 3: v1.Recipe
-	(*UUIDS)(nil),           // 4: v1.UUIDS
-	(*Credentials)(nil),     // 5: v1.Credentials
-	(*WifiCredentials)(nil), // 6: v1.WifiCredentials
-	(*MetricConfig)(nil),    // 7: v1.MetricConfig
-	(*Configuration)(nil),   // 8: v1.Configuration
-	(*Action)(nil),          // 9: v1.Action
-	(*ControlEvent)(nil),    // 10: v1.ControlEvent
-	(*Empty)(nil),           // 11: v1.Empty
-	(*DoubleValue)(nil),     // 12: v1.DoubleValue
-	(*FloatValue)(nil),      // 13: v1.FloatValue
-	(*Int64Value)(nil),      // 14: v1.Int64Value
-	(*UInt64Value)(nil),     // 15: v1.UInt64Value
-	(*Int32Value)(nil),      // 16: v1.Int32Value
-	(*UInt32Value)(nil),     // 17: v1.UInt32Value
-	(*BoolValue)(nil),       // 18: v1.BoolValue
-	(*StringValue)(nil),     // 19: v1.StringValue
-	(*BytesValue)(nil),      // 20: v1.BytesValue
+	(User_Roles)(0),         // 0: v1.User.Roles
+	(*MetricConfig)(nil),    // 1: v1.MetricConfig
+	(*MetricConfigs)(nil),   // 2: v1.MetricConfigs
+	(*MetricUpdate)(nil),    // 3: v1.MetricUpdate
+	(*MetricUpdates)(nil),   // 4: v1.MetricUpdates
+	(*Setting)(nil),         // 5: v1.Setting
+	(*Target)(nil),          // 6: v1.Target
+	(*SettingUpdate)(nil),   // 7: v1.SettingUpdate
+	(*TargetUpdate)(nil),    // 8: v1.TargetUpdate
+	(*Choice)(nil),          // 9: v1.Choice
+	(*Selector)(nil),        // 10: v1.Selector
+	(*SelectorUpdate)(nil),  // 11: v1.SelectorUpdate
+	(*ChoiceUpdate)(nil),    // 12: v1.ChoiceUpdate
+	(*Recipe)(nil),          // 13: v1.Recipe
+	(*UUIDS)(nil),           // 14: v1.UUIDS
+	(*User)(nil),            // 15: v1.User
+	(*Users)(nil),           // 16: v1.Users
+	(*WifiCredentials)(nil), // 17: v1.WifiCredentials
+	(*WifiNames)(nil),       // 18: v1.WifiNames
+	(*Action)(nil),          // 19: v1.Action
+	(*ControlEvent)(nil),    // 20: v1.ControlEvent
+	(*Empty)(nil),           // 21: v1.Empty
+	(*DoubleValue)(nil),     // 22: v1.DoubleValue
+	(*FloatValue)(nil),      // 23: v1.FloatValue
+	(*Int64Value)(nil),      // 24: v1.Int64Value
+	(*UInt64Value)(nil),     // 25: v1.UInt64Value
+	(*Int32Value)(nil),      // 26: v1.Int32Value
+	(*UInt32Value)(nil),     // 27: v1.UInt32Value
+	(*BoolValue)(nil),       // 28: v1.BoolValue
+	(*StringValue)(nil),     // 29: v1.StringValue
+	(*BytesValue)(nil),      // 30: v1.BytesValue
 }
 var file_ui_proto_depIdxs = []int32{
-	0,  // 0: v1.Metrics.metrics:type_name -> v1.Metric
-	2,  // 1: v1.Recipe.settings:type_name -> v1.Setting
-	7,  // 2: v1.Configuration.metricsConfig:type_name -> v1.MetricConfig
-	11, // 3: v1.MetricService.Get:input_type -> v1.Empty
-	11, // 4: v1.MetricService.Subscribe:input_type -> v1.Empty
-	2,  // 5: v1.SettingService.SetSetting:input_type -> v1.Setting
-	11, // 6: v1.SettingService.GetRecipesUUID:input_type -> v1.Empty
-	19, // 7: v1.SettingService.GetRecipe:input_type -> v1.StringValue
-	11, // 8: v1.SettingService.CreateRecipe:input_type -> v1.Empty
-	19, // 9: v1.SettingService.SelectRecipe:input_type -> v1.StringValue
-	5,  // 10: v1.AuthentificationService.Authentificate:input_type -> v1.Credentials
-	6,  // 11: v1.NetworkService.ConnectWifi:input_type -> v1.WifiCredentials
-	11, // 12: v1.ConfigurationService.GetConfig:input_type -> v1.Empty
-	8,  // 13: v1.ConfigurationService.SetConfig:input_type -> v1.Configuration
-	9,  // 14: v1.ControlService.Send:input_type -> v1.Action
-	11, // 15: v1.ControlService.Subscribe:input_type -> v1.Empty
-	1,  // 16: v1.MetricService.Get:output_type -> v1.Metrics
-	1,  // 17: v1.MetricService.Subscribe:output_type -> v1.Metrics
-	11, // 18: v1.SettingService.SetSetting:output_type -> v1.Empty
-	4,  // 19: v1.SettingService.GetRecipesUUID:output_type -> v1.UUIDS
-	3,  // 20: v1.SettingService.GetRecipe:output_type -> v1.Recipe
-	3,  // 21: v1.SettingService.CreateRecipe:output_type -> v1.Recipe
-	11, // 22: v1.SettingService.SelectRecipe:output_type -> v1.Empty
-	11, // 23: v1.AuthentificationService.Authentificate:output_type -> v1.Empty
-	11, // 24: v1.NetworkService.ConnectWifi:output_type -> v1.Empty
-	8,  // 25: v1.ConfigurationService.GetConfig:output_type -> v1.Configuration
-	11, // 26: v1.ConfigurationService.SetConfig:output_type -> v1.Empty
-	11, // 27: v1.ControlService.Send:output_type -> v1.Empty
-	10, // 28: v1.ControlService.Subscribe:output_type -> v1.ControlEvent
-	16, // [16:29] is the sub-list for method output_type
-	3,  // [3:16] is the sub-list for method input_type
-	3,  // [3:3] is the sub-list for extension type_name
-	3,  // [3:3] is the sub-list for extension extendee
-	0,  // [0:3] is the sub-list for field type_name
+	1,  // 0: v1.MetricConfigs.configs:type_name -> v1.MetricConfig
+	3,  // 1: v1.MetricUpdates.updates:type_name -> v1.MetricUpdate
+	6,  // 2: v1.Setting.target:type_name -> v1.Target
+	5,  // 3: v1.Choice.settings:type_name -> v1.Setting
+	9,  // 4: v1.Selector.selectedChoice:type_name -> v1.Choice
+	9,  // 5: v1.Selector.possibleChoices:type_name -> v1.Choice
+	9,  // 6: v1.ChoiceUpdate.newChoice:type_name -> v1.Choice
+	5,  // 7: v1.Recipe.settings:type_name -> v1.Setting
+	10, // 8: v1.Recipe.selectors:type_name -> v1.Selector
+	0,  // 9: v1.User.role:type_name -> v1.User.Roles
+	15, // 10: v1.Users.users:type_name -> v1.User
+	21, // 11: v1.MetricService.GetAll:input_type -> v1.Empty
+	21, // 12: v1.MetricService.Subscribe:input_type -> v1.Empty
+	21, // 13: v1.MetricService.ReadConfig:input_type -> v1.Empty
+	2,  // 14: v1.MetricService.UpdateConfig:input_type -> v1.MetricConfigs
+	7,  // 15: v1.SettingService.UpdateSetting:input_type -> v1.SettingUpdate
+	8,  // 16: v1.SettingService.UpdateUncertainty:input_type -> v1.TargetUpdate
+	11, // 17: v1.SettingService.UpdateSelectedChoice:input_type -> v1.SelectorUpdate
+	12, // 18: v1.SettingService.UpdateChoice:input_type -> v1.ChoiceUpdate
+	21, // 19: v1.SettingService.ReadRecipesUUID:input_type -> v1.Empty
+	29, // 20: v1.SettingService.ReadRecipe:input_type -> v1.StringValue
+	21, // 21: v1.SettingService.CreateRecipe:input_type -> v1.Empty
+	29, // 22: v1.SettingService.UpdateCurrentRecipe:input_type -> v1.StringValue
+	13, // 23: v1.SettingService.UpdateRecipe:input_type -> v1.Recipe
+	21, // 24: v1.AuthentificationService.ReadUserList:input_type -> v1.Empty
+	15, // 25: v1.AuthentificationService.UpdateCurrentUser:input_type -> v1.User
+	21, // 26: v1.NetworkService.ReadWifiList:input_type -> v1.Empty
+	17, // 27: v1.NetworkService.ConnectWifi:input_type -> v1.WifiCredentials
+	19, // 28: v1.ControlService.Send:input_type -> v1.Action
+	21, // 29: v1.ControlService.Subscribe:input_type -> v1.Empty
+	4,  // 30: v1.MetricService.GetAll:output_type -> v1.MetricUpdates
+	4,  // 31: v1.MetricService.Subscribe:output_type -> v1.MetricUpdates
+	2,  // 32: v1.MetricService.ReadConfig:output_type -> v1.MetricConfigs
+	21, // 33: v1.MetricService.UpdateConfig:output_type -> v1.Empty
+	21, // 34: v1.SettingService.UpdateSetting:output_type -> v1.Empty
+	21, // 35: v1.SettingService.UpdateUncertainty:output_type -> v1.Empty
+	21, // 36: v1.SettingService.UpdateSelectedChoice:output_type -> v1.Empty
+	21, // 37: v1.SettingService.UpdateChoice:output_type -> v1.Empty
+	14, // 38: v1.SettingService.ReadRecipesUUID:output_type -> v1.UUIDS
+	13, // 39: v1.SettingService.ReadRecipe:output_type -> v1.Recipe
+	13, // 40: v1.SettingService.CreateRecipe:output_type -> v1.Recipe
+	21, // 41: v1.SettingService.UpdateCurrentRecipe:output_type -> v1.Empty
+	21, // 42: v1.SettingService.UpdateRecipe:output_type -> v1.Empty
+	16, // 43: v1.AuthentificationService.ReadUserList:output_type -> v1.Users
+	21, // 44: v1.AuthentificationService.UpdateCurrentUser:output_type -> v1.Empty
+	18, // 45: v1.NetworkService.ReadWifiList:output_type -> v1.WifiNames
+	21, // 46: v1.NetworkService.ConnectWifi:output_type -> v1.Empty
+	21, // 47: v1.ControlService.Send:output_type -> v1.Empty
+	20, // 48: v1.ControlService.Subscribe:output_type -> v1.ControlEvent
+	30, // [30:49] is the sub-list for method output_type
+	11, // [11:30] is the sub-list for method input_type
+	11, // [11:11] is the sub-list for extension type_name
+	11, // [11:11] is the sub-list for extension extendee
+	0,  // [0:11] is the sub-list for field type_name
 }
 
 func init() { file_ui_proto_init() }
@@ -1404,90 +2076,6 @@ func file_ui_proto_init() {
 	}
 	if !protoimpl.UnsafeEnabled {
 		file_ui_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Metric); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_ui_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Metrics); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_ui_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Setting); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_ui_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Recipe); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_ui_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UUIDS); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_ui_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Credentials); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_ui_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*WifiCredentials); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_ui_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*MetricConfig); i {
 			case 0:
 				return &v.state
@@ -1499,8 +2087,92 @@ func file_ui_proto_init() {
 				return nil
 			}
 		}
+		file_ui_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*MetricConfigs); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_ui_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*MetricUpdate); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_ui_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*MetricUpdates); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_ui_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Setting); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_ui_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Target); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_ui_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*SettingUpdate); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_ui_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*TargetUpdate); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 		file_ui_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Configuration); i {
+			switch v := v.(*Choice); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1512,7 +2184,7 @@ func file_ui_proto_init() {
 			}
 		}
 		file_ui_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Action); i {
+			switch v := v.(*Selector); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1524,7 +2196,7 @@ func file_ui_proto_init() {
 			}
 		}
 		file_ui_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ControlEvent); i {
+			switch v := v.(*SelectorUpdate); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1536,7 +2208,7 @@ func file_ui_proto_init() {
 			}
 		}
 		file_ui_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Empty); i {
+			switch v := v.(*ChoiceUpdate); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1548,7 +2220,7 @@ func file_ui_proto_init() {
 			}
 		}
 		file_ui_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DoubleValue); i {
+			switch v := v.(*Recipe); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1560,7 +2232,7 @@ func file_ui_proto_init() {
 			}
 		}
 		file_ui_proto_msgTypes[13].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*FloatValue); i {
+			switch v := v.(*UUIDS); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1572,7 +2244,7 @@ func file_ui_proto_init() {
 			}
 		}
 		file_ui_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Int64Value); i {
+			switch v := v.(*User); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1584,7 +2256,7 @@ func file_ui_proto_init() {
 			}
 		}
 		file_ui_proto_msgTypes[15].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UInt64Value); i {
+			switch v := v.(*Users); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1596,7 +2268,7 @@ func file_ui_proto_init() {
 			}
 		}
 		file_ui_proto_msgTypes[16].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Int32Value); i {
+			switch v := v.(*WifiCredentials); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1608,7 +2280,7 @@ func file_ui_proto_init() {
 			}
 		}
 		file_ui_proto_msgTypes[17].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UInt32Value); i {
+			switch v := v.(*WifiNames); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1620,7 +2292,7 @@ func file_ui_proto_init() {
 			}
 		}
 		file_ui_proto_msgTypes[18].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*BoolValue); i {
+			switch v := v.(*Action); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1632,7 +2304,7 @@ func file_ui_proto_init() {
 			}
 		}
 		file_ui_proto_msgTypes[19].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*StringValue); i {
+			switch v := v.(*ControlEvent); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1644,6 +2316,114 @@ func file_ui_proto_init() {
 			}
 		}
 		file_ui_proto_msgTypes[20].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Empty); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_ui_proto_msgTypes[21].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*DoubleValue); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_ui_proto_msgTypes[22].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*FloatValue); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_ui_proto_msgTypes[23].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Int64Value); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_ui_proto_msgTypes[24].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*UInt64Value); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_ui_proto_msgTypes[25].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Int32Value); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_ui_proto_msgTypes[26].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*UInt32Value); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_ui_proto_msgTypes[27].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*BoolValue); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_ui_proto_msgTypes[28].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*StringValue); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_ui_proto_msgTypes[29].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*BytesValue); i {
 			case 0:
 				return &v.state
@@ -1661,13 +2441,14 @@ func file_ui_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_ui_proto_rawDesc,
-			NumEnums:      0,
-			NumMessages:   21,
+			NumEnums:      1,
+			NumMessages:   30,
 			NumExtensions: 0,
 			NumServices:   6,
 		},
 		GoTypes:           file_ui_proto_goTypes,
 		DependencyIndexes: file_ui_proto_depIdxs,
+		EnumInfos:         file_ui_proto_enumTypes,
 		MessageInfos:      file_ui_proto_msgTypes,
 	}.Build()
 	File_ui_proto = out.File
@@ -1689,9 +2470,13 @@ const _ = grpc.SupportPackageIsVersion6
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type MetricServiceClient interface {
 	// Get the list of all the metrics
-	Get(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Metrics, error)
+	GetAll(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*MetricUpdates, error)
 	// Subscribe is streaming the updated metrics as time goes
 	Subscribe(ctx context.Context, in *Empty, opts ...grpc.CallOption) (MetricService_SubscribeClient, error)
+	// GetConfig gives the config of the metrics
+	ReadConfig(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*MetricConfigs, error)
+	// UpdateConfig allows to update the config
+	UpdateConfig(ctx context.Context, in *MetricConfigs, opts ...grpc.CallOption) (*Empty, error)
 }
 
 type metricServiceClient struct {
@@ -1702,9 +2487,9 @@ func NewMetricServiceClient(cc grpc.ClientConnInterface) MetricServiceClient {
 	return &metricServiceClient{cc}
 }
 
-func (c *metricServiceClient) Get(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Metrics, error) {
-	out := new(Metrics)
-	err := c.cc.Invoke(ctx, "/v1.MetricService/Get", in, out, opts...)
+func (c *metricServiceClient) GetAll(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*MetricUpdates, error) {
+	out := new(MetricUpdates)
+	err := c.cc.Invoke(ctx, "/v1.MetricService/GetAll", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1727,7 +2512,7 @@ func (c *metricServiceClient) Subscribe(ctx context.Context, in *Empty, opts ...
 }
 
 type MetricService_SubscribeClient interface {
-	Recv() (*Metrics, error)
+	Recv() (*MetricUpdates, error)
 	grpc.ClientStream
 }
 
@@ -1735,51 +2520,79 @@ type metricServiceSubscribeClient struct {
 	grpc.ClientStream
 }
 
-func (x *metricServiceSubscribeClient) Recv() (*Metrics, error) {
-	m := new(Metrics)
+func (x *metricServiceSubscribeClient) Recv() (*MetricUpdates, error) {
+	m := new(MetricUpdates)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
 	return m, nil
 }
 
+func (c *metricServiceClient) ReadConfig(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*MetricConfigs, error) {
+	out := new(MetricConfigs)
+	err := c.cc.Invoke(ctx, "/v1.MetricService/ReadConfig", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *metricServiceClient) UpdateConfig(ctx context.Context, in *MetricConfigs, opts ...grpc.CallOption) (*Empty, error) {
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, "/v1.MetricService/UpdateConfig", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MetricServiceServer is the server API for MetricService service.
 type MetricServiceServer interface {
 	// Get the list of all the metrics
-	Get(context.Context, *Empty) (*Metrics, error)
+	GetAll(context.Context, *Empty) (*MetricUpdates, error)
 	// Subscribe is streaming the updated metrics as time goes
 	Subscribe(*Empty, MetricService_SubscribeServer) error
+	// GetConfig gives the config of the metrics
+	ReadConfig(context.Context, *Empty) (*MetricConfigs, error)
+	// UpdateConfig allows to update the config
+	UpdateConfig(context.Context, *MetricConfigs) (*Empty, error)
 }
 
 // UnimplementedMetricServiceServer can be embedded to have forward compatible implementations.
 type UnimplementedMetricServiceServer struct {
 }
 
-func (*UnimplementedMetricServiceServer) Get(context.Context, *Empty) (*Metrics, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Get not implemented")
+func (*UnimplementedMetricServiceServer) GetAll(context.Context, *Empty) (*MetricUpdates, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAll not implemented")
 }
 func (*UnimplementedMetricServiceServer) Subscribe(*Empty, MetricService_SubscribeServer) error {
 	return status.Errorf(codes.Unimplemented, "method Subscribe not implemented")
+}
+func (*UnimplementedMetricServiceServer) ReadConfig(context.Context, *Empty) (*MetricConfigs, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ReadConfig not implemented")
+}
+func (*UnimplementedMetricServiceServer) UpdateConfig(context.Context, *MetricConfigs) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateConfig not implemented")
 }
 
 func RegisterMetricServiceServer(s *grpc.Server, srv MetricServiceServer) {
 	s.RegisterService(&_MetricService_serviceDesc, srv)
 }
 
-func _MetricService_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _MetricService_GetAll_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MetricServiceServer).Get(ctx, in)
+		return srv.(MetricServiceServer).GetAll(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/v1.MetricService/Get",
+		FullMethod: "/v1.MetricService/GetAll",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MetricServiceServer).Get(ctx, req.(*Empty))
+		return srv.(MetricServiceServer).GetAll(ctx, req.(*Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1793,7 +2606,7 @@ func _MetricService_Subscribe_Handler(srv interface{}, stream grpc.ServerStream)
 }
 
 type MetricService_SubscribeServer interface {
-	Send(*Metrics) error
+	Send(*MetricUpdates) error
 	grpc.ServerStream
 }
 
@@ -1801,8 +2614,44 @@ type metricServiceSubscribeServer struct {
 	grpc.ServerStream
 }
 
-func (x *metricServiceSubscribeServer) Send(m *Metrics) error {
+func (x *metricServiceSubscribeServer) Send(m *MetricUpdates) error {
 	return x.ServerStream.SendMsg(m)
+}
+
+func _MetricService_ReadConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MetricServiceServer).ReadConfig(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/v1.MetricService/ReadConfig",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MetricServiceServer).ReadConfig(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MetricService_UpdateConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MetricConfigs)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MetricServiceServer).UpdateConfig(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/v1.MetricService/UpdateConfig",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MetricServiceServer).UpdateConfig(ctx, req.(*MetricConfigs))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 var _MetricService_serviceDesc = grpc.ServiceDesc{
@@ -1810,8 +2659,16 @@ var _MetricService_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*MetricServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Get",
-			Handler:    _MetricService_Get_Handler,
+			MethodName: "GetAll",
+			Handler:    _MetricService_GetAll_Handler,
+		},
+		{
+			MethodName: "ReadConfig",
+			Handler:    _MetricService_ReadConfig_Handler,
+		},
+		{
+			MethodName: "UpdateConfig",
+			Handler:    _MetricService_UpdateConfig_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{
@@ -1828,16 +2685,24 @@ var _MetricService_serviceDesc = grpc.ServiceDesc{
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type SettingServiceClient interface {
-	// SetSetting send a single setting to backend
-	SetSetting(ctx context.Context, in *Setting, opts ...grpc.CallOption) (*Empty, error)
-	// GetRecipsUUID get a list of the recipes UUID
-	GetRecipesUUID(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*UUIDS, error)
-	// GetRecipe gets a single recipe from the backend
-	GetRecipe(ctx context.Context, in *StringValue, opts ...grpc.CallOption) (*Recipe, error)
+	// UpdateSetting updates the value of a setting according to its name
+	UpdateSetting(ctx context.Context, in *SettingUpdate, opts ...grpc.CallOption) (*Empty, error)
+	// UpdateUncertainty updates a single setting to backend
+	UpdateUncertainty(ctx context.Context, in *TargetUpdate, opts ...grpc.CallOption) (*Empty, error)
+	// UpdateSelectedChoice updates the selected choice of a selector
+	UpdateSelectedChoice(ctx context.Context, in *SelectorUpdate, opts ...grpc.CallOption) (*Empty, error)
+	// UpdateChoice updates the settings of a choice
+	UpdateChoice(ctx context.Context, in *ChoiceUpdate, opts ...grpc.CallOption) (*Empty, error)
+	// ReadRecipsUUID returns a list of the recipes UUID
+	ReadRecipesUUID(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*UUIDS, error)
+	// ReadRecipe returns a single recipe specified by the string argument
+	ReadRecipe(ctx context.Context, in *StringValue, opts ...grpc.CallOption) (*Recipe, error)
 	// CreateRecipe asks the server to create a new recipe in the backend
 	CreateRecipe(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Recipe, error)
-	// SelectRecipe tells the backend what is the active recipe
-	SelectRecipe(ctx context.Context, in *StringValue, opts ...grpc.CallOption) (*Empty, error)
+	// UpdateCurrentRecipe tells the backend what is the active recipe
+	UpdateCurrentRecipe(ctx context.Context, in *StringValue, opts ...grpc.CallOption) (*Empty, error)
+	// UpdateRecipe update a recipe
+	UpdateRecipe(ctx context.Context, in *Recipe, opts ...grpc.CallOption) (*Empty, error)
 }
 
 type settingServiceClient struct {
@@ -1848,27 +2713,54 @@ func NewSettingServiceClient(cc grpc.ClientConnInterface) SettingServiceClient {
 	return &settingServiceClient{cc}
 }
 
-func (c *settingServiceClient) SetSetting(ctx context.Context, in *Setting, opts ...grpc.CallOption) (*Empty, error) {
+func (c *settingServiceClient) UpdateSetting(ctx context.Context, in *SettingUpdate, opts ...grpc.CallOption) (*Empty, error) {
 	out := new(Empty)
-	err := c.cc.Invoke(ctx, "/v1.SettingService/SetSetting", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/v1.SettingService/UpdateSetting", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *settingServiceClient) GetRecipesUUID(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*UUIDS, error) {
+func (c *settingServiceClient) UpdateUncertainty(ctx context.Context, in *TargetUpdate, opts ...grpc.CallOption) (*Empty, error) {
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, "/v1.SettingService/UpdateUncertainty", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *settingServiceClient) UpdateSelectedChoice(ctx context.Context, in *SelectorUpdate, opts ...grpc.CallOption) (*Empty, error) {
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, "/v1.SettingService/UpdateSelectedChoice", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *settingServiceClient) UpdateChoice(ctx context.Context, in *ChoiceUpdate, opts ...grpc.CallOption) (*Empty, error) {
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, "/v1.SettingService/UpdateChoice", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *settingServiceClient) ReadRecipesUUID(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*UUIDS, error) {
 	out := new(UUIDS)
-	err := c.cc.Invoke(ctx, "/v1.SettingService/GetRecipesUUID", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/v1.SettingService/ReadRecipesUUID", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *settingServiceClient) GetRecipe(ctx context.Context, in *StringValue, opts ...grpc.CallOption) (*Recipe, error) {
+func (c *settingServiceClient) ReadRecipe(ctx context.Context, in *StringValue, opts ...grpc.CallOption) (*Recipe, error) {
 	out := new(Recipe)
-	err := c.cc.Invoke(ctx, "/v1.SettingService/GetRecipe", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/v1.SettingService/ReadRecipe", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1884,9 +2776,18 @@ func (c *settingServiceClient) CreateRecipe(ctx context.Context, in *Empty, opts
 	return out, nil
 }
 
-func (c *settingServiceClient) SelectRecipe(ctx context.Context, in *StringValue, opts ...grpc.CallOption) (*Empty, error) {
+func (c *settingServiceClient) UpdateCurrentRecipe(ctx context.Context, in *StringValue, opts ...grpc.CallOption) (*Empty, error) {
 	out := new(Empty)
-	err := c.cc.Invoke(ctx, "/v1.SettingService/SelectRecipe", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/v1.SettingService/UpdateCurrentRecipe", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *settingServiceClient) UpdateRecipe(ctx context.Context, in *Recipe, opts ...grpc.CallOption) (*Empty, error) {
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, "/v1.SettingService/UpdateRecipe", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1895,92 +2796,166 @@ func (c *settingServiceClient) SelectRecipe(ctx context.Context, in *StringValue
 
 // SettingServiceServer is the server API for SettingService service.
 type SettingServiceServer interface {
-	// SetSetting send a single setting to backend
-	SetSetting(context.Context, *Setting) (*Empty, error)
-	// GetRecipsUUID get a list of the recipes UUID
-	GetRecipesUUID(context.Context, *Empty) (*UUIDS, error)
-	// GetRecipe gets a single recipe from the backend
-	GetRecipe(context.Context, *StringValue) (*Recipe, error)
+	// UpdateSetting updates the value of a setting according to its name
+	UpdateSetting(context.Context, *SettingUpdate) (*Empty, error)
+	// UpdateUncertainty updates a single setting to backend
+	UpdateUncertainty(context.Context, *TargetUpdate) (*Empty, error)
+	// UpdateSelectedChoice updates the selected choice of a selector
+	UpdateSelectedChoice(context.Context, *SelectorUpdate) (*Empty, error)
+	// UpdateChoice updates the settings of a choice
+	UpdateChoice(context.Context, *ChoiceUpdate) (*Empty, error)
+	// ReadRecipsUUID returns a list of the recipes UUID
+	ReadRecipesUUID(context.Context, *Empty) (*UUIDS, error)
+	// ReadRecipe returns a single recipe specified by the string argument
+	ReadRecipe(context.Context, *StringValue) (*Recipe, error)
 	// CreateRecipe asks the server to create a new recipe in the backend
 	CreateRecipe(context.Context, *Empty) (*Recipe, error)
-	// SelectRecipe tells the backend what is the active recipe
-	SelectRecipe(context.Context, *StringValue) (*Empty, error)
+	// UpdateCurrentRecipe tells the backend what is the active recipe
+	UpdateCurrentRecipe(context.Context, *StringValue) (*Empty, error)
+	// UpdateRecipe update a recipe
+	UpdateRecipe(context.Context, *Recipe) (*Empty, error)
 }
 
 // UnimplementedSettingServiceServer can be embedded to have forward compatible implementations.
 type UnimplementedSettingServiceServer struct {
 }
 
-func (*UnimplementedSettingServiceServer) SetSetting(context.Context, *Setting) (*Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SetSetting not implemented")
+func (*UnimplementedSettingServiceServer) UpdateSetting(context.Context, *SettingUpdate) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateSetting not implemented")
 }
-func (*UnimplementedSettingServiceServer) GetRecipesUUID(context.Context, *Empty) (*UUIDS, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetRecipesUUID not implemented")
+func (*UnimplementedSettingServiceServer) UpdateUncertainty(context.Context, *TargetUpdate) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateUncertainty not implemented")
 }
-func (*UnimplementedSettingServiceServer) GetRecipe(context.Context, *StringValue) (*Recipe, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetRecipe not implemented")
+func (*UnimplementedSettingServiceServer) UpdateSelectedChoice(context.Context, *SelectorUpdate) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateSelectedChoice not implemented")
+}
+func (*UnimplementedSettingServiceServer) UpdateChoice(context.Context, *ChoiceUpdate) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateChoice not implemented")
+}
+func (*UnimplementedSettingServiceServer) ReadRecipesUUID(context.Context, *Empty) (*UUIDS, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ReadRecipesUUID not implemented")
+}
+func (*UnimplementedSettingServiceServer) ReadRecipe(context.Context, *StringValue) (*Recipe, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ReadRecipe not implemented")
 }
 func (*UnimplementedSettingServiceServer) CreateRecipe(context.Context, *Empty) (*Recipe, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateRecipe not implemented")
 }
-func (*UnimplementedSettingServiceServer) SelectRecipe(context.Context, *StringValue) (*Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SelectRecipe not implemented")
+func (*UnimplementedSettingServiceServer) UpdateCurrentRecipe(context.Context, *StringValue) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateCurrentRecipe not implemented")
+}
+func (*UnimplementedSettingServiceServer) UpdateRecipe(context.Context, *Recipe) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateRecipe not implemented")
 }
 
 func RegisterSettingServiceServer(s *grpc.Server, srv SettingServiceServer) {
 	s.RegisterService(&_SettingService_serviceDesc, srv)
 }
 
-func _SettingService_SetSetting_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Setting)
+func _SettingService_UpdateSetting_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SettingUpdate)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(SettingServiceServer).SetSetting(ctx, in)
+		return srv.(SettingServiceServer).UpdateSetting(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/v1.SettingService/SetSetting",
+		FullMethod: "/v1.SettingService/UpdateSetting",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(SettingServiceServer).SetSetting(ctx, req.(*Setting))
+		return srv.(SettingServiceServer).UpdateSetting(ctx, req.(*SettingUpdate))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _SettingService_GetRecipesUUID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _SettingService_UpdateUncertainty_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TargetUpdate)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SettingServiceServer).UpdateUncertainty(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/v1.SettingService/UpdateUncertainty",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SettingServiceServer).UpdateUncertainty(ctx, req.(*TargetUpdate))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SettingService_UpdateSelectedChoice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SelectorUpdate)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SettingServiceServer).UpdateSelectedChoice(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/v1.SettingService/UpdateSelectedChoice",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SettingServiceServer).UpdateSelectedChoice(ctx, req.(*SelectorUpdate))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SettingService_UpdateChoice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ChoiceUpdate)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SettingServiceServer).UpdateChoice(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/v1.SettingService/UpdateChoice",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SettingServiceServer).UpdateChoice(ctx, req.(*ChoiceUpdate))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SettingService_ReadRecipesUUID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(SettingServiceServer).GetRecipesUUID(ctx, in)
+		return srv.(SettingServiceServer).ReadRecipesUUID(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/v1.SettingService/GetRecipesUUID",
+		FullMethod: "/v1.SettingService/ReadRecipesUUID",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(SettingServiceServer).GetRecipesUUID(ctx, req.(*Empty))
+		return srv.(SettingServiceServer).ReadRecipesUUID(ctx, req.(*Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _SettingService_GetRecipe_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _SettingService_ReadRecipe_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(StringValue)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(SettingServiceServer).GetRecipe(ctx, in)
+		return srv.(SettingServiceServer).ReadRecipe(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/v1.SettingService/GetRecipe",
+		FullMethod: "/v1.SettingService/ReadRecipe",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(SettingServiceServer).GetRecipe(ctx, req.(*StringValue))
+		return srv.(SettingServiceServer).ReadRecipe(ctx, req.(*StringValue))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -2003,20 +2978,38 @@ func _SettingService_CreateRecipe_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
-func _SettingService_SelectRecipe_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _SettingService_UpdateCurrentRecipe_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(StringValue)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(SettingServiceServer).SelectRecipe(ctx, in)
+		return srv.(SettingServiceServer).UpdateCurrentRecipe(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/v1.SettingService/SelectRecipe",
+		FullMethod: "/v1.SettingService/UpdateCurrentRecipe",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(SettingServiceServer).SelectRecipe(ctx, req.(*StringValue))
+		return srv.(SettingServiceServer).UpdateCurrentRecipe(ctx, req.(*StringValue))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SettingService_UpdateRecipe_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Recipe)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SettingServiceServer).UpdateRecipe(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/v1.SettingService/UpdateRecipe",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SettingServiceServer).UpdateRecipe(ctx, req.(*Recipe))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -2026,24 +3019,40 @@ var _SettingService_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*SettingServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "SetSetting",
-			Handler:    _SettingService_SetSetting_Handler,
+			MethodName: "UpdateSetting",
+			Handler:    _SettingService_UpdateSetting_Handler,
 		},
 		{
-			MethodName: "GetRecipesUUID",
-			Handler:    _SettingService_GetRecipesUUID_Handler,
+			MethodName: "UpdateUncertainty",
+			Handler:    _SettingService_UpdateUncertainty_Handler,
 		},
 		{
-			MethodName: "GetRecipe",
-			Handler:    _SettingService_GetRecipe_Handler,
+			MethodName: "UpdateSelectedChoice",
+			Handler:    _SettingService_UpdateSelectedChoice_Handler,
+		},
+		{
+			MethodName: "UpdateChoice",
+			Handler:    _SettingService_UpdateChoice_Handler,
+		},
+		{
+			MethodName: "ReadRecipesUUID",
+			Handler:    _SettingService_ReadRecipesUUID_Handler,
+		},
+		{
+			MethodName: "ReadRecipe",
+			Handler:    _SettingService_ReadRecipe_Handler,
 		},
 		{
 			MethodName: "CreateRecipe",
 			Handler:    _SettingService_CreateRecipe_Handler,
 		},
 		{
-			MethodName: "SelectRecipe",
-			Handler:    _SettingService_SelectRecipe_Handler,
+			MethodName: "UpdateCurrentRecipe",
+			Handler:    _SettingService_UpdateCurrentRecipe_Handler,
+		},
+		{
+			MethodName: "UpdateRecipe",
+			Handler:    _SettingService_UpdateRecipe_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -2054,8 +3063,10 @@ var _SettingService_serviceDesc = grpc.ServiceDesc{
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type AuthentificationServiceClient interface {
-	// authentificate verify with the server that password is valid
-	Authentificate(ctx context.Context, in *Credentials, opts ...grpc.CallOption) (*Empty, error)
+	// ReadUserList returns the list of all possible user
+	ReadUserList(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Users, error)
+	// UpdateCurrentUser update the current active user
+	UpdateCurrentUser(ctx context.Context, in *User, opts ...grpc.CallOption) (*Empty, error)
 }
 
 type authentificationServiceClient struct {
@@ -2066,9 +3077,18 @@ func NewAuthentificationServiceClient(cc grpc.ClientConnInterface) Authentificat
 	return &authentificationServiceClient{cc}
 }
 
-func (c *authentificationServiceClient) Authentificate(ctx context.Context, in *Credentials, opts ...grpc.CallOption) (*Empty, error) {
+func (c *authentificationServiceClient) ReadUserList(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Users, error) {
+	out := new(Users)
+	err := c.cc.Invoke(ctx, "/v1.AuthentificationService/ReadUserList", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authentificationServiceClient) UpdateCurrentUser(ctx context.Context, in *User, opts ...grpc.CallOption) (*Empty, error) {
 	out := new(Empty)
-	err := c.cc.Invoke(ctx, "/v1.AuthentificationService/Authentificate", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/v1.AuthentificationService/UpdateCurrentUser", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2077,36 +3097,59 @@ func (c *authentificationServiceClient) Authentificate(ctx context.Context, in *
 
 // AuthentificationServiceServer is the server API for AuthentificationService service.
 type AuthentificationServiceServer interface {
-	// authentificate verify with the server that password is valid
-	Authentificate(context.Context, *Credentials) (*Empty, error)
+	// ReadUserList returns the list of all possible user
+	ReadUserList(context.Context, *Empty) (*Users, error)
+	// UpdateCurrentUser update the current active user
+	UpdateCurrentUser(context.Context, *User) (*Empty, error)
 }
 
 // UnimplementedAuthentificationServiceServer can be embedded to have forward compatible implementations.
 type UnimplementedAuthentificationServiceServer struct {
 }
 
-func (*UnimplementedAuthentificationServiceServer) Authentificate(context.Context, *Credentials) (*Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Authentificate not implemented")
+func (*UnimplementedAuthentificationServiceServer) ReadUserList(context.Context, *Empty) (*Users, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ReadUserList not implemented")
+}
+func (*UnimplementedAuthentificationServiceServer) UpdateCurrentUser(context.Context, *User) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateCurrentUser not implemented")
 }
 
 func RegisterAuthentificationServiceServer(s *grpc.Server, srv AuthentificationServiceServer) {
 	s.RegisterService(&_AuthentificationService_serviceDesc, srv)
 }
 
-func _AuthentificationService_Authentificate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Credentials)
+func _AuthentificationService_ReadUserList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthentificationServiceServer).Authentificate(ctx, in)
+		return srv.(AuthentificationServiceServer).ReadUserList(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/v1.AuthentificationService/Authentificate",
+		FullMethod: "/v1.AuthentificationService/ReadUserList",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthentificationServiceServer).Authentificate(ctx, req.(*Credentials))
+		return srv.(AuthentificationServiceServer).ReadUserList(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthentificationService_UpdateCurrentUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(User)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthentificationServiceServer).UpdateCurrentUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/v1.AuthentificationService/UpdateCurrentUser",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthentificationServiceServer).UpdateCurrentUser(ctx, req.(*User))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -2116,8 +3159,12 @@ var _AuthentificationService_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*AuthentificationServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Authentificate",
-			Handler:    _AuthentificationService_Authentificate_Handler,
+			MethodName: "ReadUserList",
+			Handler:    _AuthentificationService_ReadUserList_Handler,
+		},
+		{
+			MethodName: "UpdateCurrentUser",
+			Handler:    _AuthentificationService_UpdateCurrentUser_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -2128,7 +3175,8 @@ var _AuthentificationService_serviceDesc = grpc.ServiceDesc{
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type NetworkServiceClient interface {
-	// connectWifi attempts to connect to a wifi
+	ReadWifiList(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*WifiNames, error)
+	// connectWifi is used to connect to a wifi
 	ConnectWifi(ctx context.Context, in *WifiCredentials, opts ...grpc.CallOption) (*Empty, error)
 }
 
@@ -2138,6 +3186,15 @@ type networkServiceClient struct {
 
 func NewNetworkServiceClient(cc grpc.ClientConnInterface) NetworkServiceClient {
 	return &networkServiceClient{cc}
+}
+
+func (c *networkServiceClient) ReadWifiList(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*WifiNames, error) {
+	out := new(WifiNames)
+	err := c.cc.Invoke(ctx, "/v1.NetworkService/ReadWifiList", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *networkServiceClient) ConnectWifi(ctx context.Context, in *WifiCredentials, opts ...grpc.CallOption) (*Empty, error) {
@@ -2151,7 +3208,8 @@ func (c *networkServiceClient) ConnectWifi(ctx context.Context, in *WifiCredenti
 
 // NetworkServiceServer is the server API for NetworkService service.
 type NetworkServiceServer interface {
-	// connectWifi attempts to connect to a wifi
+	ReadWifiList(context.Context, *Empty) (*WifiNames, error)
+	// connectWifi is used to connect to a wifi
 	ConnectWifi(context.Context, *WifiCredentials) (*Empty, error)
 }
 
@@ -2159,12 +3217,33 @@ type NetworkServiceServer interface {
 type UnimplementedNetworkServiceServer struct {
 }
 
+func (*UnimplementedNetworkServiceServer) ReadWifiList(context.Context, *Empty) (*WifiNames, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ReadWifiList not implemented")
+}
 func (*UnimplementedNetworkServiceServer) ConnectWifi(context.Context, *WifiCredentials) (*Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ConnectWifi not implemented")
 }
 
 func RegisterNetworkServiceServer(s *grpc.Server, srv NetworkServiceServer) {
 	s.RegisterService(&_NetworkService_serviceDesc, srv)
+}
+
+func _NetworkService_ReadWifiList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(NetworkServiceServer).ReadWifiList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/v1.NetworkService/ReadWifiList",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(NetworkServiceServer).ReadWifiList(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _NetworkService_ConnectWifi_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -2190,6 +3269,10 @@ var _NetworkService_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*NetworkServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
+			MethodName: "ReadWifiList",
+			Handler:    _NetworkService_ReadWifiList_Handler,
+		},
+		{
 			MethodName: "ConnectWifi",
 			Handler:    _NetworkService_ConnectWifi_Handler,
 		},
@@ -2202,9 +3285,6 @@ var _NetworkService_serviceDesc = grpc.ServiceDesc{
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type ConfigurationServiceClient interface {
-	//getConfig returns the configuration stored in the server
-	GetConfig(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Configuration, error)
-	SetConfig(ctx context.Context, in *Configuration, opts ...grpc.CallOption) (*Empty, error)
 }
 
 type configurationServiceClient struct {
@@ -2215,97 +3295,24 @@ func NewConfigurationServiceClient(cc grpc.ClientConnInterface) ConfigurationSer
 	return &configurationServiceClient{cc}
 }
 
-func (c *configurationServiceClient) GetConfig(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Configuration, error) {
-	out := new(Configuration)
-	err := c.cc.Invoke(ctx, "/v1.ConfigurationService/GetConfig", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *configurationServiceClient) SetConfig(ctx context.Context, in *Configuration, opts ...grpc.CallOption) (*Empty, error) {
-	out := new(Empty)
-	err := c.cc.Invoke(ctx, "/v1.ConfigurationService/SetConfig", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // ConfigurationServiceServer is the server API for ConfigurationService service.
 type ConfigurationServiceServer interface {
-	//getConfig returns the configuration stored in the server
-	GetConfig(context.Context, *Empty) (*Configuration, error)
-	SetConfig(context.Context, *Configuration) (*Empty, error)
 }
 
 // UnimplementedConfigurationServiceServer can be embedded to have forward compatible implementations.
 type UnimplementedConfigurationServiceServer struct {
 }
 
-func (*UnimplementedConfigurationServiceServer) GetConfig(context.Context, *Empty) (*Configuration, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetConfig not implemented")
-}
-func (*UnimplementedConfigurationServiceServer) SetConfig(context.Context, *Configuration) (*Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SetConfig not implemented")
-}
-
 func RegisterConfigurationServiceServer(s *grpc.Server, srv ConfigurationServiceServer) {
 	s.RegisterService(&_ConfigurationService_serviceDesc, srv)
-}
-
-func _ConfigurationService_GetConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ConfigurationServiceServer).GetConfig(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/v1.ConfigurationService/GetConfig",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ConfigurationServiceServer).GetConfig(ctx, req.(*Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ConfigurationService_SetConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Configuration)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ConfigurationServiceServer).SetConfig(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/v1.ConfigurationService/SetConfig",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ConfigurationServiceServer).SetConfig(ctx, req.(*Configuration))
-	}
-	return interceptor(ctx, in, info, handler)
 }
 
 var _ConfigurationService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "v1.ConfigurationService",
 	HandlerType: (*ConfigurationServiceServer)(nil),
-	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "GetConfig",
-			Handler:    _ConfigurationService_GetConfig_Handler,
-		},
-		{
-			MethodName: "SetConfig",
-			Handler:    _ConfigurationService_SetConfig_Handler,
-		},
-	},
-	Streams:  []grpc.StreamDesc{},
-	Metadata: "ui.proto",
+	Methods:     []grpc.MethodDesc{},
+	Streams:     []grpc.StreamDesc{},
+	Metadata:    "ui.proto",
 }
 
 // ControlServiceClient is the client API for ControlService service.

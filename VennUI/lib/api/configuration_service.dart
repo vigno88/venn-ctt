@@ -3,7 +3,7 @@ import 'package:VennUI/api/v1/ui.pbgrpc.dart' as grpc;
 import 'package:VennUI/api/v1/ui.pb.dart' as proto;
 import 'package:VennUI/utilies.dart';
 
-const serverPort = 3000;
+import 'utilities.dart';
 
 /// ConfigurationService client implementation
 class ConfigurationService {
@@ -40,70 +40,70 @@ class ConfigurationService {
     }
   }
 
-  // Asynchronous function to get configuration from the server
-  Future<proto.Configuration> getConfiguration() async {
-    if (_clientSend == null) {
-      // Create a new client
-      _clientSend = ClientChannel(
-        serverIP,
-        port: serverPort,
-        options: ChannelOptions(
-          credentials: ChannelCredentials.insecure(),
-          idleTimeout: Duration(hours: 24),
-        ),
-      );
-    }
+  // // Asynchronous function to get configuration from the server
+  // Future<proto.Configuration> getConfiguration() async {
+  //   if (_clientSend == null) {
+  //     // Create a new client
+  //     _clientSend = ClientChannel(
+  //       serverIP,
+  //       port: serverPort,
+  //       options: ChannelOptions(
+  //         credentials: ChannelCredentials.insecure(),
+  //         idleTimeout: Duration(hours: 24),
+  //       ),
+  //     );
+  //   }
 
-    var request = grpc.Empty().createEmptyInstance();
+  //   var request = grpc.Empty().createEmptyInstance();
 
-    try {
-      var config =
-          await grpc.ConfigurationServiceClient(_clientSend).getConfig(request);
-      return config;
-    } catch (e) {
-      if (!_isShutdown) {
-        // Invalidate current client
-        _shutdownSend();
+  //   try {
+  //     var config =
+  //         await grpc.ConfigurationServiceClient(_clientSend).getConfig(request);
+  //     return config;
+  //   } catch (e) {
+  //     if (!_isShutdown) {
+  //       // Invalidate current client
+  //       _shutdownSend();
 
-        // Print the error
-        print(e.toString());
+  //       // Print the error
+  //       print(e.toString());
 
-        // Try again
-        Future.delayed(Duration(milliseconds: 100), () {
-          return getConfiguration();
-        });
-      }
-    }
-  }
+  //       // Try again
+  //       Future.delayed(Duration(milliseconds: 100), () {
+  //         return getConfiguration();
+  //       });
+  //     }
+  //   }
+  // }
 
-  void setConfiguration(proto.Configuration config) {
-    if (_clientSend == null) {
-      // Create a new client
-      _clientSend = ClientChannel(
-        serverIP,
-        port: serverPort,
-        options: ChannelOptions(
-          credentials: ChannelCredentials.insecure(),
-          idleTimeout: Duration(hours: 24),
-        ),
-      );
-    }
+  // void setConfiguration(proto.Configuration config) {
+  //   if (_clientSend == null) {
+  //     // Create a new client
+  //     _clientSend = ClientChannel(
+  //       serverIP,
+  //       port: serverPort,
+  //       options: ChannelOptions(
+  //         credentials: ChannelCredentials.insecure(),
+  //         idleTimeout: Duration(hours: 24),
+  //       ),
+  //     );
+  //   }
 
-    try {
-      grpc.ConfigurationServiceClient(_clientSend).setConfig(config);
-    } catch (e) {
-      if (!_isShutdown) {
-        // Invalidate current client
-        _shutdownSend();
+  //   try {
+  //     grpc.ConfigurationServiceClient(_clientSend).setConfig(config);
+  //   } catch (e) {
+  //     if (!_isShutdown) {
+  //       // Invalidate current client
+  //       _shutdownSend();
 
-        // Print the error
-        print(e.toString());
+  //       // Print the error
+  //       print(e.toString());
 
-        // Try again
-        Future.delayed(Duration(milliseconds: 100), () {
-          return getConfiguration();
-        });
-      }
-    }
-  }
+  //       // Try again
+  //       Future.delayed(Duration(milliseconds: 100), () {
+  //         return getConfiguration();
+  //       });
+  //     }
+  //   }
+  // }
 }

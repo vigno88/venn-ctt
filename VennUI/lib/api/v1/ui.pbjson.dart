@@ -5,20 +5,38 @@
 // @dart = 2.7
 // ignore_for_file: annotate_overrides,camel_case_types,unnecessary_const,non_constant_identifier_names,library_prefixes,unused_import,unused_shown_name,return_of_invalid_type,unnecessary_this,prefer_final_fields
 
-const Metric$json = const {
-  '1': 'Metric',
+const MetricConfig$json = const {
+  '1': 'MetricConfig',
   '2': const [
-    const {'1': 'name', '3': 1, '4': 1, '5': 9, '10': 'name'},
-    const {'1': 'value', '3': 2, '4': 1, '5': 1, '10': 'value'},
-    const {'1': 'average', '3': 3, '4': 1, '5': 1, '10': 'average'},
-    const {'1': 'goal', '3': 4, '4': 1, '5': 1, '10': 'goal'},
+    const {'1': 'unit', '3': 1, '4': 1, '5': 9, '10': 'unit'},
+    const {'1': 'target', '3': 2, '4': 1, '5': 2, '10': 'target'},
+    const {'1': 'type', '3': 3, '4': 1, '5': 9, '10': 'type'},
+    const {'1': 'name', '3': 4, '4': 1, '5': 9, '10': 'name'},
+    const {'1': 'info', '3': 5, '4': 1, '5': 9, '10': 'info'},
+    const {'1': 'hasTarget', '3': 6, '4': 1, '5': 8, '10': 'hasTarget'},
   ],
 };
 
-const Metrics$json = const {
-  '1': 'Metrics',
+const MetricConfigs$json = const {
+  '1': 'MetricConfigs',
   '2': const [
-    const {'1': 'metrics', '3': 1, '4': 3, '5': 11, '6': '.v1.Metric', '10': 'metrics'},
+    const {'1': 'configs', '3': 1, '4': 3, '5': 11, '6': '.v1.MetricConfig', '10': 'configs'},
+  ],
+};
+
+const MetricUpdate$json = const {
+  '1': 'MetricUpdate',
+  '2': const [
+    const {'1': 'name', '3': 1, '4': 1, '5': 9, '10': 'name'},
+    const {'1': 'value', '3': 2, '4': 1, '5': 1, '10': 'value'},
+    const {'1': 'target', '3': 3, '4': 1, '5': 1, '10': 'target'},
+  ],
+};
+
+const MetricUpdates$json = const {
+  '1': 'MetricUpdates',
+  '2': const [
+    const {'1': 'updates', '3': 1, '4': 3, '5': 11, '6': '.v1.MetricUpdate', '10': 'updates'},
   ],
 };
 
@@ -31,7 +49,64 @@ const Setting$json = const {
     const {'1': 'min', '3': 4, '4': 1, '5': 1, '10': 'min'},
     const {'1': 'name', '3': 5, '4': 1, '5': 9, '10': 'name'},
     const {'1': 'info', '3': 6, '4': 1, '5': 9, '10': 'info'},
-    const {'1': 'goalName', '3': 7, '4': 1, '5': 9, '10': 'goalName'},
+    const {'1': 'target', '3': 7, '4': 1, '5': 11, '6': '.v1.Target', '10': 'target'},
+  ],
+};
+
+const Target$json = const {
+  '1': 'Target',
+  '2': const [
+    const {'1': 'name', '3': 1, '4': 1, '5': 9, '10': 'name'},
+    const {'1': 'uncertainty', '3': 2, '4': 1, '5': 1, '10': 'uncertainty'},
+  ],
+};
+
+const SettingUpdate$json = const {
+  '1': 'SettingUpdate',
+  '2': const [
+    const {'1': 'name', '3': 1, '4': 1, '5': 9, '10': 'name'},
+    const {'1': 'value', '3': 2, '4': 1, '5': 1, '10': 'value'},
+  ],
+};
+
+const TargetUpdate$json = const {
+  '1': 'TargetUpdate',
+  '2': const [
+    const {'1': 'name', '3': 1, '4': 1, '5': 9, '10': 'name'},
+    const {'1': 'value', '3': 2, '4': 1, '5': 1, '10': 'value'},
+  ],
+};
+
+const Choice$json = const {
+  '1': 'Choice',
+  '2': const [
+    const {'1': 'name', '3': 1, '4': 1, '5': 9, '10': 'name'},
+    const {'1': 'settings', '3': 2, '4': 3, '5': 11, '6': '.v1.Setting', '10': 'settings'},
+  ],
+};
+
+const Selector$json = const {
+  '1': 'Selector',
+  '2': const [
+    const {'1': 'name', '3': 1, '4': 1, '5': 9, '10': 'name'},
+    const {'1': 'selectedChoice', '3': 2, '4': 1, '5': 11, '6': '.v1.Choice', '10': 'selectedChoice'},
+    const {'1': 'possibleChoices', '3': 3, '4': 3, '5': 11, '6': '.v1.Choice', '10': 'possibleChoices'},
+  ],
+};
+
+const SelectorUpdate$json = const {
+  '1': 'SelectorUpdate',
+  '2': const [
+    const {'1': 'name', '3': 1, '4': 1, '5': 9, '10': 'name'},
+    const {'1': 'choiceName', '3': 2, '4': 1, '5': 9, '10': 'choiceName'},
+  ],
+};
+
+const ChoiceUpdate$json = const {
+  '1': 'ChoiceUpdate',
+  '2': const [
+    const {'1': 'nameSelector', '3': 1, '4': 1, '5': 9, '10': 'nameSelector'},
+    const {'1': 'newChoice', '3': 2, '4': 1, '5': 11, '6': '.v1.Choice', '10': 'newChoice'},
   ],
 };
 
@@ -39,7 +114,10 @@ const Recipe$json = const {
   '1': 'Recipe',
   '2': const [
     const {'1': 'uuid', '3': 1, '4': 1, '5': 9, '10': 'uuid'},
-    const {'1': 'settings', '3': 2, '4': 3, '5': 11, '6': '.v1.Setting', '10': 'settings'},
+    const {'1': 'title', '3': 2, '4': 1, '5': 9, '10': 'title'},
+    const {'1': 'info', '3': 3, '4': 1, '5': 9, '10': 'info'},
+    const {'1': 'settings', '3': 4, '4': 3, '5': 11, '6': '.v1.Setting', '10': 'settings'},
+    const {'1': 'selectors', '3': 5, '4': 3, '5': 11, '6': '.v1.Selector', '10': 'selectors'},
   ],
 };
 
@@ -50,38 +128,43 @@ const UUIDS$json = const {
   ],
 };
 
-const Credentials$json = const {
-  '1': 'Credentials',
+const User$json = const {
+  '1': 'User',
   '2': const [
-    const {'1': 'user', '3': 1, '4': 1, '5': 9, '10': 'user'},
-    const {'1': 'password', '3': 2, '4': 1, '5': 9, '10': 'password'},
+    const {'1': 'title', '3': 1, '4': 1, '5': 9, '10': 'title'},
+    const {'1': 'role', '3': 2, '4': 1, '5': 14, '6': '.v1.User.Roles', '10': 'role'},
+  ],
+  '4': const [User_Roles$json],
+};
+
+const User_Roles$json = const {
+  '1': 'Roles',
+  '2': const [
+    const {'1': 'USER', '2': 0},
+    const {'1': 'ADMIN', '2': 1},
+    const {'1': 'CREATOR', '2': 2},
+  ],
+};
+
+const Users$json = const {
+  '1': 'Users',
+  '2': const [
+    const {'1': 'users', '3': 1, '4': 3, '5': 11, '6': '.v1.User', '10': 'users'},
   ],
 };
 
 const WifiCredentials$json = const {
   '1': 'WifiCredentials',
   '2': const [
-    const {'1': 'name', '3': 1, '4': 1, '5': 9, '10': 'name'},
+    const {'1': 'SSID', '3': 1, '4': 1, '5': 9, '10': 'SSID'},
     const {'1': 'password', '3': 2, '4': 1, '5': 9, '10': 'password'},
   ],
 };
 
-const MetricConfig$json = const {
-  '1': 'MetricConfig',
+const WifiNames$json = const {
+  '1': 'WifiNames',
   '2': const [
-    const {'1': 'unit', '3': 1, '4': 1, '5': 9, '10': 'unit'},
-    const {'1': 'goal', '3': 2, '4': 1, '5': 2, '10': 'goal'},
-    const {'1': 'type', '3': 3, '4': 1, '5': 9, '10': 'type'},
-    const {'1': 'name', '3': 4, '4': 1, '5': 9, '10': 'name'},
-    const {'1': 'info', '3': 5, '4': 1, '5': 9, '10': 'info'},
-    const {'1': 'hasGoal', '3': 6, '4': 1, '5': 8, '10': 'hasGoal'},
-  ],
-};
-
-const Configuration$json = const {
-  '1': 'Configuration',
-  '2': const [
-    const {'1': 'metricsConfig', '3': 1, '4': 3, '5': 11, '6': '.v1.MetricConfig', '10': 'metricsConfig'},
+    const {'1': 'SSIDs', '3': 1, '4': 3, '5': 9, '10': 'SSIDs'},
   ],
 };
 

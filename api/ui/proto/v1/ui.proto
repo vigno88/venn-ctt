@@ -8,30 +8,57 @@ option go_package = ".;proto";
 // Metric Service 
 //=============================================================================
 
+// MetricConfig is all the information required to display the metrics on the
+// dashboard
+message MetricConfig {
+  string unit = 1;
+  float target = 2;
+  string type = 3;
+  string name = 4;
+  string info = 5;
+  bool hasTarget = 6;
+}
 
-message Metric {
+// MetricConfigs is one or many MetricConfig
+message MetricConfigs {
+  repeated MetricConfig configs = 1;
+}
+
+// MetricUpdate is used to update a new metric that is received from the sensors
+message MetricUpdate {
   string name = 1;
   double value = 2;
-  double average = 3;
-  double goal = 4;
+  double target = 3;
 }
 
-message Metrics {
-  repeated Metric metrics = 1;
+
+// MetricUpdates is one or many MetricUpdate
+message MetricUpdates {
+  repeated MetricUpdate updates = 1;
 }
 
+// MetricService is used to transfer information concerning metrics between the
+// UI and the server.
 service MetricService {
   // Get the list of all the metrics
-  rpc Get(Empty) returns (Metrics) {}
+  rpc GetAll(Empty) returns (MetricUpdates) {}
 
   // Subscribe is streaming the updated metrics as time goes
-  rpc Subscribe(Empty) returns (stream Metrics) {}
+  rpc Subscribe(Empty) returns (stream MetricUpdates) {}
+
+  // GetConfig gives the config of the metrics
+  rpc ReadConfig(Empty) returns (MetricConfigs) {}
+
+  // UpdateConfig allows to update the config
+  rpc UpdateConfig(MetricConfigs) returns (Empty) {}
 }
 
 //=============================================================================
 // Setting Service 
 //=============================================================================
 
+// Setting represents everything required to display a setting as a slider in
+// the UI 
 message Setting {
   string type = 1;
   double value = 2;
@@ -39,47 +66,126 @@ message Setting {
   double min = 4;
   string name = 5;
   string info = 6;
-  string goalName = 7;
+  Target target = 7;
 }
 
-message Recipe {
-  string uuid = 1;
+// Target is an optional field that is used when the setting is used as a target
+// for control
+message Target {
+  string name = 1;
+  double uncertainty = 2;
+}
+
+// SettingUpdate is used to update the value of a setting by its name 
+message SettingUpdate {
+  string name = 1;
+  double value = 2;
+}
+
+// TargetUpdate is used to update the value of the uncertainty of a target by
+// its name
+message TargetUpdate {
+  string name = 1;
+  double value = 2;
+}
+
+// Choice is used to represent a possible choice in a selector, by default
+// all choices have an associated list of settings. 
+message Choice {
+  string name = 1;
   repeated Setting settings = 2;
 }
 
+// Selector represents all the information required to display a selector on
+// the settings page
+message Selector {
+  string name = 1;
+  Choice selectedChoice = 2;
+  repeated Choice possibleChoices = 3;
+}
+
+// SelectorUpdate is used to update the choice of a selector in the backend
+message SelectorUpdate {
+  string name = 1;
+  string choiceName = 2;
+}
+
+// ChoiceUpdate is used to update a choice and all its associated settings
+message ChoiceUpdate {
+  string nameSelector = 1;
+  Choice newChoice = 2;
+}
+
+// Recipe represents a collection of settings and selector choices that
+// dictates the behavior of the machine
+message Recipe {
+  string uuid = 1;
+  string title = 2;
+  string info = 3;
+  repeated Setting settings = 4;
+  repeated Selector selectors = 5; 
+}
+
+// UUIDS is a collection of UUID string 
 message UUIDS {
   repeated string uuids = 1;
 }
 
+// SettingService is used to transfer information concerning settings between
+// the UI and the server.
 service SettingService {
-  // SetSetting send a single setting to backend
-  rpc SetSetting(Setting) returns (Empty) {}
+  // UpdateSetting updates the value of a setting according to its name
+  rpc UpdateSetting(SettingUpdate) returns (Empty) {}
   
-  // GetRecipsUUID get a list of the recipes UUID
-  rpc GetRecipesUUID(Empty) returns (UUIDS) {}
+  // UpdateUncertainty updates a single setting to backend
+  rpc UpdateUncertainty(TargetUpdate) returns (Empty) {}
+  
+  // UpdateSelectedChoice updates the selected choice of a selector 
+  rpc UpdateSelectedChoice(SelectorUpdate) returns (Empty) {}
 
-  // GetRecipe gets a single recipe from the backend 
-  rpc GetRecipe(StringValue) returns (Recipe) {}
+  // UpdateChoice updates the settings of a choice 
+  rpc UpdateChoice(ChoiceUpdate) returns (Empty) {}
+
+  // ReadRecipsUUID returns a list of the recipes UUID
+  rpc ReadRecipesUUID(Empty) returns (UUIDS) {}
+
+  // ReadRecipe returns a single recipe specified by the string argument 
+  rpc ReadRecipe(StringValue) returns (Recipe) {}
 
   // CreateRecipe asks the server to create a new recipe in the backend 
   rpc CreateRecipe(Empty) returns (Recipe) {}
   
-  // SelectRecipe tells the backend what is the active recipe
-  rpc SelectRecipe(StringValue) returns (Empty) {}
+  // UpdateCurrentRecipe tells the backend what is the active recipe
+  rpc UpdateCurrentRecipe(StringValue) returns (Empty) {}
+
+  // UpdateRecipe update a recipe
+  rpc UpdateRecipe(Recipe) returns (Empty) {}
 }
 
 //=============================================================================
 // Authentification Service 
 //=============================================================================
 
-message Credentials {
-  string user = 1;
-  string password = 2;
+message User {
+  string title = 1;
+  enum Roles {
+    USER = 0;
+    ADMIN = 1;
+    CREATOR = 2;
+  }
+  Roles role = 2;
+}
+
+message Users {
+  repeated User users = 1;
 }
 
 service AuthentificationService {
-  // authentificate verify with the server that password is valid 
-  rpc Authentificate(Credentials) returns (Empty) {}
+  // ReadUserList returns the list of all possible user 
+  rpc ReadUserList(Empty) returns (Users) {}
+
+  // UpdateCurrentUser update the current active user
+  rpc UpdateCurrentUser(User) returns (Empty) {}
 }
 
 //=============================================================================
@@ -87,12 +193,18 @@ service AuthentificationService {
 //=============================================================================
 
 message WifiCredentials {
-  string name = 1;
+  string SSID = 1;
   string password = 2;
 }
 
+message WifiNames {
+  repeated string SSIDs = 1;
+}
+
 service NetworkService {
-  // connectWifi attempts to connect to a wifi
+  rpc ReadWifiList(Empty) returns (WifiNames) {}
+
+  // connectWifi is used to connect to a wifi
   rpc ConnectWifi(WifiCredentials) returns (Empty) {}
 }
 
@@ -101,22 +213,10 @@ service NetworkService {
 // Configuration Service 
 //=============================================================================
 
-message MetricConfig {
-  string unit = 1;
-  float goal = 2;
-  string type = 3;
-  string name = 4;
-  string info = 5;
-  bool hasGoal = 6;
-}
-message Configuration {
-  repeated MetricConfig metricsConfig = 1;
-}
-
 service ConfigurationService {
-  //getConfig returns the configuration stored in the server
-  rpc GetConfig(Empty) returns (Configuration) {}
-  rpc SetConfig(Configuration) returns (Empty) {}
+  /* //getConfig returns the configuration stored in the server */
+  /* rpc GetConfig(Empty) returns (Configuration) {} */
+  /* rpc SetConfig(Configuration) returns (Empty) {} */
 }
 
 

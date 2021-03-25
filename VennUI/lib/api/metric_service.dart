@@ -1,13 +1,9 @@
+import 'package:VennUI/api/utilities.dart';
 import 'package:grpc/grpc.dart';
 import 'package:VennUI/api/v1/ui.pbgrpc.dart' as grpc;
 import 'package:VennUI/api/v1/ui.pb.dart' as proto;
 import 'package:VennUI/utilies.dart';
 
-const serverPort = 3000;
-
-class Credentials {}
-
-/// MetricService client implementation
 class MetricService {
   // Flag is indicating that client is shutting down
   bool _isShutdown = false;
@@ -18,17 +14,8 @@ class MetricService {
   // gRPC client channel to receive messages from the server
   ClientChannel _clientReceive;
 
-  // Constructor
   MetricService() {
-    // Create a new client
-    _clientSend = ClientChannel(
-      serverIP,
-      port: serverPort,
-      options: ChannelOptions(
-        credentials: ChannelCredentials.insecure(),
-        idleTimeout: Duration(hours: 24),
-      ),
-    );
+    _clientSend = newClient(serverIP, serverPort);
   }
 
   // Shutdown client
@@ -55,60 +42,86 @@ class MetricService {
   }
 
 // Asynchronous function to get the current metrics from the server
-  Future<proto.Metrics> getMetrics() async {
+  Future<proto.MetricUpdates> getMetrics() async {
     if (_clientSend == null) {
-      // Create a new client
-      _clientSend = ClientChannel(
-        serverIP,
-        port: serverPort,
-        options: ChannelOptions(
-          credentials: ChannelCredentials.insecure(),
-          idleTimeout: Duration(hours: 24),
-        ),
-      );
+      _clientSend = newClient(serverIP, serverPort);
     }
 
     var request = grpc.Empty().createEmptyInstance();
 
     try {
-      var metrics = await grpc.MetricServiceClient(_clientSend).get(request);
+      var metrics = await grpc.MetricServiceClient(_clientSend).getAll(request);
       return metrics;
     } catch (e) {
       if (!_isShutdown) {
         // Invalidate current client
         _shutdownSend();
-
-        // Print the error
         print(e.toString());
-
         // Try again
-        Future.delayed(Duration(milliseconds: 100), () {
+        Future.delayed(retryDelay, () {
           return getMetrics();
         });
       }
     }
   }
 
+  // Asynchronous function to get the current metrics configuration from the server
+  Future<proto.MetricConfigs> readConfig() async {
+    if (_clientSend == null) {
+      _clientSend = newClient(serverIP, serverPort);
+    }
+
+    var request = grpc.Empty().createEmptyInstance();
+
+    try {
+      var configs =
+          await grpc.MetricServiceClient(_clientSend).readConfig(request);
+      return configs;
+    } catch (e) {
+      if (!_isShutdown) {
+        // Invalidate current client
+        _shutdownSend();
+        print(e.toString());
+        // Try again
+        Future.delayed(retryDelay, () {
+          return readConfig();
+        });
+      }
+    }
+  }
+
+  // Asynchronous function to update the current metrics configuration from the server
+  void updateConfig(proto.MetricConfigs c) async {
+    if (_clientSend == null) {
+      _clientSend = newClient(serverIP, serverPort);
+    }
+    try {
+      await grpc.MetricServiceClient(_clientSend).updateConfig(c);
+    } catch (e) {
+      if (!_isShutdown) {
+        // Invalidate current client
+        _shutdownSend();
+        print(e.toString());
+        // Try again
+        Future.delayed(retryDelay, () {
+          return updateConfig(c);
+        });
+      }
+    }
+  }
+
   // Asynchronous function to get the stream of metrics from the server
-  Stream<proto.Metric> getMetricStream() async* {
+  Stream<proto.MetricUpdate> getMetricStream() async* {
     if (_clientReceive == null) {
-      // Create a new client
-      _clientReceive = ClientChannel(
-        serverIP,
-        port: serverPort,
-        options: ChannelOptions(
-          credentials: ChannelCredentials.insecure(),
-          idleTimeout: Duration(hours: 24),
-        ),
-      );
+      _clientReceive = newClient(serverIP, serverPort);
     }
 
     var request = grpc.Empty().createEmptyInstance();
 
     try {
       var stream = grpc.MetricServiceClient(_clientReceive).subscribe(request);
-      await for (proto.Metrics M in stream) {
-        for (var m in M.metrics) {
+      await for (proto.MetricUpdates M in stream) {
+        for (var m in M.updates) {
           yield m;
         }
       }
@@ -116,12 +129,9 @@ class MetricService {
       if (!_isShutdown) {
         // Invalidate current client
         _shutdownSend();
-
         // Print the error
         print(e.toString());
-
-        // Try again
-        Future.delayed(Duration(milliseconds: 100), () {
+        Future.delayed(retryDelay, () {
           return getMetricStream();
         });
       }

@@ -113,6 +113,8 @@ class Tile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: 200,
+      height: 100,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.all(Radius.circular(20)),

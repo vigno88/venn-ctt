@@ -67,12 +67,12 @@ func GetDefaultRecipe(ctx context.Context) *proto.Recipe {
 	var settings []*proto.Setting
 	for _, setting := range config.DefaultRecipe {
 		s := &proto.Setting{
-			Info:     setting.Setting.Info,
-			Max:      setting.Setting.Max,
-			Min:      setting.Setting.Min,
-			Name:     setting.Setting.Name,
-			Value:    setting.Setting.Value,
-			GoalName: setting.Setting.GoalName,
+			Info:   setting.Setting.Info,
+			Max:    setting.Setting.Max,
+			Min:    setting.Setting.Min,
+			Name:   setting.Setting.Name,
+			Value:  setting.Setting.Value,
+			Target: &proto.Target{Name: setting.Setting.GoalName},
 		}
 		settings = append(settings, s)
 	}
@@ -92,30 +92,30 @@ func getNamesMap(ctx context.Context) {
 	}
 }
 
-func GetConfig(ctx context.Context) *proto.Configuration {
-	pC := &proto.Configuration{}
+func GetConfig(ctx context.Context) *proto.MetricConfigs {
+	pC := &proto.MetricConfigs{}
 	// Get the metrics config
 	for _, m := range config.Metrics {
 		m := &proto.MetricConfig{
-			Goal:    float32(m.Metric.Goal),
-			Info:    m.Metric.Info,
-			Name:    m.Metric.Name,
-			Type:    m.Metric.Type,
-			Unit:    m.Metric.Unit,
-			HasGoal: m.Metric.HasGoal,
+			Target:    float32(m.Metric.Goal),
+			Info:      m.Metric.Info,
+			Name:      m.Metric.Name,
+			Type:      m.Metric.Type,
+			Unit:      m.Metric.Unit,
+			HasTarget: m.Metric.HasGoal,
 		}
-		pC.MetricsConfig = append(pC.MetricsConfig, m)
+		pC.Configs = append(pC.Configs, m)
 	}
 	return pC
 }
 
 // setConfig updates the metrics config received from the UI
 // more particulary the goal value
-func SetMetricsConfig(c *proto.Configuration) {
-	for _, m := range c.MetricsConfig {
+func SetMetricsConfig(c *proto.MetricConfigs) {
+	for _, m := range c.Configs {
 		for i, mC := range config.Metrics {
 			if mC.Metric.Name == m.Name {
-				config.Metrics[i].Metric.Goal = float64(m.Goal)
+				config.Metrics[i].Metric.Goal = float64(m.Target)
 			}
 		}
 	}

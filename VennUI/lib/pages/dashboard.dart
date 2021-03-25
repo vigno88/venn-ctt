@@ -365,13 +365,13 @@ class MetricChip extends StatelessWidget {
                                       fontWeight: FontWeight.bold)),
                               TextSpan(
                                   text: ' (' +
-                                      tile.goal.toString() +
+                                      tile.target.toString() +
                                       ' ' +
                                       tile.unit +
                                       ')',
                                   style: TextStyle(
                                       fontSize: 22,
-                                      color: tile.hasGoal
+                                      color: tile.hasTarget
                                           ? (tile.isAlert
                                               ? Colors.white
                                               : paleColor.withOpacity(0.7))

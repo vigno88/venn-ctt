@@ -14,30 +14,48 @@ import 'ui.pb.dart' as $0;
 export 'ui.pb.dart';
 
 class MetricServiceClient extends $grpc.Client {
-  static final _$get = $grpc.ClientMethod<$0.Empty, $0.Metrics>(
-      '/v1.MetricService/Get',
+  static final _$getAll = $grpc.ClientMethod<$0.Empty, $0.MetricUpdates>(
+      '/v1.MetricService/GetAll',
       ($0.Empty value) => value.writeToBuffer(),
-      ($core.List<$core.int> value) => $0.Metrics.fromBuffer(value));
-  static final _$subscribe = $grpc.ClientMethod<$0.Empty, $0.Metrics>(
+      ($core.List<$core.int> value) => $0.MetricUpdates.fromBuffer(value));
+  static final _$subscribe = $grpc.ClientMethod<$0.Empty, $0.MetricUpdates>(
       '/v1.MetricService/Subscribe',
       ($0.Empty value) => value.writeToBuffer(),
-      ($core.List<$core.int> value) => $0.Metrics.fromBuffer(value));
+      ($core.List<$core.int> value) => $0.MetricUpdates.fromBuffer(value));
+  static final _$readConfig = $grpc.ClientMethod<$0.Empty, $0.MetricConfigs>(
+      '/v1.MetricService/ReadConfig',
+      ($0.Empty value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) => $0.MetricConfigs.fromBuffer(value));
+  static final _$updateConfig = $grpc.ClientMethod<$0.MetricConfigs, $0.Empty>(
+      '/v1.MetricService/UpdateConfig',
+      ($0.MetricConfigs value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) => $0.Empty.fromBuffer(value));
 
   MetricServiceClient($grpc.ClientChannel channel,
       {$grpc.CallOptions options,
       $core.Iterable<$grpc.ClientInterceptor> interceptors})
       : super(channel, options: options, interceptors: interceptors);
 
-  $grpc.ResponseFuture<$0.Metrics> get($0.Empty request,
+  $grpc.ResponseFuture<$0.MetricUpdates> getAll($0.Empty request,
       {$grpc.CallOptions options}) {
-    return $createUnaryCall(_$get, request, options: options);
+    return $createUnaryCall(_$getAll, request, options: options);
   }
 
-  $grpc.ResponseStream<$0.Metrics> subscribe($0.Empty request,
+  $grpc.ResponseStream<$0.MetricUpdates> subscribe($0.Empty request,
       {$grpc.CallOptions options}) {
     return $createStreamingCall(
         _$subscribe, $async.Stream.fromIterable([request]),
         options: options);
+  }
+
+  $grpc.ResponseFuture<$0.MetricConfigs> readConfig($0.Empty request,
+      {$grpc.CallOptions options}) {
+    return $createUnaryCall(_$readConfig, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.Empty> updateConfig($0.MetricConfigs request,
+      {$grpc.CallOptions options}) {
+    return $createUnaryCall(_$updateConfig, request, options: options);
   }
 }
 
@@ -45,56 +63,105 @@ abstract class MetricServiceBase extends $grpc.Service {
   $core.String get $name => 'v1.MetricService';
 
   MetricServiceBase() {
-    $addMethod($grpc.ServiceMethod<$0.Empty, $0.Metrics>(
-        'Get',
-        get_Pre,
+    $addMethod($grpc.ServiceMethod<$0.Empty, $0.MetricUpdates>(
+        'GetAll',
+        getAll_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
-        ($0.Metrics value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.Empty, $0.Metrics>(
+        ($0.MetricUpdates value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.Empty, $0.MetricUpdates>(
         'Subscribe',
         subscribe_Pre,
         false,
         true,
         ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
-        ($0.Metrics value) => value.writeToBuffer()));
+        ($0.MetricUpdates value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.Empty, $0.MetricConfigs>(
+        'ReadConfig',
+        readConfig_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
+        ($0.MetricConfigs value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.MetricConfigs, $0.Empty>(
+        'UpdateConfig',
+        updateConfig_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.MetricConfigs.fromBuffer(value),
+        ($0.Empty value) => value.writeToBuffer()));
   }
 
-  $async.Future<$0.Metrics> get_Pre(
+  $async.Future<$0.MetricUpdates> getAll_Pre(
       $grpc.ServiceCall call, $async.Future<$0.Empty> request) async {
-    return get(call, await request);
+    return getAll(call, await request);
   }
 
-  $async.Stream<$0.Metrics> subscribe_Pre(
+  $async.Stream<$0.MetricUpdates> subscribe_Pre(
       $grpc.ServiceCall call, $async.Future<$0.Empty> request) async* {
     yield* subscribe(call, await request);
   }
 
-  $async.Future<$0.Metrics> get($grpc.ServiceCall call, $0.Empty request);
-  $async.Stream<$0.Metrics> subscribe($grpc.ServiceCall call, $0.Empty request);
+  $async.Future<$0.MetricConfigs> readConfig_Pre(
+      $grpc.ServiceCall call, $async.Future<$0.Empty> request) async {
+    return readConfig(call, await request);
+  }
+
+  $async.Future<$0.Empty> updateConfig_Pre(
+      $grpc.ServiceCall call, $async.Future<$0.MetricConfigs> request) async {
+    return updateConfig(call, await request);
+  }
+
+  $async.Future<$0.MetricUpdates> getAll(
+      $grpc.ServiceCall call, $0.Empty request);
+  $async.Stream<$0.MetricUpdates> subscribe(
+      $grpc.ServiceCall call, $0.Empty request);
+  $async.Future<$0.MetricConfigs> readConfig(
+      $grpc.ServiceCall call, $0.Empty request);
+  $async.Future<$0.Empty> updateConfig(
+      $grpc.ServiceCall call, $0.MetricConfigs request);
 }
 
 class SettingServiceClient extends $grpc.Client {
-  static final _$setSetting = $grpc.ClientMethod<$0.Setting, $0.Empty>(
-      '/v1.SettingService/SetSetting',
-      ($0.Setting value) => value.writeToBuffer(),
+  static final _$updateSetting = $grpc.ClientMethod<$0.SettingUpdate, $0.Empty>(
+      '/v1.SettingService/UpdateSetting',
+      ($0.SettingUpdate value) => value.writeToBuffer(),
       ($core.List<$core.int> value) => $0.Empty.fromBuffer(value));
-  static final _$getRecipesUUID = $grpc.ClientMethod<$0.Empty, $0.UUIDS>(
-      '/v1.SettingService/GetRecipesUUID',
+  static final _$updateUncertainty =
+      $grpc.ClientMethod<$0.TargetUpdate, $0.Empty>(
+          '/v1.SettingService/UpdateUncertainty',
+          ($0.TargetUpdate value) => value.writeToBuffer(),
+          ($core.List<$core.int> value) => $0.Empty.fromBuffer(value));
+  static final _$updateSelectedChoice =
+      $grpc.ClientMethod<$0.SelectorUpdate, $0.Empty>(
+          '/v1.SettingService/UpdateSelectedChoice',
+          ($0.SelectorUpdate value) => value.writeToBuffer(),
+          ($core.List<$core.int> value) => $0.Empty.fromBuffer(value));
+  static final _$updateChoice = $grpc.ClientMethod<$0.ChoiceUpdate, $0.Empty>(
+      '/v1.SettingService/UpdateChoice',
+      ($0.ChoiceUpdate value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) => $0.Empty.fromBuffer(value));
+  static final _$readRecipesUUID = $grpc.ClientMethod<$0.Empty, $0.UUIDS>(
+      '/v1.SettingService/ReadRecipesUUID',
       ($0.Empty value) => value.writeToBuffer(),
       ($core.List<$core.int> value) => $0.UUIDS.fromBuffer(value));
-  static final _$getRecipe = $grpc.ClientMethod<$0.StringValue, $0.Recipe>(
-      '/v1.SettingService/GetRecipe',
+  static final _$readRecipe = $grpc.ClientMethod<$0.StringValue, $0.Recipe>(
+      '/v1.SettingService/ReadRecipe',
       ($0.StringValue value) => value.writeToBuffer(),
       ($core.List<$core.int> value) => $0.Recipe.fromBuffer(value));
   static final _$createRecipe = $grpc.ClientMethod<$0.Empty, $0.Recipe>(
       '/v1.SettingService/CreateRecipe',
       ($0.Empty value) => value.writeToBuffer(),
       ($core.List<$core.int> value) => $0.Recipe.fromBuffer(value));
-  static final _$selectRecipe = $grpc.ClientMethod<$0.StringValue, $0.Empty>(
-      '/v1.SettingService/SelectRecipe',
-      ($0.StringValue value) => value.writeToBuffer(),
+  static final _$updateCurrentRecipe =
+      $grpc.ClientMethod<$0.StringValue, $0.Empty>(
+          '/v1.SettingService/UpdateCurrentRecipe',
+          ($0.StringValue value) => value.writeToBuffer(),
+          ($core.List<$core.int> value) => $0.Empty.fromBuffer(value));
+  static final _$updateRecipe = $grpc.ClientMethod<$0.Recipe, $0.Empty>(
+      '/v1.SettingService/UpdateRecipe',
+      ($0.Recipe value) => value.writeToBuffer(),
       ($core.List<$core.int> value) => $0.Empty.fromBuffer(value));
 
   SettingServiceClient($grpc.ClientChannel channel,
@@ -102,19 +169,34 @@ class SettingServiceClient extends $grpc.Client {
       $core.Iterable<$grpc.ClientInterceptor> interceptors})
       : super(channel, options: options, interceptors: interceptors);
 
-  $grpc.ResponseFuture<$0.Empty> setSetting($0.Setting request,
+  $grpc.ResponseFuture<$0.Empty> updateSetting($0.SettingUpdate request,
       {$grpc.CallOptions options}) {
-    return $createUnaryCall(_$setSetting, request, options: options);
+    return $createUnaryCall(_$updateSetting, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.UUIDS> getRecipesUUID($0.Empty request,
+  $grpc.ResponseFuture<$0.Empty> updateUncertainty($0.TargetUpdate request,
       {$grpc.CallOptions options}) {
-    return $createUnaryCall(_$getRecipesUUID, request, options: options);
+    return $createUnaryCall(_$updateUncertainty, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.Recipe> getRecipe($0.StringValue request,
+  $grpc.ResponseFuture<$0.Empty> updateSelectedChoice($0.SelectorUpdate request,
       {$grpc.CallOptions options}) {
-    return $createUnaryCall(_$getRecipe, request, options: options);
+    return $createUnaryCall(_$updateSelectedChoice, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.Empty> updateChoice($0.ChoiceUpdate request,
+      {$grpc.CallOptions options}) {
+    return $createUnaryCall(_$updateChoice, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.UUIDS> readRecipesUUID($0.Empty request,
+      {$grpc.CallOptions options}) {
+    return $createUnaryCall(_$readRecipesUUID, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.Recipe> readRecipe($0.StringValue request,
+      {$grpc.CallOptions options}) {
+    return $createUnaryCall(_$readRecipe, request, options: options);
   }
 
   $grpc.ResponseFuture<$0.Recipe> createRecipe($0.Empty request,
@@ -122,9 +204,14 @@ class SettingServiceClient extends $grpc.Client {
     return $createUnaryCall(_$createRecipe, request, options: options);
   }
 
-  $grpc.ResponseFuture<$0.Empty> selectRecipe($0.StringValue request,
+  $grpc.ResponseFuture<$0.Empty> updateCurrentRecipe($0.StringValue request,
       {$grpc.CallOptions options}) {
-    return $createUnaryCall(_$selectRecipe, request, options: options);
+    return $createUnaryCall(_$updateCurrentRecipe, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.Empty> updateRecipe($0.Recipe request,
+      {$grpc.CallOptions options}) {
+    return $createUnaryCall(_$updateRecipe, request, options: options);
   }
 }
 
@@ -132,23 +219,44 @@ abstract class SettingServiceBase extends $grpc.Service {
   $core.String get $name => 'v1.SettingService';
 
   SettingServiceBase() {
-    $addMethod($grpc.ServiceMethod<$0.Setting, $0.Empty>(
-        'SetSetting',
-        setSetting_Pre,
+    $addMethod($grpc.ServiceMethod<$0.SettingUpdate, $0.Empty>(
+        'UpdateSetting',
+        updateSetting_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.Setting.fromBuffer(value),
+        ($core.List<$core.int> value) => $0.SettingUpdate.fromBuffer(value),
+        ($0.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.TargetUpdate, $0.Empty>(
+        'UpdateUncertainty',
+        updateUncertainty_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.TargetUpdate.fromBuffer(value),
+        ($0.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.SelectorUpdate, $0.Empty>(
+        'UpdateSelectedChoice',
+        updateSelectedChoice_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.SelectorUpdate.fromBuffer(value),
+        ($0.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.ChoiceUpdate, $0.Empty>(
+        'UpdateChoice',
+        updateChoice_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.ChoiceUpdate.fromBuffer(value),
         ($0.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.Empty, $0.UUIDS>(
-        'GetRecipesUUID',
-        getRecipesUUID_Pre,
+        'ReadRecipesUUID',
+        readRecipesUUID_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
         ($0.UUIDS value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.StringValue, $0.Recipe>(
-        'GetRecipe',
-        getRecipe_Pre,
+        'ReadRecipe',
+        readRecipe_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.StringValue.fromBuffer(value),
@@ -161,27 +269,49 @@ abstract class SettingServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
         ($0.Recipe value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.StringValue, $0.Empty>(
-        'SelectRecipe',
-        selectRecipe_Pre,
+        'UpdateCurrentRecipe',
+        updateCurrentRecipe_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.StringValue.fromBuffer(value),
         ($0.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.Recipe, $0.Empty>(
+        'UpdateRecipe',
+        updateRecipe_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.Recipe.fromBuffer(value),
+        ($0.Empty value) => value.writeToBuffer()));
   }
 
-  $async.Future<$0.Empty> setSetting_Pre(
-      $grpc.ServiceCall call, $async.Future<$0.Setting> request) async {
-    return setSetting(call, await request);
+  $async.Future<$0.Empty> updateSetting_Pre(
+      $grpc.ServiceCall call, $async.Future<$0.SettingUpdate> request) async {
+    return updateSetting(call, await request);
   }
 
-  $async.Future<$0.UUIDS> getRecipesUUID_Pre(
+  $async.Future<$0.Empty> updateUncertainty_Pre(
+      $grpc.ServiceCall call, $async.Future<$0.TargetUpdate> request) async {
+    return updateUncertainty(call, await request);
+  }
+
+  $async.Future<$0.Empty> updateSelectedChoice_Pre(
+      $grpc.ServiceCall call, $async.Future<$0.SelectorUpdate> request) async {
+    return updateSelectedChoice(call, await request);
+  }
+
+  $async.Future<$0.Empty> updateChoice_Pre(
+      $grpc.ServiceCall call, $async.Future<$0.ChoiceUpdate> request) async {
+    return updateChoice(call, await request);
+  }
+
+  $async.Future<$0.UUIDS> readRecipesUUID_Pre(
       $grpc.ServiceCall call, $async.Future<$0.Empty> request) async {
-    return getRecipesUUID(call, await request);
+    return readRecipesUUID(call, await request);
   }
 
-  $async.Future<$0.Recipe> getRecipe_Pre(
+  $async.Future<$0.Recipe> readRecipe_Pre(
       $grpc.ServiceCall call, $async.Future<$0.StringValue> request) async {
-    return getRecipe(call, await request);
+    return readRecipe(call, await request);
   }
 
   $async.Future<$0.Recipe> createRecipe_Pre(
@@ -189,27 +319,44 @@ abstract class SettingServiceBase extends $grpc.Service {
     return createRecipe(call, await request);
   }
 
-  $async.Future<$0.Empty> selectRecipe_Pre(
+  $async.Future<$0.Empty> updateCurrentRecipe_Pre(
       $grpc.ServiceCall call, $async.Future<$0.StringValue> request) async {
-    return selectRecipe(call, await request);
+    return updateCurrentRecipe(call, await request);
   }
 
-  $async.Future<$0.Empty> setSetting(
-      $grpc.ServiceCall call, $0.Setting request);
-  $async.Future<$0.UUIDS> getRecipesUUID(
+  $async.Future<$0.Empty> updateRecipe_Pre(
+      $grpc.ServiceCall call, $async.Future<$0.Recipe> request) async {
+    return updateRecipe(call, await request);
+  }
+
+  $async.Future<$0.Empty> updateSetting(
+      $grpc.ServiceCall call, $0.SettingUpdate request);
+  $async.Future<$0.Empty> updateUncertainty(
+      $grpc.ServiceCall call, $0.TargetUpdate request);
+  $async.Future<$0.Empty> updateSelectedChoice(
+      $grpc.ServiceCall call, $0.SelectorUpdate request);
+  $async.Future<$0.Empty> updateChoice(
+      $grpc.ServiceCall call, $0.ChoiceUpdate request);
+  $async.Future<$0.UUIDS> readRecipesUUID(
       $grpc.ServiceCall call, $0.Empty request);
-  $async.Future<$0.Recipe> getRecipe(
+  $async.Future<$0.Recipe> readRecipe(
       $grpc.ServiceCall call, $0.StringValue request);
   $async.Future<$0.Recipe> createRecipe(
       $grpc.ServiceCall call, $0.Empty request);
-  $async.Future<$0.Empty> selectRecipe(
+  $async.Future<$0.Empty> updateCurrentRecipe(
       $grpc.ServiceCall call, $0.StringValue request);
+  $async.Future<$0.Empty> updateRecipe(
+      $grpc.ServiceCall call, $0.Recipe request);
 }
 
 class AuthentificationServiceClient extends $grpc.Client {
-  static final _$authentificate = $grpc.ClientMethod<$0.Credentials, $0.Empty>(
-      '/v1.AuthentificationService/Authentificate',
-      ($0.Credentials value) => value.writeToBuffer(),
+  static final _$readUserList = $grpc.ClientMethod<$0.Empty, $0.Users>(
+      '/v1.AuthentificationService/ReadUserList',
+      ($0.Empty value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) => $0.Users.fromBuffer(value));
+  static final _$updateCurrentUser = $grpc.ClientMethod<$0.User, $0.Empty>(
+      '/v1.AuthentificationService/UpdateCurrentUser',
+      ($0.User value) => value.writeToBuffer(),
       ($core.List<$core.int> value) => $0.Empty.fromBuffer(value));
 
   AuthentificationServiceClient($grpc.ClientChannel channel,
@@ -217,9 +364,14 @@ class AuthentificationServiceClient extends $grpc.Client {
       $core.Iterable<$grpc.ClientInterceptor> interceptors})
       : super(channel, options: options, interceptors: interceptors);
 
-  $grpc.ResponseFuture<$0.Empty> authentificate($0.Credentials request,
+  $grpc.ResponseFuture<$0.Users> readUserList($0.Empty request,
       {$grpc.CallOptions options}) {
-    return $createUnaryCall(_$authentificate, request, options: options);
+    return $createUnaryCall(_$readUserList, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.Empty> updateCurrentUser($0.User request,
+      {$grpc.CallOptions options}) {
+    return $createUnaryCall(_$updateCurrentUser, request, options: options);
   }
 }
 
@@ -227,25 +379,43 @@ abstract class AuthentificationServiceBase extends $grpc.Service {
   $core.String get $name => 'v1.AuthentificationService';
 
   AuthentificationServiceBase() {
-    $addMethod($grpc.ServiceMethod<$0.Credentials, $0.Empty>(
-        'Authentificate',
-        authentificate_Pre,
+    $addMethod($grpc.ServiceMethod<$0.Empty, $0.Users>(
+        'ReadUserList',
+        readUserList_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.Credentials.fromBuffer(value),
+        ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
+        ($0.Users value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.User, $0.Empty>(
+        'UpdateCurrentUser',
+        updateCurrentUser_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.User.fromBuffer(value),
         ($0.Empty value) => value.writeToBuffer()));
   }
 
-  $async.Future<$0.Empty> authentificate_Pre(
-      $grpc.ServiceCall call, $async.Future<$0.Credentials> request) async {
-    return authentificate(call, await request);
+  $async.Future<$0.Users> readUserList_Pre(
+      $grpc.ServiceCall call, $async.Future<$0.Empty> request) async {
+    return readUserList(call, await request);
   }
 
-  $async.Future<$0.Empty> authentificate(
-      $grpc.ServiceCall call, $0.Credentials request);
+  $async.Future<$0.Empty> updateCurrentUser_Pre(
+      $grpc.ServiceCall call, $async.Future<$0.User> request) async {
+    return updateCurrentUser(call, await request);
+  }
+
+  $async.Future<$0.Users> readUserList(
+      $grpc.ServiceCall call, $0.Empty request);
+  $async.Future<$0.Empty> updateCurrentUser(
+      $grpc.ServiceCall call, $0.User request);
 }
 
 class NetworkServiceClient extends $grpc.Client {
+  static final _$readWifiList = $grpc.ClientMethod<$0.Empty, $0.WifiNames>(
+      '/v1.NetworkService/ReadWifiList',
+      ($0.Empty value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) => $0.WifiNames.fromBuffer(value));
   static final _$connectWifi = $grpc.ClientMethod<$0.WifiCredentials, $0.Empty>(
       '/v1.NetworkService/ConnectWifi',
       ($0.WifiCredentials value) => value.writeToBuffer(),
@@ -255,6 +425,11 @@ class NetworkServiceClient extends $grpc.Client {
       {$grpc.CallOptions options,
       $core.Iterable<$grpc.ClientInterceptor> interceptors})
       : super(channel, options: options, interceptors: interceptors);
+
+  $grpc.ResponseFuture<$0.WifiNames> readWifiList($0.Empty request,
+      {$grpc.CallOptions options}) {
+    return $createUnaryCall(_$readWifiList, request, options: options);
+  }
 
   $grpc.ResponseFuture<$0.Empty> connectWifi($0.WifiCredentials request,
       {$grpc.CallOptions options}) {
@@ -266,6 +441,13 @@ abstract class NetworkServiceBase extends $grpc.Service {
   $core.String get $name => 'v1.NetworkService';
 
   NetworkServiceBase() {
+    $addMethod($grpc.ServiceMethod<$0.Empty, $0.WifiNames>(
+        'ReadWifiList',
+        readWifiList_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
+        ($0.WifiNames value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.WifiCredentials, $0.Empty>(
         'ConnectWifi',
         connectWifi_Pre,
@@ -275,75 +457,33 @@ abstract class NetworkServiceBase extends $grpc.Service {
         ($0.Empty value) => value.writeToBuffer()));
   }
 
+  $async.Future<$0.WifiNames> readWifiList_Pre(
+      $grpc.ServiceCall call, $async.Future<$0.Empty> request) async {
+    return readWifiList(call, await request);
+  }
+
   $async.Future<$0.Empty> connectWifi_Pre(
       $grpc.ServiceCall call, $async.Future<$0.WifiCredentials> request) async {
     return connectWifi(call, await request);
   }
 
+  $async.Future<$0.WifiNames> readWifiList(
+      $grpc.ServiceCall call, $0.Empty request);
   $async.Future<$0.Empty> connectWifi(
       $grpc.ServiceCall call, $0.WifiCredentials request);
 }
 
 class ConfigurationServiceClient extends $grpc.Client {
-  static final _$getConfig = $grpc.ClientMethod<$0.Empty, $0.Configuration>(
-      '/v1.ConfigurationService/GetConfig',
-      ($0.Empty value) => value.writeToBuffer(),
-      ($core.List<$core.int> value) => $0.Configuration.fromBuffer(value));
-  static final _$setConfig = $grpc.ClientMethod<$0.Configuration, $0.Empty>(
-      '/v1.ConfigurationService/SetConfig',
-      ($0.Configuration value) => value.writeToBuffer(),
-      ($core.List<$core.int> value) => $0.Empty.fromBuffer(value));
-
   ConfigurationServiceClient($grpc.ClientChannel channel,
       {$grpc.CallOptions options,
       $core.Iterable<$grpc.ClientInterceptor> interceptors})
       : super(channel, options: options, interceptors: interceptors);
-
-  $grpc.ResponseFuture<$0.Configuration> getConfig($0.Empty request,
-      {$grpc.CallOptions options}) {
-    return $createUnaryCall(_$getConfig, request, options: options);
-  }
-
-  $grpc.ResponseFuture<$0.Empty> setConfig($0.Configuration request,
-      {$grpc.CallOptions options}) {
-    return $createUnaryCall(_$setConfig, request, options: options);
-  }
 }
 
 abstract class ConfigurationServiceBase extends $grpc.Service {
   $core.String get $name => 'v1.ConfigurationService';
 
-  ConfigurationServiceBase() {
-    $addMethod($grpc.ServiceMethod<$0.Empty, $0.Configuration>(
-        'GetConfig',
-        getConfig_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
-        ($0.Configuration value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.Configuration, $0.Empty>(
-        'SetConfig',
-        setConfig_Pre,
-        false,
-        false,
-        ($core.List<$core.int> value) => $0.Configuration.fromBuffer(value),
-        ($0.Empty value) => value.writeToBuffer()));
-  }
-
-  $async.Future<$0.Configuration> getConfig_Pre(
-      $grpc.ServiceCall call, $async.Future<$0.Empty> request) async {
-    return getConfig(call, await request);
-  }
-
-  $async.Future<$0.Empty> setConfig_Pre(
-      $grpc.ServiceCall call, $async.Future<$0.Configuration> request) async {
-    return setConfig(call, await request);
-  }
-
-  $async.Future<$0.Configuration> getConfig(
-      $grpc.ServiceCall call, $0.Empty request);
-  $async.Future<$0.Empty> setConfig(
-      $grpc.ServiceCall call, $0.Configuration request);
+  ConfigurationServiceBase() {}
 }
 
 class ControlServiceClient extends $grpc.Client {

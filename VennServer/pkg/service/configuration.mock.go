@@ -17,12 +17,12 @@ func NewConfigurationServiceServer() proto.ConfigurationServiceServer {
 	return &configurationServiceServer{}
 }
 
-func (s *configurationServiceServer) GetConfig(ctx context.Context, e *proto.Empty) (*proto.Configuration, error) {
+func (s *configurationServiceServer) GetConfig(ctx context.Context, e *proto.Empty) (*proto.MetricConfigs, error) {
 	log.Printf("Frontend ask for the configuration")
 	return configuration.GetConfig(ctx), nil
 }
 
-func (s *configurationServiceServer) SetConfig(ctx context.Context, config *proto.Configuration) (*proto.Empty, error) {
+func (s *configurationServiceServer) SetConfig(ctx context.Context, config *proto.MetricConfigs) (*proto.Empty, error) {
 	configuration.SetMetricsConfig(config)
 	return &proto.Empty{}, nil
 }

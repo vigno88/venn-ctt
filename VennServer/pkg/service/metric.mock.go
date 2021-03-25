@@ -4,55 +4,67 @@ package service
 
 import (
 	"context"
+	"log"
 
 	proto "github.com/vigno88/Venn/VennServer/pkg/api/v1"
+	configuration "github.com/vigno88/Venn/VennServer/pkg/configuration"
 )
 
 // metricServiceServer is implementation of proto.metricServiceServer proto interface
 type metricServiceServer struct {
 }
 
-var metricsChan chan *proto.Metric
+var metricsChan chan *proto.MetricUpdate
 
-func NewMetricServiceServer(c chan *proto.Metric) proto.MetricServiceServer {
+func NewMetricServiceServer(c chan *proto.MetricUpdate) proto.MetricServiceServer {
 	metricsChan = c
 	return &metricServiceServer{}
 }
 
+func (s *metricServiceServer) ReadConfig(ctx context.Context, e *proto.Empty) (*proto.MetricConfigs, error) {
+	log.Printf("Frontend ask for the configuration")
+	return configuration.GetConfig(ctx), nil
+}
+
+func (s *metricServiceServer) UpdateConfig(ctx context.Context, config *proto.MetricConfigs) (*proto.Empty, error) {
+	configuration.SetMetricsConfig(config)
+	return &proto.Empty{}, nil
+}
+
 // Get is used to get the current set of metrics
-func (s *metricServiceServer) Get(ctx context.Context, e *proto.Empty) (*proto.Metrics, error) {
+func (s *metricServiceServer) GetAll(ctx context.Context, e *proto.Empty) (*proto.MetricUpdates, error) {
 	// return metrics.GetAll(ctx)
 
 	// Code used for testing purpose
-	return &proto.Metrics{Metrics: []*proto.Metric{
-		{Name: "Temperature 1", Value: 0.0, Average: 0.0},
-		{Name: "Humidity 1", Value: 0.0, Average: 0.0},
-		{Name: "Temperature 2", Value: 0.0, Average: 0.0},
-		{Name: "Humidity 3", Value: 0.0, Average: 0.0},
-		{Name: "Temperature 1", Value: 0.0, Average: 0.0},
-		{Name: "Humidity 1", Value: 0.0, Average: 0.0},
-		{Name: "Temperature 2", Value: 0.0, Average: 0.0},
-		{Name: "Humidity 3", Value: 0.0, Average: 0.0},
-		{Name: "Temperature 1", Value: 0.0, Average: 0.0},
-		{Name: "Humidity 1", Value: 0.0, Average: 0.0},
-		{Name: "Temperature 2", Value: 0.0, Average: 0.0},
-		{Name: "Humidity 3", Value: 0.0, Average: 0.0},
-		{Name: "Temperature 1", Value: 0.0, Average: 0.0},
-		{Name: "Humidity 1", Value: 0.0, Average: 0.0},
-		{Name: "Temperature 2", Value: 0.0, Average: 0.0},
-		{Name: "Humidity 3", Value: 0.0, Average: 0.0},
-		{Name: "Temperature 1", Value: 0.0, Average: 0.0},
-		{Name: "Humidity 1", Value: 0.0, Average: 0.0},
-		// {Name: "Temperature 2", Value: 0.0, Average: 0.0},
-		// {Name: "Humidity 3", Value: 0.0, Average: 0.0},
-		// {Name: "Temperature 1", Value: 0.0, Average: 0.0},
-		// {Name: "Humidity 1", Value: 0.0, Average: 0.0},
-		// {Name: "Temperature 2", Value: 0.0, Average: 0.0},
-		// {Name: "Humidity 3", Value: 0.0, Average: 0.0},
-		// {Name: "Temperature 1", Value: 0.0, Average: 0.0},
-		// {Name: "Humidity 1", Value: 0.0, Average: 0.0},
-		// {Name: "Temperature 2", Value: 0.0, Average: 0.0},
-		// {Name: "Humidity 3", Value: 0.0, Average: 0.0},
+	return &proto.MetricUpdates{Updates: []*proto.MetricUpdate{
+		{Name: "Temperature 1", Value: 0.0},
+		{Name: "Humidity 1", Value: 0.0},
+		{Name: "Temperature 2", Value: 0.0},
+		{Name: "Humidity 3", Value: 0.0},
+		{Name: "Temperature 1", Value: 0.0},
+		{Name: "Humidity 1", Value: 0.0},
+		{Name: "Temperature 2", Value: 0.0},
+		{Name: "Humidity 3", Value: 0.0},
+		{Name: "Temperature 1", Value: 0.0},
+		{Name: "Humidity 1", Value: 0.0},
+		{Name: "Temperature 2", Value: 0.0},
+		{Name: "Humidity 3", Value: 0.0},
+		{Name: "Temperature 1", Value: 0.0},
+		{Name: "Humidity 1", Value: 0.0},
+		{Name: "Temperature 2", Value: 0.0},
+		{Name: "Humidity 3", Value: 0.0},
+		{Name: "Temperature 1", Value: 0.0},
+		{Name: "Humidity 1", Value: 0.0},
+		// {Name: "Temperature 2", Value: 0.0 },
+		// {Name: "Humidity 3", Value: 0.0 },
+		// {Name: "Temperature 1", Value: 0.0 },
+		// {Name: "Humidity 1", Value: 0.0 },
+		// {Name: "Temperature 2", Value: 0.0 },
+		// {Name: "Humidity 3", Value: 0.0 },
+		// {Name: "Temperature 1", Value: 0.0 },
+		// {Name: "Humidity 1", Value: 0.0 },
+		// {Name: "Temperature 2", Value: 0.0 },
+		// {Name: "Humidity 3", Value: 0.0 },
 	}}, nil
 
 }

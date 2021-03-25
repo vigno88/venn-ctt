@@ -33,7 +33,7 @@ func Init(ctx context.Context, path string) error {
 }
 
 // Put put the metric into the kv store
-func Put(ctx context.Context, metric *proto.Metric) error {
+func Put(ctx context.Context, metric *proto.MetricUpdate) error {
 	bytes, err := protobuf.Marshal(metric)
 	if err != nil {
 		return err
@@ -52,7 +52,7 @@ func Put(ctx context.Context, metric *proto.Metric) error {
 }
 
 // Get takes the name of a metric and retrieve it from the kv store
-func Get(ctx context.Context, name string) (*proto.Metric, error) {
+func Get(ctx context.Context, name string) (*proto.MetricUpdate, error) {
 	var value []byte
 	db, err := bolt.Open(pathDB, 0600, nil)
 	if err != nil {
@@ -66,7 +66,7 @@ func Get(ctx context.Context, name string) (*proto.Metric, error) {
 		}
 		return nil
 	})
-	metric := &proto.Metric{}
+	metric := &proto.MetricUpdate{}
 	if err != nil {
 		return metric, err
 	}
@@ -74,7 +74,7 @@ func Get(ctx context.Context, name string) (*proto.Metric, error) {
 	return metric, err
 }
 
-func GetAll(ctx context.Context) (*proto.Metrics, error) {
+func GetAll(ctx context.Context) (*proto.MetricUpdates, error) {
 	// var metrics []*proto.Metric
 	// err := db.View(func(txn *badger.Txn) error {
 	// 	opts := badger.DefaultIteratorOptions

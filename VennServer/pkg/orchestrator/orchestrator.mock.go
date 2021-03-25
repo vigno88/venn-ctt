@@ -15,7 +15,7 @@ import (
 	"github.com/vigno88/Venn/VennServer/pkg/util"
 )
 
-func Run(ctx context.Context, c chan *proto.Metric) {
+func Run(ctx context.Context, c chan *proto.MetricUpdate) {
 	// Initialize all the module
 	err := authentifaction.Init(ctx, util.PathAuth)
 	handle(err)

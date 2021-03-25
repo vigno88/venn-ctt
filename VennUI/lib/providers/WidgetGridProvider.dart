@@ -66,15 +66,6 @@ class WidgetGridProvider with ChangeNotifier {
       dashboardWidgets.add(DashboardWidget(tilePositions[i].item1,
           tilePositions[i].item2, grid, dashboardTiles[i]));
     }
-    // dashboardWidgets.add(DashboardWidget(0, 0, grid, Tile(false, 2, 2)));
-    // dashboardWidgets.add(DashboardWidget(2, 2, grid, Tile(false, 2, 2)));
-    // dashboardWidgets.add(DashboardWidget(0, 2, grid, Tile(false, 1, 2)));
-    // dashboardWidgets.add(DashboardWidget(1, 2, grid, Tile(false, 1, 2)));
-    // dashboardWidgets.add(DashboardWidget(2, 0, grid, Tile(false, 2, 1)));
-    // dashboardWidgets.add(DashboardWidget(2, 1, grid, Tile(false, 2, 1)));
-    // dashboardWidgets.add(DashboardWidget(4, 0, grid, Tile(false, 4, 2)));
-    // dashboardWidgets.add(DashboardWidget(6, 2, grid, Tile(false, 1, 1)));
-    // dashboardWidgets.add(DashboardWidget(6, 3, grid, Tile(false, 1, 1)));
     return dashboardWidgets;
   }
 }

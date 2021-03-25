@@ -1,15 +1,13 @@
+import 'package:VennUI/api/utilities.dart';
 import 'package:grpc/grpc.dart';
 import 'package:VennUI/api/v1/ui.pbgrpc.dart' as grpc;
+import 'package:VennUI/api/v1/ui.pb.dart' as proto;
 import 'package:VennUI/utilies.dart';
-
-const serverPort = 3000;
-
-class Credentials {}
 
 /// NetworkService client implementation
 class NetworkService {
   // Flag is indicating that client is shutting down
-  bool _isShutDown = false;
+  bool _isShutdown = false;
 
   // gRPC client channel to send messages to the server
   ClientChannel _clientSend;
@@ -17,29 +15,13 @@ class NetworkService {
   // gRPC client channel to receive messages from the server
   ClientChannel _clientReceive;
 
-  grpc.NetworkServiceClient _networkService;
-
-  // Event is raised when message has been sent to the server successfully
-  final void Function(Credentials cred) onSentSuccess;
-
-  /// Event is raised when message sending is failed
-  final void Function(Credentials message, String error) onSentError;
-
-  /// Event is raised when message has been received from the server
-  final void Function() onReceivedSuccess;
-
-  /// Event is raised when message receiving is failed
-  final void Function(String error) onReceivedError;
-
-  NetworkService(
-      {this.onSentSuccess,
-      this.onSentError,
-      this.onReceivedError,
-      this.onReceivedSuccess});
+  NetworkService() {
+    _clientSend = newClient(serverIP, serverPort);
+  }
 
   // Shutdown client
   Future<void> shutdown() async {
-    _isShutDown = true;
+    _isShutdown = true;
     _shutdownSend();
     _shutdownReceive();
   }
@@ -60,24 +42,46 @@ class NetworkService {
     }
   }
 
-  // // Try connect to wifi with gRPC call
-  // void connect(Credentials cred) async {
-  //   if (_clientSend == null) {
-  //     // Create new client
-  //     _clientSend = ClientChannel(
-  //       serverIP,
-  //       port: serverPort,
-  //       options: ChannelOptions(
-  //         credentials: ChannelCredentials.insecure(),
-  //         idleTimeout: Duration(seconds: 10),
-  //       ),
-  //     );
-  //     _networkService = grpc.NetworkServiceClient(_clientSend);
-  //   }
+  // Asynchronous function to read the list of wifi ssids from the backend
+  Future<proto.WifiNames> readWifiList() async {
+    if (_clientSend == null) {
+      _clientSend = newClient(serverIP, serverPort);
+    }
+    try {
+      var request = grpc.Empty().createEmptyInstance();
+      var names =
+          await grpc.NetworkServiceClient(_clientSend).readWifiList(request);
+      return names;
+    } catch (e) {
+      if (!_isShutdown) {
+        // Invalidate current client
+        _shutdownSend();
+        print(e.toString());
+        // Try again
+        Future.delayed(retryDelay, () {
+          return readWifiList();
+        });
+      }
+    }
+  }
 
-  //   final c = grpc.WifiCredentials()
-  //     ..name = "admin"
-  //     ..password = "admin";
-  //   await _networkService.connectWifi(c).then().catchError(onError);
-  // }
+  // Asynchronous function to connect to the wifi
+  void connectWifi(proto.WifiCredentials c) async {
+    if (_clientSend == null) {
+      _clientSend = newClient(serverIP, serverPort);
+    }
+    try {
+      await grpc.NetworkServiceClient(_clientSend).connectWifi(c);
+    } catch (e) {
+      if (!_isShutdown) {
+        // Invalidate current client
+        _shutdownSend();
+        print(e.toString());
+        // Try again
+        Future.delayed(retryDelay, () {
+          return connectWifi(c);
+        });
+      }
+    }
+  }
 }

@@ -1,6 +1,6 @@
 import 'package:VennUI/api/configuration_service.dart';
 import 'package:VennUI/api/metric_service.dart';
-import 'package:VennUI/api/recipe_service.dart';
+import 'package:VennUI/api/setting_service.dart';
 import 'package:VennUI/providers/SettingsProvider.dart';
 import 'package:VennUI/providers/WidgetGridProvider.dart';
 import 'package:flutter/material.dart';
@@ -14,14 +14,14 @@ void main() {
   var m = MetricService();
   // var a = AuthentificationService();
   // var n = NetworkServic();
-  var r = RecipeService();
+  var r = SettingService();
 
   // Intl.defaultLocale = 'en_CA';
   RouterVenn.setupRouter();
   runApp(MultiProvider(providers: [
-    ChangeNotifierProvider<MetricProvider>(create: (_) => MetricProvider(c, m)),
+    ChangeNotifierProvider<MetricProvider>(create: (_) => MetricProvider(m)),
     ChangeNotifierProvider<SettingsProvider>(
-        create: (_) => SettingsProvider(r, c)),
+        create: (_) => SettingsProvider(r, m)),
     ChangeNotifierProvider<WidgetGridProvider>(
         create: (_) => WidgetGridProvider())
   ], child: MyApp()));

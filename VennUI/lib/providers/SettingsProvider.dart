@@ -1,35 +1,46 @@
 import 'package:VennUI/api/configuration_service.dart';
+import 'package:VennUI/api/metric_service.dart';
 import 'package:flutter/material.dart';
-import 'package:VennUI/api/recipe_service.dart';
+import 'package:VennUI/api/setting_service.dart';
 import 'package:VennUI/api/v1/ui.pb.dart' as proto;
 import 'package:VennUI/utilies.dart';
 
 class SettingsProvider with ChangeNotifier {
+  // Sliders
   final int sliderPerPage = 5;
 
   bool isLoading = true;
-  int numPages = 1;
-  int activeIndex = 0;
+  int numPagesSliders = 1;
+  int activeIndexSlider = 0;
   int modifiedSlider = 0;
 
   List<proto.Setting> settings = [];
   List<double> oldSettings = [];
-  RecipeService recipeService;
-  ConfigurationService configurationService;
 
-  SettingsProvider(RecipeService r, ConfigurationService c) {
-    recipeService = r;
-    configurationService = c;
+  // Selectors
+  int numPagesSelectors = 1;
+  int activeIndexSelectors = 0;
+
+  // Recipe
+  int hoverRecipe = -1;
+  int selectedRecipe = 1;
+
+  SettingService settingService;
+  MetricService metricService;
+
+  SettingsProvider(SettingService r, MetricService s) {
+    settingService = r;
+    metricService = s;
     initiate();
   }
 
   void initiate() async {
-    var defaultRecipe = await recipeService.getRecipe('default');
+    var defaultRecipe = await settingService.readRecipe('default');
     settings = List.of(defaultRecipe.settings);
     oldSettings =
         List.generate(settings.length, (index) => settings[index].value);
     isLoading = false;
-    numPages = (settings.length / sliderPerPage).ceil();
+    numPagesSliders = (settings.length / sliderPerPage).ceil();
     notifyListeners();
   }
 
@@ -39,11 +50,19 @@ class SettingsProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void setActivePageIndex(int i) {
-    if (i < 0 || i > numPages) {
+  void setPageSliders(int i) {
+    if (i < 0 || i > numPagesSliders) {
       throw ('Invalid page index');
     }
-    activeIndex = i;
+    activeIndexSlider = i;
+    notifyListeners();
+  }
+
+  void setPageSelectors(int i) {
+    if (i < 0 || i > numPagesSliders) {
+      throw ('Invalid page index');
+    }
+    activeIndexSelectors = i;
     notifyListeners();
   }
 
@@ -58,7 +77,7 @@ class SettingsProvider with ChangeNotifier {
   }
 
   void loadRecipe() async {
-    var recipe = await recipeService.getRecipe('default');
+    var recipe = await settingService.readRecipe('default');
     settings = recipe.settings;
     oldSettings =
         List.generate(settings.length, (index) => settings[index].value);
@@ -68,21 +87,22 @@ class SettingsProvider with ChangeNotifier {
   void saveRecipe() async {
     for (int i = 0; i < settings.length; i++) {
       if (settings[i].value != oldSettings[i]) {
-        if (settings[i].hasGoalName()) {
-          updateGoal(settings[i]);
+        if (settings[i].hasTarget()) {
+          updateTarget(settings[i]);
         }
-        recipeService.setSetting(settings[i]);
+        settingService.updateSetting(proto.SettingUpdate(
+            name: settings[i].name, value: settings[i].value));
         oldSettings[i] = settings[i].value;
       }
     }
   }
 
-  void updateGoal(proto.Setting setting) async {
-    proto.Configuration config = await configurationService.getConfiguration();
-    for (int i = 0; i < config.metricsConfig.length; i++) {
-      if (config.metricsConfig[i].name == setting.goalName) {
-        config.metricsConfig[i].goal = setting.value;
-        configurationService.setConfiguration(config);
+  void updateTarget(proto.Setting setting) async {
+    proto.MetricConfigs M = await metricService.readConfig();
+    for (int i = 0; i < M.configs.length; i++) {
+      if (M.configs[i].name == setting.target.name) {
+        M.configs[i].target = setting.value;
+        metricService.updateConfig(M);
         return;
       }
     }

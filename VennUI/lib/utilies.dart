@@ -14,10 +14,12 @@ void showModal(BuildContext context, String title, String content) {
   );
 }
 
-Color baseColor = Color(0xff222f3e);
-Color infoColor = Color(0xff576574);
-Color paleColor = Color(0xff8395a7);
-Color oldBaseColor = Color(0xff14121f);
+const Color baseColor = Color(0xff222f3e);
+const Color infoColor = Color(0xff576574);
+const Color paleColor = Color(0xff8395a7);
+const Color oldBaseColor = Color(0xff14121f);
+final Color paleBlue = Color(0xff54a0ff);
+final Color darkBlue = Color(0xff2e86de);
 
 // const serverIP = "127.0.0.1";
 const serverIP = "10.0.2.2";

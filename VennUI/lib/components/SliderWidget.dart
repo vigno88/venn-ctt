@@ -3,9 +3,6 @@ import 'package:VennUI/utilies.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-final Color paleBlue = Color(0xff54a0ff);
-final Color darkBlue = Color(0xff2e86de);
-
 class SliderWidget extends StatelessWidget {
   final double sliderHeight;
   final int min;
