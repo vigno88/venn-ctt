@@ -11,7 +11,6 @@ import (
 )
 
 var pathDB string
-var bucketName string
 
 const currentKey = "current"
 const keyValueName = "users"
@@ -31,6 +30,12 @@ type User struct {
 func Init(ctx context.Context, path string) error {
 	pathDB = path
 	log.Printf("Initiating authentifaction store at %s", pathDB)
+	db, err := storm.Open(pathDB)
+	if err != nil {
+		return err
+	}
+	db.Init(&User{})
+	db.Close()
 	return nil
 }
 
@@ -70,7 +75,7 @@ func UserToProto(u *User) *proto.User {
 }
 
 func CreateUser(u *proto.User) error {
-	db, err := storm.Open("my.db")
+	db, err := storm.Open(pathDB)
 	if err != nil {
 		return err
 	}
@@ -83,7 +88,7 @@ func CreateUser(u *proto.User) error {
 }
 
 func ReadUsers() ([]*proto.User, error) {
-	db, err := storm.Open("my.db")
+	db, err := storm.Open(pathDB)
 	if err != nil {
 		return nil, err
 	}
@@ -101,7 +106,7 @@ func ReadUsers() ([]*proto.User, error) {
 }
 
 func UpdateCurrentUser(name string) error {
-	db, err := storm.Open("my.db")
+	db, err := storm.Open(pathDB)
 	if err != nil {
 		return err
 	}
@@ -114,7 +119,7 @@ func UpdateCurrentUser(name string) error {
 }
 
 func ReadCurrentUser() (string, error) {
-	db, err := storm.Open("my.db")
+	db, err := storm.Open(pathDB)
 	if err != nil {
 		return "", err
 	}
@@ -128,7 +133,7 @@ func ReadCurrentUser() (string, error) {
 }
 
 func ReadUser(name string) (*proto.User, error) {
-	db, err := storm.Open("my.db")
+	db, err := storm.Open(pathDB)
 	if err != nil {
 		return nil, err
 	}
