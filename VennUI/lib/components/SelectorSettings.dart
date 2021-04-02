@@ -1,26 +1,32 @@
+import 'package:VennUI/providers/SettingsProvider.dart';
 import 'package:VennUI/utilies.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SelectorSettings extends StatefulWidget {
-  static const _fruits = [
-    'Apple',
-    'Orange',
-    'Lemon',
-    'Strawberry',
-    'Peach',
-    'Cherry',
-    'Watermelon',
-  ];
+  final _index;
+
+  SelectorSettings(
+    this._index,
+  );
 
   @override
   _SelectorSettingsState createState() => _SelectorSettingsState();
 }
 
 class _SelectorSettingsState extends State<SelectorSettings> {
-  var _selectedFruit = 'Cherry';
+  String _selectedItem;
+  List<String> _items;
 
   @override
   Widget build(BuildContext context) {
+    _selectedItem = context
+        .watch<SettingsProvider>()
+        .selectors[widget._index]
+        .selectedChoice
+        .name;
+    _items =
+        context.watch<SettingsProvider>().selectorChoicesName[widget._index];
     return Container(
         height: 160,
         width: 420,
@@ -60,27 +66,26 @@ class _SelectorSettingsState extends State<SelectorSettings> {
                       ),
                       child: DropdownButtonHideUnderline(
                           child: DropdownButton(
-                        dropdownColor: Colors.white,
-                        style: TextStyle(fontSize: 22, color: baseColor),
-                        elevation: 1,
-                        icon: Icon(Icons.keyboard_arrow_down),
-                        iconEnabledColor: paleColor,
-                        isExpanded: true,
-                        value:
-                            _selectedFruit, // A global variable used to keep track of the selection
-                        items: SelectorSettings._fruits.map((item) {
-                          return DropdownMenuItem(
-                            value: item,
-                            child: Text(
-                              item,
-                            ),
-                          );
-                        }).toList(),
-                        onChanged: (selectedItem) => setState(
-                          () => _selectedFruit = selectedItem,
-                        ),
-                        // onChanged: null,
-                      )))),
+                              dropdownColor: Colors.white,
+                              style: TextStyle(fontSize: 22, color: baseColor),
+                              elevation: 1,
+                              icon: Icon(Icons.keyboard_arrow_down),
+                              iconEnabledColor: paleColor,
+                              isExpanded: true,
+                              value:
+                                  _selectedItem, // A global variable used to keep track of the selection
+                              items: _items.map((item) {
+                                return DropdownMenuItem(
+                                  value: item,
+                                  child: Text(
+                                    item,
+                                  ),
+                                );
+                              }).toList(),
+                              onChanged: (selectedItem) =>
+                                  updateSelectedChoice(context, selectedItem)
+                              // onChanged: null,
+                              )))),
               SizedBox(
                 width: 10,
               ),
@@ -93,5 +98,14 @@ class _SelectorSettingsState extends State<SelectorSettings> {
             ]),
           ],
         ));
+  }
+
+  void updateSelectedChoice(BuildContext context, String newItem) {
+    context
+        .read<SettingsProvider>()
+        .updateSelectorChoice(widget._index, newItem);
+    setState(
+      () => _selectedItem = newItem,
+    );
   }
 }

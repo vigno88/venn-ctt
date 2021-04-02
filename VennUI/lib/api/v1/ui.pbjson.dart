@@ -94,6 +94,13 @@ const Selector$json = const {
   ],
 };
 
+const Selectors$json = const {
+  '1': 'Selectors',
+  '2': const [
+    const {'1': 'selectors', '3': 1, '4': 3, '5': 11, '6': '.v1.Selector', '10': 'selectors'},
+  ],
+};
+
 const SelectorUpdate$json = const {
   '1': 'SelectorUpdate',
   '2': const [
@@ -165,6 +172,14 @@ const WifiNames$json = const {
   '1': 'WifiNames',
   '2': const [
     const {'1': 'SSIDs', '3': 1, '4': 3, '5': 9, '10': 'SSIDs'},
+  ],
+};
+
+const WifiStatus$json = const {
+  '1': 'WifiStatus',
+  '2': const [
+    const {'1': 'isConnected', '3': 1, '4': 1, '5': 8, '10': 'isConnected'},
+    const {'1': 'SSID', '3': 2, '4': 1, '5': 9, '10': 'SSID'},
   ],
 };
 

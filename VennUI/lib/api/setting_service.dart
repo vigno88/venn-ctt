@@ -212,7 +212,7 @@ class SettingService {
         print(e.toString());
         // Try again
         Future.delayed(retryDelay, () {
-          updateCurrentRecipe(uuid);
+          return updateCurrentRecipe(uuid);
         });
       }
     }
@@ -232,7 +232,29 @@ class SettingService {
         print(e.toString());
         // Try again
         Future.delayed(retryDelay, () {
-          updateRecipe(r);
+          return updateRecipe(r);
+        });
+      }
+    }
+  }
+
+  Future<proto.Selectors> readSelectorList() async {
+    if (_clientSend == null) {
+      _clientSend = newClient(serverIP, serverPort);
+    }
+    try {
+      var request = grpc.Empty.create();
+      var selectors = await grpc.SettingServiceClient(_clientSend)
+          .readSelectorList(request);
+      return selectors;
+    } catch (e) {
+      if (!_isShutdown) {
+        // Invalidate current client
+        _shutdownSend();
+        print(e.toString());
+        // Try again
+        Future.delayed(retryDelay, () {
+          return readSelectorList();
         });
       }
     }

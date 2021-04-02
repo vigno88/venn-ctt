@@ -10,7 +10,7 @@ class SettingsProvider with ChangeNotifier {
   final int sliderPerPage = 5;
 
   bool isLoading = true;
-  int numPagesSliders = 1;
+  int numPagesSliders = 3;
   int activeIndexSlider = 0;
   int modifiedSlider = 0;
 
@@ -18,12 +18,17 @@ class SettingsProvider with ChangeNotifier {
   List<double> oldSettings = [];
 
   // Selectors
-  int numPagesSelectors = 1;
-  int activeIndexSelectors = 0;
+  final int selectorPerPage = 4;
 
-  // Recipe
+  int numPagesSelectors = 0;
+  int activeIndexSelectors = 0;
+  List<proto.Selector> selectors = [];
+  List<List<String>> selectorChoicesName = [];
+
+  // Recipes
   int hoverRecipe = -1;
-  int selectedRecipe = 1;
+  int selectedRecipe = 0;
+  List<proto.Recipe> recipes = [];
 
   SettingService settingService;
   MetricService metricService;
@@ -35,12 +40,33 @@ class SettingsProvider with ChangeNotifier {
   }
 
   void initiate() async {
+    // Retrieve the initial settings
     var defaultRecipe = await settingService.readRecipe('default');
     settings = List.of(defaultRecipe.settings);
     oldSettings =
         List.generate(settings.length, (index) => settings[index].value);
+    // numPagesSliders = (settings.length / sliderPerPage).ceil();
+
+    // Retrieve the set of selector
+    var s = await settingService.readSelectorList();
+    selectors = List.of(s.selectors);
+    numPagesSelectors = (selectors.length / selectorPerPage).ceil();
+    for (var selector in selectors) {
+      List<String> choicesName = [];
+      for (var choice in selector.possibleChoices) {
+        choicesName.add(choice.name);
+      }
+      selectorChoicesName.add(choicesName);
+    }
+
+    // Retrieve Initial Set of recipe
+    var uuids = await settingService.readRecipesUUID();
+    for (var uuid in List.of(uuids.uuids)) {
+      var r = await settingService.readRecipe(uuid);
+      recipes.add(r);
+    }
+
     isLoading = false;
-    numPagesSliders = (settings.length / sliderPerPage).ceil();
     notifyListeners();
   }
 
@@ -51,7 +77,7 @@ class SettingsProvider with ChangeNotifier {
   }
 
   void setPageSliders(int i) {
-    if (i < 0 || i > numPagesSliders) {
+    if (i < 0 || i >= numPagesSliders) {
       throw ('Invalid page index');
     }
     activeIndexSlider = i;
@@ -59,7 +85,7 @@ class SettingsProvider with ChangeNotifier {
   }
 
   void setPageSelectors(int i) {
-    if (i < 0 || i > numPagesSliders) {
+    if (i < 0 || i >= numPagesSelectors) {
       throw ('Invalid page index');
     }
     activeIndexSelectors = i;
@@ -106,5 +132,23 @@ class SettingsProvider with ChangeNotifier {
         return;
       }
     }
+  }
+
+  void updateSelectorChoice(int index, String newChoiceName) {
+    var newChoice;
+    for (var choice in selectors[index].possibleChoices) {
+      if (choice.name == newChoiceName) {
+        newChoice = choice;
+      }
+    }
+    selectors[index].selectedChoice = newChoice;
+  }
+
+  void updateRecipeHover(int i) {
+    if (i == hoverRecipe) {
+      hoverRecipe = -1;
+    }
+    hoverRecipe = i;
+    notifyListeners();
   }
 }

@@ -1,7 +1,11 @@
 import 'package:VennUI/components/SelectorSettings.dart';
 import 'package:VennUI/components/StatusBar.dart';
 import 'package:VennUI/components/TopBarIcon.dart';
+import 'package:VennUI/dialogs/user_dialog.dart';
+import 'package:VennUI/dialogs/wifi_dialog.dart';
+import 'package:VennUI/providers/NetworkProvider.dart';
 import 'package:VennUI/providers/SettingsProvider.dart';
+import 'package:VennUI/providers/UserProvider.dart';
 import 'package:VennUI/utilies.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -18,37 +22,47 @@ class SettingsPage extends StatelessWidget {
         body: Stack(
       children: [
         Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.centerLeft,
-                colors: [
-                  const Color(0xfff9fafe),
-                  const Color(0xfff4f4fc),
-                ],
-              ),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.centerLeft,
+              colors: [
+                const Color(0xfff9fafe),
+                const Color(0xfff4f4fc),
+              ],
             ),
-            child: Container(
-                padding: EdgeInsets.fromLTRB(55, 0, 40, 0),
-                child: Column(
-                  children: [
-                    SettingsTitleBar(),
-                    Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          ),
+          child: Selector<SettingsProvider, bool>(
+              selector: (BuildContext context, SettingsProvider provider) =>
+                  provider.isLoading,
+              builder: (context, bool isLoading, _) {
+                if (isLoading) {
+                  return Container();
+                } else {
+                  return Container(
+                      padding: EdgeInsets.fromLTRB(55, 0, 40, 0),
+                      child: Column(
                         children: [
-                          Column(
-                            children: [
-                              SettingsPanel(),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              SelectorPanel(),
-                            ],
-                          ),
-                          RecipePanel(),
-                        ]),
-                  ],
-                ))),
+                          SettingsTitleBar(),
+                          Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  children: [
+                                    SettingsPanel(),
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    SelectorPanel(),
+                                  ],
+                                ),
+                                RecipePanel(),
+                              ]),
+                        ],
+                      ));
+                }
+              }),
+        ),
         StatusBar(),
       ],
     ));
@@ -58,6 +72,7 @@ class SettingsPage extends StatelessWidget {
 class RecipePanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    int hoverRecipe = context.watch<SettingsProvider>().hoverRecipe;
     return Container(
         margin: EdgeInsets.fromLTRB(0, 0, 15, 0),
         child: Row(
@@ -76,14 +91,23 @@ class RecipePanel extends StatelessWidget {
                   separatorBuilder: (BuildContext context, int index) =>
                       const Divider(),
                   padding: const EdgeInsets.all(8),
-                  itemCount: 10,
+                  itemCount: context.watch<SettingsProvider>().recipes.length,
                   itemBuilder: (BuildContext context, int index) {
-                    if (index == 1) {
-                      return RecipeItem(index, "Recipe " + index.toString(),
-                          "info text", true);
+                    if (index == hoverRecipe) {
+                      return RecipeItem(
+                          index,
+                          context
+                              .watch<SettingsProvider>()
+                              .recipes[index]
+                              .title,
+                          context.watch<SettingsProvider>().recipes[index].info,
+                          true);
                     }
-                    return RecipeItem(index, "Recipe " + index.toString(),
-                        "info text", false);
+                    return RecipeItem(
+                        index,
+                        context.watch<SettingsProvider>().recipes[index].title,
+                        context.watch<SettingsProvider>().recipes[index].info,
+                        false);
                   }),
             ),
             RecipeButtons(),
@@ -107,46 +131,50 @@ class RecipeItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
-      child: Container(
-        padding: EdgeInsets.fromLTRB(10, 5, 10, 0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(20)),
-          color: _isSelected ? paleBlue.withOpacity(0.2) : Colors.white,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              (_index + 1).toString(),
-              style: TextStyle(
-                  color: _isSelected ? darkBlue : paleColor.withOpacity(0.6),
-                  fontWeight: FontWeight.bold,
-                  fontSize: 75),
+    return GestureDetector(
+        onTap: () => context.read<SettingsProvider>().updateRecipeHover(_index),
+        child: Container(
+          padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+          child: Container(
+            padding: EdgeInsets.fromLTRB(10, 5, 10, 0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(20)),
+              color: _isSelected ? paleBlue.withOpacity(0.2) : Colors.white,
             ),
-            SizedBox(
-              width: 10,
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
-                  child: Text(
-                    _title,
-                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                  ),
+                Text(
+                  (_index + 1).toString(),
+                  style: TextStyle(
+                      color:
+                          _isSelected ? darkBlue : paleColor.withOpacity(0.6),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 75),
                 ),
-                Text(_infoText, style: TextStyle(fontSize: 17)),
+                SizedBox(
+                  width: 10,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Container(
+                      margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
+                      child: Text(
+                        _title,
+                        style: TextStyle(
+                            fontSize: 25, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    Text(_infoText, style: TextStyle(fontSize: 17)),
+                  ],
+                )
               ],
-            )
-          ],
-        ),
-      ),
-    );
+            ),
+          ),
+        ));
   }
 }
 
@@ -172,37 +200,7 @@ class SelectorPanel extends StatelessWidget {
               ),
               onPageChanged: (index) =>
                   context.read<SettingsProvider>().setPageSelectors(index),
-              children: [
-                Container(
-                  child: Row(
-                    // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    // crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Expanded(
-                          child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SelectorSettings(),
-                          SelectorSettings(),
-                        ],
-                      )),
-                      Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            SelectorSettings(),
-                            SelectorSettings(),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(),
-                Container(),
-              ],
+              children: getSelectorPages(context),
             ),
           ),
           SizedBox(
@@ -213,6 +211,79 @@ class SelectorPanel extends StatelessWidget {
         SelectorButtons(),
       ],
     ));
+  }
+
+  List<Widget> getSelectorPages(BuildContext context) {
+    int numSettings =
+        Provider.of<SettingsProvider>(context, listen: false).selectors.length;
+    int numPages =
+        Provider.of<SettingsProvider>(context, listen: false).numPagesSelectors;
+
+    List<Container> pagesContainer = [];
+    for (int indexPage = 0; indexPage < numPages; indexPage++) {
+      var selectors = [];
+      for (int indexSelector = indexPage * 4;
+          indexSelector < (indexPage + 1) * 4;
+          indexSelector++) {
+        if (indexSelector >= numSettings) {
+          break;
+        }
+        selectors.add(SelectorSettings(indexSelector));
+      }
+      var eC = Container(
+        height: 160,
+        width: 420,
+      );
+      switch (selectors.length) {
+        case 1:
+          pagesContainer.add(getSelectorPage(selectors[0], eC, eC, eC));
+          break;
+        case 2:
+          pagesContainer
+              .add(getSelectorPage(selectors[0], selectors[1], eC, eC));
+          break;
+        case 3:
+          pagesContainer.add(
+              getSelectorPage(selectors[0], selectors[1], selectors[2], eC));
+          break;
+        case 4:
+          pagesContainer.add(getSelectorPage(
+              selectors[0], selectors[1], selectors[2], selectors[3]));
+          break;
+        default:
+          pagesContainer.add(getSelectorPage(eC, eC, eC, eC));
+          break;
+      }
+    }
+    return pagesContainer;
+  }
+
+  Widget getSelectorPage(Widget w1, Widget w2, Widget w3, w4) {
+    return Container(
+      child: Row(
+        children: [
+          Expanded(
+              child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              w1,
+              w2,
+            ],
+          )),
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                w3,
+                w4,
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -238,7 +309,16 @@ class SettingsTitleBar extends StatelessWidget {
                   child: Container(
                 child: IconButton(
                     icon: Icon(Typicons.wi_fi),
-                    onPressed: () {},
+                    onPressed: () {
+                      final provider =
+                          Provider.of<NetworkProvider>(context, listen: false);
+                      showDialog(
+                          context: context,
+                          builder: (_) {
+                            return ChangeNotifierProvider.value(
+                                value: provider, child: WifiDialogBox());
+                          });
+                    },
                     iconSize: 50.0,
                     color: baseColor),
                 height: 60,
@@ -251,7 +331,16 @@ class SettingsTitleBar extends StatelessWidget {
                   child: Container(
                 child: IconButton(
                     icon: Icon(Typicons.user),
-                    onPressed: () {},
+                    onPressed: () {
+                      final provider =
+                          Provider.of<UserProvider>(context, listen: false);
+                      showDialog(
+                          context: context,
+                          builder: (_) {
+                            return ChangeNotifierProvider.value(
+                                value: provider, child: UserDialogBox());
+                          });
+                    },
                     iconSize: 50.0,
                     color: baseColor),
                 height: 60,
@@ -282,6 +371,8 @@ class SettingsPageIndicator extends StatelessWidget {
 class SelectorPageIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    int count = context.watch<SettingsProvider>().numPagesSelectors;
+    int index = context.watch<SettingsProvider>().activeIndexSelectors;
     return Container(
         height: 10,
         child: AnimatedSmoothIndicator(

@@ -29,3 +29,7 @@ func (s *networkServiceServer) ConnectWifi(ctx context.Context, cred *proto.Wifi
 
 	return &proto.Empty{}, nil
 }
+
+func (s *networkServiceServer) ReadStatus(ctx context.Context, e *proto.Empty) (*proto.WifiStatus, error) {
+	return nil, nil
+}

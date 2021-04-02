@@ -84,4 +84,26 @@ class NetworkService {
       }
     }
   }
+
+  Future<proto.WifiStatus> readStatus() async {
+    if (_clientSend == null) {
+      _clientSend = newClient(serverIP, serverPort);
+    }
+    try {
+      var request = grpc.Empty().createEmptyInstance();
+      var status =
+          await grpc.NetworkServiceClient(_clientSend).readStatus(request);
+      return status;
+    } catch (e) {
+      if (!_isShutdown) {
+        // Invalidate current client
+        _shutdownSend();
+        print(e.toString());
+        // Try again
+        Future.delayed(retryDelay, () {
+          return readStatus();
+        });
+      }
+    }
+  }
 }

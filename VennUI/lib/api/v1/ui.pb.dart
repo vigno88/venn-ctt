@@ -730,6 +730,47 @@ class Selector extends $pb.GeneratedMessage {
   $core.List<Choice> get possibleChoices => $_getList(2);
 }
 
+class Selectors extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'Selectors', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'v1'), createEmptyInstance: create)
+    ..pc<Selector>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'selectors', $pb.PbFieldType.PM, subBuilder: Selector.create)
+    ..hasRequiredFields = false
+  ;
+
+  Selectors._() : super();
+  factory Selectors({
+    $core.Iterable<Selector> selectors,
+  }) {
+    final _result = create();
+    if (selectors != null) {
+      _result.selectors.addAll(selectors);
+    }
+    return _result;
+  }
+  factory Selectors.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory Selectors.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  Selectors clone() => Selectors()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  Selectors copyWith(void Function(Selectors) updates) => super.copyWith((message) => updates(message as Selectors)); // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static Selectors create() => Selectors._();
+  Selectors createEmptyInstance() => create();
+  static $pb.PbList<Selectors> createRepeated() => $pb.PbList<Selectors>();
+  @$core.pragma('dart2js:noInline')
+  static Selectors getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Selectors>(create);
+  static Selectors _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.List<Selector> get selectors => $_getList(0);
+}
+
 class SelectorUpdate extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'SelectorUpdate', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'v1'), createEmptyInstance: create)
     ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'name')
@@ -1188,6 +1229,67 @@ class WifiNames extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(1)
   $core.List<$core.String> get sSIDs => $_getList(0);
+}
+
+class WifiStatus extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'WifiStatus', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'v1'), createEmptyInstance: create)
+    ..aOB(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'isConnected', protoName: 'isConnected')
+    ..aOS(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'SSID', protoName: 'SSID')
+    ..hasRequiredFields = false
+  ;
+
+  WifiStatus._() : super();
+  factory WifiStatus({
+    $core.bool isConnected,
+    $core.String sSID,
+  }) {
+    final _result = create();
+    if (isConnected != null) {
+      _result.isConnected = isConnected;
+    }
+    if (sSID != null) {
+      _result.sSID = sSID;
+    }
+    return _result;
+  }
+  factory WifiStatus.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory WifiStatus.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.deepCopy] instead. '
+  'Will be removed in next major version')
+  WifiStatus clone() => WifiStatus()..mergeFromMessage(this);
+  @$core.Deprecated(
+  'Using this can add significant overhead to your binary. '
+  'Use [GeneratedMessageGenericExtensions.rebuild] instead. '
+  'Will be removed in next major version')
+  WifiStatus copyWith(void Function(WifiStatus) updates) => super.copyWith((message) => updates(message as WifiStatus)); // ignore: deprecated_member_use
+  $pb.BuilderInfo get info_ => _i;
+  @$core.pragma('dart2js:noInline')
+  static WifiStatus create() => WifiStatus._();
+  WifiStatus createEmptyInstance() => create();
+  static $pb.PbList<WifiStatus> createRepeated() => $pb.PbList<WifiStatus>();
+  @$core.pragma('dart2js:noInline')
+  static WifiStatus getDefault() => _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<WifiStatus>(create);
+  static WifiStatus _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.bool get isConnected => $_getBF(0);
+  @$pb.TagNumber(1)
+  set isConnected($core.bool v) { $_setBool(0, v); }
+  @$pb.TagNumber(1)
+  $core.bool hasIsConnected() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearIsConnected() => clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get sSID => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set sSID($core.String v) { $_setString(1, v); }
+  @$pb.TagNumber(2)
+  $core.bool hasSSID() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearSSID() => clearField(2);
 }
 
 class Action extends $pb.GeneratedMessage {

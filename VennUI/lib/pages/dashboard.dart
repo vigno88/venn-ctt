@@ -1,5 +1,9 @@
 import 'package:VennUI/components/BottomBar.dart';
+import 'package:VennUI/dialogs/user_dialog.dart';
+import 'package:VennUI/dialogs/wifi_dialog.dart';
 import 'package:VennUI/providers/MetricProvider.dart';
+import 'package:VennUI/providers/NetworkProvider.dart';
+import 'package:VennUI/providers/UserProvider.dart';
 import 'package:VennUI/providers/WidgetGridProvider.dart';
 import 'package:VennUI/utilies.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -214,7 +218,16 @@ class MetricTitleBar extends StatelessWidget {
                   child: Container(
                 child: IconButton(
                     icon: Icon(Typicons.wi_fi),
-                    onPressed: () {},
+                    onPressed: () {
+                      final provider =
+                          Provider.of<NetworkProvider>(context, listen: false);
+                      showDialog(
+                          context: context,
+                          builder: (_) {
+                            return ChangeNotifierProvider.value(
+                                value: provider, child: WifiDialogBox());
+                          });
+                    },
                     iconSize: 50.0,
                     color: baseColor),
                 height: 60,
@@ -227,7 +240,16 @@ class MetricTitleBar extends StatelessWidget {
                   child: Container(
                 child: IconButton(
                     icon: Icon(Typicons.user),
-                    onPressed: () {},
+                    onPressed: () {
+                      final provider =
+                          Provider.of<UserProvider>(context, listen: false);
+                      showDialog(
+                          context: context,
+                          builder: (_) {
+                            return ChangeNotifierProvider.value(
+                                value: provider, child: UserDialogBox());
+                          });
+                    },
                     iconSize: 50.0,
                     color: baseColor),
                 height: 60,
