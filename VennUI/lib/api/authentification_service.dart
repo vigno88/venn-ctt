@@ -84,4 +84,26 @@ class AuthentificationService {
       }
     }
   }
+
+  Future<proto.User> getCurrentUser() async {
+    if (_clientSend == null) {
+      _clientSend = newClient(serverIP, serverPort);
+    }
+    try {
+      var request = grpc.Empty().createEmptyInstance();
+      var user = await grpc.AuthentificationServiceClient(_clientSend)
+          .getCurrentUser(request);
+      return user;
+    } catch (e) {
+      if (!_isShutdown) {
+        // Invalidate current client
+        _shutdownSend();
+        print(e.toString());
+        // Try again
+        Future.delayed(retryDelay, () {
+          return getCurrentUser();
+        });
+      }
+    }
+  }
 }

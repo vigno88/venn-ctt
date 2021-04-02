@@ -11,28 +11,25 @@ import (
 type authentificationServiceServer struct {
 }
 
+var currentUser *proto.User
+
 func NewAuthentificationServiceServer() proto.AuthentificationServiceServer {
+	currentUser = &proto.User{Title: "User", Role: proto.User_USER}
 	return &authentificationServiceServer{}
 }
 
 func (s *authentificationServiceServer) ReadUserList(ctx context.Context, e *proto.Empty) (*proto.Users, error) {
-	return nil, nil
+	return &proto.Users{Users: []*proto.User{
+		{Title: "User", Role: proto.User_USER},
+		{Title: "Administrator", Role: proto.User_ADMIN},
+		{Title: "God", Role: proto.User_CREATOR},
+	}}, nil
 }
 func (s *authentificationServiceServer) UpdateCurrentUser(ctx context.Context, u *proto.User) (*proto.Empty, error) {
+	currentUser = u
 	return nil, nil
 }
 
-// func (s *authentificationServiceServer) Authentificate(ctx context.Context, cred *proto.Credentials) (*proto.Empty, error) {
-// 	if cred == nil {
-// 		return &proto.Empty{},
-// 			status.Error(codes.InvalidArgument, "credentials cannot be null")
-// 	}
-// 	found, err := auth.Verify(ctx, cred.GetUser(), cred.GetPassword())
-// 	if err != nil {
-// 		return &proto.Empty{}, status.Error(codes.Internal, err.Error())
-// 	}
-// 	if !found {
-// 		return &proto.Empty{}, fmt.Errorf("user-password combination not found")
-// 	}
-// 	return &proto.Empty{}, nil
-// }
+func (s *authentificationServiceServer) GetCurrentUser(ctx context.Context, e *proto.Empty) (*proto.User, error) {
+	return currentUser, nil
+}

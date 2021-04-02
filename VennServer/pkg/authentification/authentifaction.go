@@ -1,80 +1,142 @@
+// +build production
+
 package authentifaction
 
 import (
 	"context"
-	"fmt"
 	"log"
 
-	bolt "go.etcd.io/bbolt"
+	"github.com/asdine/storm/v3"
+	proto "github.com/vigno88/Venn/VennServer/pkg/api/v1"
 )
 
 var pathDB string
 var bucketName string
 
+const currentKey = "current"
+const keyValueName = "users"
+
+const (
+	USER    = `user`
+	ADMIN   = `admin`
+	CREATOR = `creator`
+)
+
+type User struct {
+	Title    string `storm:"id"`
+	Type     string
+	Password string
+}
+
 func Init(ctx context.Context, path string) error {
-	// home, err := os.UserHomeDir()
-	// if err != nil {
-	// 	log.Printf("Error wen getting home path: %v", err)
-	// }
-	// pathDB = home + "/badger/auth.db"
 	pathDB = path
-	bucketName = "main"
 	log.Printf("Initiating authentifaction store at %s", pathDB)
-	db, err := bolt.Open(pathDB, 0600, nil)
-	if err != nil {
-		return err
-	}
-	err = db.Update(func(tx *bolt.Tx) error {
-		_, err := tx.CreateBucketIfNotExists([]byte(bucketName))
-		return err
-	})
-	db.Close()
-	populate(ctx)
 	return nil
 }
 
-// We have only two user for now so we populate the entries on init
-func populate(ctx context.Context) error {
-	db, err := bolt.Open(pathDB, 0600, nil)
+func protoToUser(u *proto.User) *User {
+	var t string
+	switch u.Role {
+	case proto.User_ADMIN:
+		t = ADMIN
+		break
+	case proto.User_CREATOR:
+		t = CREATOR
+		break
+	case proto.User_USER:
+		t = USER
+		break
+	}
+	return &User{
+		Title: u.Title,
+		Type:  t,
+	}
+}
+
+func UserToProto(u *User) *proto.User {
+	var t proto.User_Roles
+	switch u.Type {
+	case ADMIN:
+		t = proto.User_ADMIN
+		break
+	case USER:
+		t = proto.User_USER
+		break
+	case CREATOR:
+		t = proto.User_CREATOR
+		break
+	}
+	return &proto.User{Title: u.Title, Role: t}
+}
+
+func CreateUser(u *proto.User) error {
+	db, err := storm.Open("my.db")
 	if err != nil {
 		return err
 	}
 	defer db.Close()
-	err = db.Update(func(tx *bolt.Tx) error {
-		b := tx.Bucket([]byte(bucketName))
-		err := b.Put([]byte("admin"), []byte("admin"))
-		if err != nil {
-			return err
-		}
-		err = b.Put([]byte("fab"), []byte("uneed"))
+	err = db.Save(protoToUser(u))
+	if err == nil {
 		return err
-	})
+	}
+	return nil
+}
+
+func ReadUsers() ([]*proto.User, error) {
+	db, err := storm.Open("my.db")
 	if err != nil {
-		log.Printf("Error while populating authentifaction store: %v", err)
+		return nil, err
+	}
+	defer db.Close()
+	var users []User
+	err = db.All(&users)
+	if err != nil {
+		return nil, err
+	}
+	var protoUsers []*proto.User
+	for _, u := range users {
+		protoUsers = append(protoUsers, UserToProto(&u))
+	}
+	return protoUsers, nil
+}
+
+func UpdateCurrentUser(name string) error {
+	db, err := storm.Open("my.db")
+	if err != nil {
+		return err
+	}
+	defer db.Close()
+	err = db.Set(keyValueName, currentKey, name)
+	if err != nil {
+		return err
 	}
 	return err
 }
 
-func Verify(ctx context.Context, username string, password string) (bool, error) {
-	var value []byte
-	db, err := bolt.Open(pathDB, 0644, nil)
+func ReadCurrentUser() (string, error) {
+	db, err := storm.Open("my.db")
 	if err != nil {
-		return false, err
+		return "", err
 	}
 	defer db.Close()
-	err = db.View(func(tx *bolt.Tx) error {
-		b := tx.Bucket([]byte(bucketName))
-		value = b.Get([]byte(username))
-		if b == nil {
-			return fmt.Errorf("Couldnt get %s key value", username)
-		}
-		return nil
-	})
+	var name string
+	err = db.Get(keyValueName, currentKey, &name)
 	if err != nil {
-		return false, err
+		return "", err
 	}
-	if password != string(value) {
-		return false, nil
+	return name, nil
+}
+
+func ReadUser(name string) (*proto.User, error) {
+	db, err := storm.Open("my.db")
+	if err != nil {
+		return nil, err
 	}
-	return true, nil
+	defer db.Close()
+	user := &proto.User{}
+	err = db.One("Title", name, &user)
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
 }

@@ -23,7 +23,16 @@ class _UserDialogBoxState extends State<UserDialogBox> {
         borderRadius: BorderRadius.circular(10),
       ),
       backgroundColor: Colors.transparent,
-      child: contentBox(context),
+      child: Selector<UserProvider, bool>(
+          selector: (BuildContext context, UserProvider provider) =>
+              provider.isLoading,
+          builder: (context, bool isLoading, _) {
+            if (isLoading) {
+              return Container();
+            } else {
+              return contentBox(context);
+            }
+          }),
     );
   }
 
@@ -55,7 +64,7 @@ class _UserDialogBoxState extends State<UserDialogBox> {
               ),
               Text(
                 "Currently connected using: " +
-                    context.watch<UserProvider>().currentUser,
+                    context.watch<UserProvider>().currentUser.title,
                 style: TextStyle(
                     fontSize: 25,
                     fontWeight: FontWeight.w300,
@@ -97,14 +106,16 @@ class _UserDialogBoxState extends State<UserDialogBox> {
                                       index,
                                       context
                                           .watch<UserProvider>()
-                                          .userList[index],
+                                          .userList[index]
+                                          .title,
                                       true);
                                 }
                                 return UserItem(
                                     index,
                                     context
                                         .watch<UserProvider>()
-                                        .userList[index],
+                                        .userList[index]
+                                        .title,
                                     false);
                               }),
                         ),
@@ -116,15 +127,18 @@ class _UserDialogBoxState extends State<UserDialogBox> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    UserButton("Change User", () {
-                      Navigator.of(context).pop();
-                    }),
+                    UserButton("Change User", () => updateUser(context)),
                   ]),
             ],
           ),
         ),
       ],
     );
+  }
+
+  void updateUser(BuildContext context) {
+    context.read<UserProvider>().updateCurrentUser(hoverUser);
+    Navigator.of(context).pop();
   }
 }
 

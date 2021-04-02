@@ -26,7 +26,16 @@ class _WifiDialogBoxState extends State<WifiDialogBox> {
         borderRadius: BorderRadius.circular(10),
       ),
       backgroundColor: Colors.transparent,
-      child: contentBox(context),
+      child: Selector<NetworkProvider, bool>(
+          selector: (BuildContext context, NetworkProvider provider) =>
+              provider.isLoading,
+          builder: (context, bool isLoading, _) {
+            if (isLoading) {
+              return Container();
+            } else {
+              return contentBox(context);
+            }
+          }),
     );
   }
 
@@ -139,7 +148,7 @@ class _WifiDialogBoxState extends State<WifiDialogBox> {
                     SizedBox(
                       width: 10,
                     ),
-                    WifiButton("Connect"),
+                    WifiButton("Connect", () => connectWifi(context)),
                   ]),
               SizedBox(
                 height: 40,
@@ -161,6 +170,13 @@ class _WifiDialogBoxState extends State<WifiDialogBox> {
         ),
       ],
     );
+  }
+
+  void connectWifi(BuildContext context) {
+    context
+        .read<NetworkProvider>()
+        .connectWifi(hoverRecipe, textController.text);
+    Navigator.of(context).pop();
   }
 
   void updateKeyboard(VirtualKeyboardKey key) {
@@ -249,8 +265,9 @@ class WifiItem extends StatelessWidget {
 
 class WifiButton extends StatefulWidget {
   final String text;
+  final Function f;
 
-  WifiButton(this.text);
+  WifiButton(this.text, this.f);
 
   @override
   _WifiButtonState createState() => _WifiButtonState();
@@ -287,7 +304,7 @@ class _WifiButtonState extends State<WifiButton>
     return GestureDetector(
       onTapDown: _tapDown,
       onTapUp: _tapUp,
-      onTap: () => null,
+      onTap: () => widget.f(),
       child: Container(
         height: 50,
         width: 130,

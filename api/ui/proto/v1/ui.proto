@@ -195,6 +195,8 @@ service AuthentificationService {
 
   // UpdateCurrentUser update the current active user
   rpc UpdateCurrentUser(User) returns (Empty) {}
+
+  rpc GetCurrentUser(Empty) returns (User) {}
 }
 
 //=============================================================================

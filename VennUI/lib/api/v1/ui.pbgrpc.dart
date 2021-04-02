@@ -381,6 +381,10 @@ class AuthentificationServiceClient extends $grpc.Client {
       '/v1.AuthentificationService/UpdateCurrentUser',
       ($0.User value) => value.writeToBuffer(),
       ($core.List<$core.int> value) => $0.Empty.fromBuffer(value));
+  static final _$getCurrentUser = $grpc.ClientMethod<$0.Empty, $0.User>(
+      '/v1.AuthentificationService/GetCurrentUser',
+      ($0.Empty value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) => $0.User.fromBuffer(value));
 
   AuthentificationServiceClient($grpc.ClientChannel channel,
       {$grpc.CallOptions options,
@@ -395,6 +399,11 @@ class AuthentificationServiceClient extends $grpc.Client {
   $grpc.ResponseFuture<$0.Empty> updateCurrentUser($0.User request,
       {$grpc.CallOptions options}) {
     return $createUnaryCall(_$updateCurrentUser, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.User> getCurrentUser($0.Empty request,
+      {$grpc.CallOptions options}) {
+    return $createUnaryCall(_$getCurrentUser, request, options: options);
   }
 }
 
@@ -416,6 +425,13 @@ abstract class AuthentificationServiceBase extends $grpc.Service {
         false,
         ($core.List<$core.int> value) => $0.User.fromBuffer(value),
         ($0.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.Empty, $0.User>(
+        'GetCurrentUser',
+        getCurrentUser_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
+        ($0.User value) => value.writeToBuffer()));
   }
 
   $async.Future<$0.Users> readUserList_Pre(
@@ -428,10 +444,17 @@ abstract class AuthentificationServiceBase extends $grpc.Service {
     return updateCurrentUser(call, await request);
   }
 
+  $async.Future<$0.User> getCurrentUser_Pre(
+      $grpc.ServiceCall call, $async.Future<$0.Empty> request) async {
+    return getCurrentUser(call, await request);
+  }
+
   $async.Future<$0.Users> readUserList(
       $grpc.ServiceCall call, $0.Empty request);
   $async.Future<$0.Empty> updateCurrentUser(
       $grpc.ServiceCall call, $0.User request);
+  $async.Future<$0.User> getCurrentUser(
+      $grpc.ServiceCall call, $0.Empty request);
 }
 
 class NetworkServiceClient extends $grpc.Client {

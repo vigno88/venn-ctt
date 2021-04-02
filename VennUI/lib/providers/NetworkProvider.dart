@@ -6,13 +6,33 @@ import 'package:VennUI/api/v1/ui.pb.dart' as proto;
 class NetworkProvider with ChangeNotifier {
   NetworkService networkService;
 
-  List<String> wifiSSIDs = ["ssid-fdasfd-1", "ssid-fdasfd-1", "ssid-fdasfd-1"];
+  List<String> wifiSSIDs = [];
   int hoverSSID = -1;
-
-  String currentWifi = "wifi 2134214";
+  bool isLoading = true;
+  String currentWifi = "Not Connected";
 
   NetworkProvider(NetworkService n) {
     networkService = n;
+    initiate();
+  }
+
+  void initiate() async {
+    // Get the current WiFi status
+    var status = await networkService.readStatus();
+    if (status.hasIsConnected()) {
+      if (status.isConnected == true) {
+        currentWifi = status.sSID;
+      } else {
+        currentWifi = "Not Connected";
+      }
+    }
+    // Get the list of wifi
+    var wifis = await networkService.readWifiList();
+    if (wifis.sSIDs != null) {
+      wifiSSIDs = wifis.sSIDs;
+    }
+    isLoading = false;
+    notifyListeners();
   }
 
   void updateSSIDHover(int i) {
@@ -21,5 +41,13 @@ class NetworkProvider with ChangeNotifier {
     }
     hoverSSID = i;
     notifyListeners();
+  }
+
+  void connectWifi(int i, String password) {
+    if (i < 0 || i >= wifiSSIDs.length) {
+      return;
+    }
+    var c = proto.WifiCredentials(password: password, sSID: wifiSSIDs[i]);
+    networkService.connectWifi(c);
   }
 }
