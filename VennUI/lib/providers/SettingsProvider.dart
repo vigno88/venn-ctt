@@ -1,4 +1,3 @@
-import 'package:VennUI/api/configuration_service.dart';
 import 'package:VennUI/api/metric_service.dart';
 import 'package:flutter/material.dart';
 import 'package:VennUI/api/setting_service.dart';
