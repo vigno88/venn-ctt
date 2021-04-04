@@ -16,7 +16,7 @@ import (
 	"github.com/vigno88/Venn/VennServer/pkg/util"
 )
 
-func Run(ctx context.Context, c chan *proto.MetricUpdate) {
+func Run(ctx context.Context, c chan *proto.MetricUpdates) {
 	// Verify validity software
 	err := validate(util.PathKey)
 	if err != nil {

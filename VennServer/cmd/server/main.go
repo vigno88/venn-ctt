@@ -14,7 +14,7 @@ import (
 
 func main() {
 	// metricChannel is used to send stream data to gRPC API
-	metricChan := make(chan *proto.MetricUpdate, 200)
+	metricChan := make(chan *proto.MetricUpdates, 200)
 	go orchestrator.Run(context.Background(), metricChan)
 	if err := grpc.RunServer(context.Background(),
 		service.NewMetricServiceServer(metricChan),

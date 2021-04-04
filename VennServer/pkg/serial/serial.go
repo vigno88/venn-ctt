@@ -22,12 +22,12 @@ type serialManager struct {
 	ToSend   chan string
 	Received chan string
 	ErrChan  chan error
-	gRPCChan chan *proto.MetricUpdate
+	gRPCChan chan *proto.MetricUpdates
 }
 
 var manager serialManager
 
-func Init(ctx context.Context, c chan *proto.MetricUpdate) error {
+func Init(ctx context.Context, c chan *proto.MetricUpdates) error {
 	p, err := manager.openPort()
 	if err != nil {
 		return err

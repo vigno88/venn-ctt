@@ -2,101 +2,113 @@ package metrics
 
 import (
 	"context"
-	"fmt"
 	"log"
 
-	protobuf "github.com/golang/protobuf/proto"
+	"github.com/asdine/storm/v3"
 	proto "github.com/vigno88/Venn/VennServer/pkg/api/v1"
-	bolt "go.etcd.io/bbolt"
+	// bolt "go.etcd.io/bbolt"
 )
 
 var pathDB string
-var bucketName string
 
-// var metricsChan chan proto.Metric
+// var bucketName string
 
-// Init open the kv store at the specified path
+type Metric struct {
+	Name      string `storm:"Id"`
+	Unit      string
+	Target    float32
+	Type      string
+	Info      string
+	HasTarget bool
+	Value     float64
+}
+
+func ToProto(m *Metric) *proto.MetricConfig {
+	return &proto.MetricConfig{
+		Unit:      m.Unit,
+		Target:    m.Target,
+		Type:      m.Type,
+		Name:      m.Name,
+		Info:      m.Info,
+		HasTarget: m.HasTarget,
+	}
+}
+
+func ToMetric(m *proto.MetricConfig) *Metric {
+	return &Metric{
+		Name:      m.Name,
+		Unit:      m.Unit,
+		Target:    m.Target,
+		Type:      m.Type,
+		Info:      m.Info,
+		HasTarget: m.HasTarget,
+	}
+}
+
+// Init open the metric store at the specified path, the store is used to store
+// the metric configuration as well as the most recent metrics
 func Init(ctx context.Context, path string) error {
 	log.Printf("Initiating the metrics store at %s\n", pathDB)
 	pathDB = path
-	bucketName = "main"
-	db, err := bolt.Open(pathDB, 0600, nil)
-	if err != nil {
-		return err
-	}
-	err = db.Update(func(tx *bolt.Tx) error {
-		_, err := tx.CreateBucketIfNotExists([]byte(bucketName))
-		return err
-	})
-	db.Close()
-	return err
-}
-
-// Put put the metric into the kv store
-func Put(ctx context.Context, metric *proto.MetricUpdate) error {
-	bytes, err := protobuf.Marshal(metric)
-	if err != nil {
-		return err
-	}
-
-	db, err := bolt.Open(pathDB, 0600, nil)
+	db, err := storm.Open(pathDB)
 	if err != nil {
 		return err
 	}
 	defer db.Close()
-	return db.Update(func(tx *bolt.Tx) error {
-		b := tx.Bucket([]byte(bucketName))
-		err := b.Put([]byte(metric.GetName()), bytes)
-		return err
-	})
+	err = db.Init(&Metric{})
+	return err
 }
 
-// Get takes the name of a metric and retrieve it from the kv store
-func Get(ctx context.Context, name string) (*proto.MetricUpdate, error) {
-	var value []byte
-	db, err := bolt.Open(pathDB, 0600, nil)
+func Create(m *Metric) error {
+	db, err := storm.Open(pathDB)
+	if err != nil {
+		return err
+	}
+	defer db.Close()
+	err = db.Save(m)
+	if err == storm.ErrAlreadyExists {
+		return db.Update(m)
+	}
+	return err
+}
+
+func Update(m *Metric) error {
+	db, err := storm.Open(pathDB)
+	if err != nil {
+		return err
+	}
+	defer db.Close()
+	err = db.Save(m)
+	if err == storm.ErrAlreadyExists {
+		return db.Update(m)
+	}
+	return err
+}
+
+func Read(name string) (*Metric, error) {
+	db, err := storm.Open(pathDB)
 	if err != nil {
 		return nil, err
 	}
-	err = db.View(func(tx *bolt.Tx) error {
-		b := tx.Bucket([]byte(bucketName))
-		value = b.Get([]byte(name))
-		if value == nil {
-			return fmt.Errorf("Couldnt find the value of this key: %s", name)
-		}
-		return nil
-	})
-	metric := &proto.MetricUpdate{}
-	if err != nil {
-		return metric, err
-	}
-	err = protobuf.Unmarshal(value, metric)
-	return metric, err
+	defer db.Close()
+	var m Metric
+	err = db.One("Name", name, &m)
+	return &m, err
+
 }
 
-func GetAll(ctx context.Context) (*proto.MetricUpdates, error) {
-	// var metrics []*proto.Metric
-	// err := db.View(func(txn *badger.Txn) error {
-	// 	opts := badger.DefaultIteratorOptions
-	// 	opts.PrefetchSize = 10
-	// 	it := txn.NewIterator(opts)
-	// 	defer it.Close()
-	// 	for it.Rewind(); it.Valid(); it.Next() {
-	// 		item := it.Item()
-	// 		value, err := item.ValueCopy(nil)
-	// 		if err != nil {
-	// 			return err
-	// 		}
-	// 		metric := &proto.Metric{}
-	// 		err = protobuf.Unmarshal(value, metric)
-	// 		if err != nil {
-	// 			return err
-	// 		}
-	// 		metrics = append(metrics, metric)
-	// 	}
-	// 	return nil
-	// })
-	// log.Printf("Retrieved all the metrics from the store\n")
-	// return &proto.Metrics{Metrics: metrics}, err
-	return nil, nil
+// Not implemented for now
+func Delete(name string) *Metric {
+	return nil
+}
+
+func ReadAll() ([]Metric, error) {
+	db, err := storm.Open(pathDB)
+	if err != nil {
+		return nil, err
+	}
+	defer db.Close()
+	var metrics []Metric
+	err = db.All(&metrics)
+	return metrics, err
 }
