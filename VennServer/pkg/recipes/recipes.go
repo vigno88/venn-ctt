@@ -17,7 +17,7 @@ const keyValueName = "recipe"
 
 type Recipe struct {
 	UUID      string `storm:"id"`
-	Name      string // Name of the recipe
+	Name      string
 	Info      string
 	Selectors map[string]*proto.Selector
 	Sliders   map[string]*proto.Setting
@@ -36,16 +36,6 @@ func Init(ctx context.Context, path string) error {
 		return err
 	}
 	db.Close()
-	// // Get the default recipe and save it
-	// defaultRecipe := GetDefaultRecipe(ctx)
-	// defaultRecipe.Uuid = "default"
-	// PutRecipe(ctx, defaultRecipe)
-
-	// // Send the recipe settings to the microcontroller
-	// for _, setting := range defaultRecipe.Settings {
-	// 	serial.SendSetting(setting)
-	// }
-	// log.Println("Initial settings sent to arduino")
 	return err
 }
 
@@ -154,6 +144,16 @@ func ReadAllRecipes() ([]Recipe, error) {
 	var recipes []Recipe
 	err = db.All(&recipes)
 	return recipes, err
+}
+
+func SaveRecipe(r *Recipe) error {
+	db, err := storm.Open(pathDB)
+	if err != nil {
+		return err
+	}
+	defer db.Close()
+	err = db.Save(r)
+	return err
 }
 
 func recipeToString(r *proto.Recipe) []string {

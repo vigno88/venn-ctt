@@ -1,37 +1,79 @@
 defaultRecipe:
-  - setting:
-      type: "slider" 
-      value: 0
-      max: 100
-      min: 0
-      name: "Temperature"
-      info: "Ce slider controle la temperature de l'air en pourcentage "
-      smallName: "1"
-      goalName: "Temperature 1"
-  - setting:
-      type: "slider" 
-      value: 0
-      max: 100
-      min: 0
-      name: "Vitesse"
-      info: "Ce slider controle la vitesse de rotation du tonneau."
-      smallName: "2"
-  - setting:
-      type: "slider" 
-      value: 1
-      max: 600
-      min: 30
-      name: "Temps"
-      info: "Ce slider controle le temps de rotation du tonnean en seconde."
-      smallName: "3"
-  # - setting:
-  #     type: "slider"
-  #     value: 10
-  #     max: 100
-  #     min: 30
-  #     name: "Air"
-  #     info: "Ce Slider controle la vitesse de l'air chaud en pourcentage."
-  #     smallName: "4"
+    settings:
+        - setting:
+            type: "slider" 
+            value: 0
+            max: 100
+            min: 0
+            name: "Temperature"
+            info: "Ce slider controle la temperature de l'air en pourcentage "
+            smallName: "1"
+            goalName: "Temperature 1"
+        - setting:
+            type: "slider" 
+            value: 0
+            max: 100
+            min: 0
+            name: "Vitesse"
+            info: "Ce slider controle la vitesse de rotation du tonneau."
+            smallName: "2"
+        - setting:
+            type: "slider" 
+            value: 1
+            max: 600
+            min: 30
+            name: "Temps"
+            info: "Ce slider controle le temps de rotation du tonnean en seconde."
+            smallName: "3"
+    selectors:
+        - selector:
+            name: "Selector 1"
+            selectedChoice:
+                choice:
+                    name: "Choice 1"
+                    settings:
+                        - setting:
+                            type: "slider"
+                            value: 1
+                            max: 600
+                            min: 30 
+                            name: "Temps"
+                            info: "Ce slider controle le temps de rotation du tonnean en seconde."
+                            smallName: "3"
+            possibleChoices:
+                - choice:
+                    name: "Choice 1"
+                    settings:
+                        - setting:
+                            type: "slider"
+                            value: 1
+                            max: 600
+                            min: 30 
+                            name: "Temps"
+                            info: "Ce slider controle le temps de rotation du tonnean en seconde."
+                            smallName: "3"
+                - choice:
+                    name: "Choice 2"
+                    settings:
+                        - setting:
+                            type: "slider"
+                            value: 1
+                            max: 600
+                            min: 30 
+                            name: "Temps"
+                            info: "Ce slider controle le temps de rotation du tonnean en seconde."
+                            smallName: "3"
+                - choice:
+                    name: "Choice 3"
+                    settings:
+                        - setting:
+                            type: "slider"
+                            value: 1
+                            max: 600
+                            min: 30 
+                            name: "Temps"
+                            info: "Ce slider controle le temps de rotation du tonnean en seconde."
+                            smallName: "3"
 metrics:
   - metric:
       unit: "°c"
