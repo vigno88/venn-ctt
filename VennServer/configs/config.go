@@ -6,16 +6,34 @@ import (
 	recipe "github.com/vigno88/Venn/VennServer/pkg/recipes"
 )
 
+var SettingsSmallNames = map[string]string{
+	"Temperature": "1",
+	"Vitesse":     "2",
+	"Temps":       "3",
+}
+
+var SettingLongName = map[string]string{
+	"1": "Temperature",
+	"2": "Vitesse",
+	"3": "Temps",
+}
+
+func GetTarget(name string) float32 {
+	for _, v := range GetDefaultConfig().Metrics {
+		if v.Name == name {
+			return v.Target
+		}
+	}
+	return 0
+}
+
 type ReadableConfig struct {
 	Recipe  recipe.Recipe
 	Metrics []metrics.Metric
-	// Should be deprecated soon
-	SettingsSmallNames map[string]string
 }
 
 // This function is to be a human readable config
 func GetDefaultConfig() *ReadableConfig {
-
 	generalS1 := &proto.Setting{
 		Type:   "slider",
 		Value:  0,
@@ -55,11 +73,6 @@ func GetDefaultConfig() *ReadableConfig {
 	}
 
 	return &ReadableConfig{
-		SettingsSmallNames: map[string]string{
-			"Temperature": "1",
-			"Vitesse":     "2",
-			"Temps":       "3",
-		},
 		Recipe: recipe.Recipe{
 			UUID: "",
 			Name: "Recipe 1",

@@ -139,19 +139,19 @@ package configuration
 // 	return config, nil
 // }
 
-func GetNameMetric(smallName string) string {
-	return metricsNamesMap[smallName]
-}
+// func GetNameMetric(smallName string) string {
+// 	return metricsNamesMap[smallName]
+// }
 
-func GetSmallNameSetting(name string) string {
-	return settingsNamesMap[name]
-}
+// func GetSmallNameSetting(name string) string {
+// 	return settingsNamesMap[name]
+// }
 
-func GetGoal(name string) float64 {
-	for _, mC := range config.Metrics {
-		if mC.Metric.Name == name {
-			return mC.Metric.Goal
-		}
-	}
-	return 0
-}
+// func GetGoal(name string) float64 {
+// 	for _, mC := range config.Metrics {
+// 		if mC.Metric.Name == name {
+// 			return mC.Metric.Goal
+// 		}
+// 	}
+// 	return 0
+// }

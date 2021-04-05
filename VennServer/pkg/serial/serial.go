@@ -9,8 +9,8 @@ import (
 	"strings"
 	"time"
 
+	config "github.com/vigno88/Venn/VennServer/configs"
 	proto "github.com/vigno88/Venn/VennServer/pkg/api/v1"
-	"github.com/vigno88/Venn/VennServer/pkg/configuration"
 
 	// "github.com/vigno88/Venn/VennServer/pkg/service"
 	"go.bug.st/serial"
@@ -80,7 +80,7 @@ func Run(ctx context.Context, exit chan<- string) {
 }
 
 func SendSetting(setting *proto.Setting) {
-	SendString(fmt.Sprintf("p#%s#%d", configuration.GetSmallNameSetting(setting.GetName()), int(setting.GetValue())))
+	SendString(fmt.Sprintf("p#%s#%d", config.SettingsSmallNames[setting.GetName()], int(setting.GetValue())))
 }
 
 func SendString(s string) {
@@ -124,10 +124,10 @@ func (m *serialManager) process(ctx context.Context, packet string) error {
 			return err
 		}
 		metric := &proto.MetricUpdate{}
-		metric.Name = configuration.GetNameMetric(parts[1])
-		metric.Target = configuration.GetGoal(metric.Name)
+		metric.Name = config.SettingLongName[parts[1]]
+		metric.Target = float64(config.GetTarget(metric.Name))
 		metric.Value = f
-		manager.gRPCChan <- metric
+		manager.gRPCChan <- &proto.MetricUpdates{Updates: []*proto.MetricUpdate{metric}}
 	}
 	return nil
 }
