@@ -2,22 +2,22 @@
 
 USER=pi
 PASSWORD=pi
-IP=192.168.0.125
+IP=192.168.0.108
 
 # Build proto files
 ./compileProto.sh
 
 cd ../VennServer/scripts
-./build.sh
+./build.sh production
 echo 'Built golang project'
-./upload.sh
+./upload.sh $IP 
 echo 'Uploaded golang project'
 cd ../../scripts/
 
 cd ../VennUI/
 ./build.sh
 echo 'Built flutter project'
-./upload.sh
+./upload.sh $IP
 echo 'Uploaded flutter project'
 
 # Upload config file

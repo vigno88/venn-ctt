@@ -14,7 +14,7 @@ var pathDB string
 // var bucketName string
 
 type Metric struct {
-	Name      string `storm:"Id"`
+	Name      string `storm:"id"`
 	Unit      string
 	Target    float32
 	Type      string
@@ -48,14 +48,14 @@ func ToMetric(m *proto.MetricConfig) *Metric {
 // Init open the metric store at the specified path, the store is used to store
 // the metric configuration as well as the most recent metrics
 func Init(ctx context.Context, path string) error {
-	log.Printf("Initiating the metrics store at %s\n", pathDB)
+	log.Printf("Initiating the metrics store at %s\n", path)
 	pathDB = path
 	db, err := storm.Open(pathDB)
 	if err != nil {
 		return err
 	}
 	defer db.Close()
-	err = db.Init(&Metric{})
+	// err = db.Init(&Metric{})
 	return err
 }
 

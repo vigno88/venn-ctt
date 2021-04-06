@@ -4,11 +4,11 @@ go 1.13
 
 require (
 	github.com/DataDog/zstd v1.4.5 // indirect
-	github.com/asdine/storm/v3 v3.2.1 // indirect
+	github.com/asdine/storm/v3 v3.2.1
 	github.com/dgraph-io/badger/v2 v2.2007.2
 	github.com/dgraph-io/badger/v3 v3.2011.1
 	github.com/dgryski/go-farm v0.0.0-20200201041132-a6ae2369ad13 // indirect
-	github.com/go-ping/ping v0.0.0-20210402232549-1726e5ede5b6 // indirect
+	github.com/go-ping/ping v0.0.0-20210402232549-1726e5ede5b6
 	github.com/golang/protobuf v1.4.3
 	github.com/golang/snappy v0.0.2 // indirect
 	github.com/mark2b/wpa-connect v1.3.1

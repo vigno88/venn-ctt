@@ -21,8 +21,8 @@ const Color oldBaseColor = Color(0xff14121f);
 final Color paleBlue = Color(0xff54a0ff);
 final Color darkBlue = Color(0xff2e86de);
 
-// const serverIP = "127.0.0.1";
-const serverIP = "10.0.2.2";
+const serverIP = "127.0.0.1";
+// const serverIP = "10.0.2.2";
 
 int get1DCoord(int x, int y, int width) {
   return x + width * y;

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 PASSWORD=pi
-IP=192.168.0.125
+IP=$1
 USER=pi
 
 # Upload assets to pi

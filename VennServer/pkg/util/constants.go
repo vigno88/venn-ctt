@@ -2,8 +2,8 @@
 
 package util
 
-const PathAuth = "/home/pi/badger/auth.db"
+const PathAuth = "/home/pi/localDB/auth.db"
 const PathConfig = "/home/pi/config/config.yaml"
-const PathMetric = "/home/pi/badger/metric.db"
-const PathRecipe = "/home/pi/badger/recipe.db"
+const PathMetric = "/home/pi/localDB/metric.db"
+const PathRecipe = "/home/pi/localDB/recipe.db"
 const PathKey = "/home/pi/config/key"
