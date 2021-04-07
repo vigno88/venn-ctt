@@ -31,13 +31,14 @@ func Run(ctx context.Context, c chan *proto.MetricUpdates) {
 	handle(err)
 	err = metrics.Init(ctx, util.PathMetric)
 	handle(err)
-	err = wifi.Init(ctx, util.PathMetric)
+	err = wifi.Init(ctx, util.PathWifi)
 	handle(err)
 	exit := make(chan string)
 	go serial.Run(ctx, exit)
 	go wifi.Run()
 	err = recipes.Init(ctx, util.PathRecipe)
 	handle(err)
+	log.Printf("Orchestrator is running..\n")
 	for {
 		select {
 		case <-exit:

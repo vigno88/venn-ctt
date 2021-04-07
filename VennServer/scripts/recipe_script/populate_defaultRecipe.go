@@ -12,7 +12,8 @@ import (
 func main() {
 	c := config.GetDefaultConfig()
 	// Add the default recipe to the recipe store
-	uuid := util.GetNewUUID(context.Background())
+	// uuid := util.GetNewUUID(context.Background())
+	uuid := `default`
 	c.Recipe.UUID = uuid
 	err := recipe.Init(context.Background(), util.PathRecipe)
 	if err != nil {

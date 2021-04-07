@@ -4,6 +4,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	proto "github.com/vigno88/Venn/VennServer/pkg/api/v1"
@@ -23,7 +24,11 @@ func (s *authentificationServiceServer) ReadUserList(ctx context.Context, e *pro
 		log.Printf("Error while reading users list: %s", err.Error())
 		return nil, err
 	}
-	return &proto.Users{Users: users}, nil
+	u := []*proto.User{}
+	for _, v := range users {
+		u = append(u, authentifaction.UserToProto(&v))
+	}
+	return &proto.Users{Users: u}, nil
 }
 
 func (s *authentificationServiceServer) UpdateCurrentUser(ctx context.Context, u *proto.User) (*proto.Empty, error) {
@@ -41,5 +46,11 @@ func (s *authentificationServiceServer) GetCurrentUser(ctx context.Context, e *p
 		log.Printf("Error while reading current user: %s", err.Error())
 		return nil, err
 	}
-	return authentifaction.ReadUser(name)
+	u, err := authentifaction.ReadUser(name)
+	if err != nil {
+		log.Printf("Error while reading user: %s", err.Error())
+		return nil, err
+	}
+	fmt.Printf("%v\n", u)
+	return authentifaction.UserToProto(u), nil
 }

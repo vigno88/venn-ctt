@@ -4,7 +4,6 @@ import (
 	"context"
 	"log"
 
-	proto "github.com/vigno88/Venn/VennServer/pkg/api/v1"
 	authentifaction "github.com/vigno88/Venn/VennServer/pkg/authentification"
 	"github.com/vigno88/Venn/VennServer/pkg/util"
 )
@@ -15,15 +14,27 @@ func main() {
 		log.Printf("Error while authenticating: %s\n", err.Error())
 	}
 	// Create the 3 basic users
-	err = authentifaction.CreateUser(&proto.User{Title: "Admin", Role: proto.User_ADMIN})
+	err = authentifaction.CreateUser(&authentifaction.User{
+		Title:    "Admin",
+		Type:     authentifaction.ADMIN_TYPE,
+		Password: "",
+	})
 	if err != nil {
 		log.Printf("Error while creating user: %s\n", err.Error())
 	}
-	err = authentifaction.CreateUser(&proto.User{Title: "God", Role: proto.User_CREATOR})
+	err = authentifaction.CreateUser(&authentifaction.User{
+		Title:    "God",
+		Type:     authentifaction.CREATOR_TYPE,
+		Password: "",
+	})
 	if err != nil {
 		log.Printf("Error while creating user: %s\n", err.Error())
 	}
-	err = authentifaction.CreateUser(&proto.User{Title: "User", Role: proto.User_USER})
+	err = authentifaction.CreateUser(&authentifaction.User{
+		Title:    "User",
+		Type:     authentifaction.USER_TYPE,
+		Password: "",
+	})
 	if err != nil {
 		log.Printf("Error while creating user: %s\n", err.Error())
 	}

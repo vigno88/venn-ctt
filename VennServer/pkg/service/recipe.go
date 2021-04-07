@@ -109,9 +109,9 @@ func (s *settingServiceServer) ReadRecipesUUID(ctx context.Context, e *proto.Emp
 		log.Printf("Error while reading all recipes: %s", err.Error())
 		return nil, err
 	}
-	uuids := make([]string, len(recipes))
-	for i, r := range recipes {
-		uuids[i] = r.UUID
+	uuids := []string{}
+	for _, r := range recipes {
+		uuids = append(uuids, r.UUID)
 	}
 	return &proto.UUIDS{Uuids: uuids}, nil
 }

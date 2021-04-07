@@ -1,4 +1,5 @@
 import 'package:VennUI/api/metric_service.dart';
+import 'package:VennUI/api/v1/ui.pbgrpc.dart';
 import 'package:flutter/material.dart';
 import 'package:VennUI/api/setting_service.dart';
 import 'package:VennUI/api/v1/ui.pb.dart' as proto;
@@ -41,10 +42,11 @@ class SettingsProvider with ChangeNotifier {
   void initiate() async {
     // Retrieve the initial settings
     var defaultRecipe = await settingService.readRecipe('default');
+    print(defaultRecipe.settings);
     settings = List.of(defaultRecipe.settings);
     oldSettings =
         List.generate(settings.length, (index) => settings[index].value);
-    // numPagesSliders = (settings.length / sliderPerPage).ceil();
+    numPagesSliders = (settings.length / sliderPerPage).ceil();
 
     // Retrieve the set of selector
     var s = await settingService.readSelectorList();

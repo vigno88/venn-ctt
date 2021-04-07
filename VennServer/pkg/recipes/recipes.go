@@ -58,11 +58,11 @@ func ToRecipe(r *proto.Recipe) *Recipe {
 }
 
 func ToProto(r *Recipe) *proto.Recipe {
-	sliders := make([]*proto.Setting, len(r.Sliders))
+	sliders := []*proto.Setting{}
 	for _, v := range r.Sliders {
 		sliders = append(sliders, v)
 	}
-	selectors := make([]*proto.Selector, len(r.Selectors))
+	selectors := []*proto.Selector{}
 	for _, v := range r.Selectors {
 		selectors = append(selectors, v)
 	}

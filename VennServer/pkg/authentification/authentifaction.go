@@ -4,6 +4,7 @@ package authentifaction
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"github.com/asdine/storm/v3"
@@ -16,9 +17,9 @@ const currentKey = "current"
 const keyValueName = "users"
 
 const (
-	USER    = `user`
-	ADMIN   = `admin`
-	CREATOR = `creator`
+	USER_TYPE    = `user`
+	ADMIN_TYPE   = `admin`
+	CREATOR_TYPE = `creator`
 )
 
 type User struct {
@@ -34,7 +35,7 @@ func Init(ctx context.Context, path string) error {
 	if err != nil {
 		return err
 	}
-	db.Init(&User{})
+	// db.Init(&User{})
 	db.Close()
 	return nil
 }
@@ -43,13 +44,13 @@ func protoToUser(u *proto.User) *User {
 	var t string
 	switch u.Role {
 	case proto.User_ADMIN:
-		t = ADMIN
+		t = ADMIN_TYPE
 		break
 	case proto.User_CREATOR:
-		t = CREATOR
+		t = CREATOR_TYPE
 		break
 	case proto.User_USER:
-		t = USER
+		t = USER_TYPE
 		break
 	}
 	return &User{
@@ -61,33 +62,33 @@ func protoToUser(u *proto.User) *User {
 func UserToProto(u *User) *proto.User {
 	var t proto.User_Roles
 	switch u.Type {
-	case ADMIN:
+	case ADMIN_TYPE:
 		t = proto.User_ADMIN
 		break
-	case USER:
+	case USER_TYPE:
 		t = proto.User_USER
 		break
-	case CREATOR:
+	case CREATOR_TYPE:
 		t = proto.User_CREATOR
 		break
 	}
 	return &proto.User{Title: u.Title, Role: t}
 }
 
-func CreateUser(u *proto.User) error {
+func CreateUser(u *User) error {
 	db, err := storm.Open(pathDB)
 	if err != nil {
 		return err
 	}
 	defer db.Close()
-	err = db.Save(protoToUser(u))
+	err = db.Save(u)
 	if err == nil {
 		return err
 	}
 	return nil
 }
 
-func ReadUsers() ([]*proto.User, error) {
+func ReadUsers() ([]User, error) {
 	db, err := storm.Open(pathDB)
 	if err != nil {
 		return nil, err
@@ -98,11 +99,7 @@ func ReadUsers() ([]*proto.User, error) {
 	if err != nil {
 		return nil, err
 	}
-	var protoUsers []*proto.User
-	for _, u := range users {
-		protoUsers = append(protoUsers, UserToProto(&u))
-	}
-	return protoUsers, nil
+	return users, nil
 }
 
 func UpdateCurrentUser(name string) error {
@@ -132,16 +129,17 @@ func ReadCurrentUser() (string, error) {
 	return name, nil
 }
 
-func ReadUser(name string) (*proto.User, error) {
+func ReadUser(name string) (*User, error) {
 	db, err := storm.Open(pathDB)
 	if err != nil {
 		return nil, err
 	}
 	defer db.Close()
-	user := &proto.User{}
+	user := User{}
+	fmt.Printf("Trying to read user : %s", name)
 	err = db.One("Title", name, &user)
 	if err != nil {
 		return nil, err
 	}
-	return user, nil
+	return &user, nil
 }

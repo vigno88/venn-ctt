@@ -16,12 +16,12 @@ var isConnected bool
 var currentSSID string
 
 type Credential struct {
-	SSID     string `storm:"Id"`
+	SSID     string `storm:"id"`
 	Password string
 }
 
 func Init(ctx context.Context, path string) error {
-	log.Printf("Initiating the wifi store at %s\n", pathDB)
+	log.Printf("Initiating the wifi store at %s\n", path)
 	pathDB = path
 	db, err := storm.Open(pathDB)
 	if err != nil {
@@ -34,11 +34,17 @@ func Init(ctx context.Context, path string) error {
 	if err != nil {
 		return err
 	}
-	if len(credentials) != 0 && Connect(credentials[0].SSID, credentials[0].Password) == nil {
+	if len(credentials) != 0 {
+		_, err := wifi.ConnectManager.Connect(credentials[0].SSID, credentials[0].Password, time.Second*60)
+		if err != nil {
+			return err
+		}
 		isConnected = true
 		currentSSID = credentials[0].SSID
+		log.Printf("Connected to %s\n", currentSSID)
 		return nil
 	}
+	log.Printf("Did not found any wifi\n")
 	isConnected = false
 	currentSSID = ``
 	return nil
@@ -51,6 +57,7 @@ func Run() {
 		if err != nil {
 			panic(err)
 		}
+		pinger.SetPrivileged(true)
 		pinger.Count = 3
 		err = pinger.Run() // Blocks until finished.
 		if err != nil {
@@ -79,10 +86,15 @@ func Connect(ssid string, password string) error {
 				return err
 			}
 			err = db.Save(&Credential{SSID: ssid, Password: password})
+			currentSSID = ssid
 			return err
 		}
 		if err == storm.ErrAlreadyExists {
-			db.Update(&Credential{SSID: ssid, Password: password})
+			err := db.Update(&Credential{SSID: ssid, Password: password})
+			if err != nil {
+				return err
+			}
+			currentSSID = ssid
 		}
 	} else {
 		return err
@@ -122,6 +134,7 @@ func ReadStatus() (bool, string) {
 
 func ReadWifiList() ([]string, error) {
 	var list []string
+	wifi.ScanManager.NetInterface = `wlan0`
 	if bssList, err := wifi.ScanManager.Scan(); err == nil {
 		for _, bss := range bssList {
 			list = append(list, bss.SSID)
@@ -130,4 +143,14 @@ func ReadWifiList() ([]string, error) {
 		return nil, err
 	}
 	return list, nil
+}
+
+func AddCredential(c *Credential, path string) error {
+	db, err := storm.Open(path)
+	if err != nil {
+		return err
+	}
+	defer db.Close()
+	err = db.Save(c)
+	return err
 }
