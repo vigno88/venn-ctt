@@ -1,6 +1,7 @@
 import 'package:VennUI/api/metric_service.dart';
 import 'package:flutter/material.dart';
 import 'package:VennUI/api/v1/ui.pb.dart' as proto;
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:typicons_flutter/typicons_flutter.dart';
 
 // Metric provider is used to track data about the metric dashboard
@@ -113,11 +114,14 @@ class MetricTile {
     _isAlert = false;
     // Set the right icon for the metric type
     switch (type) {
-      case 'temperature':
-        this._icon = Icon(Typicons.thermometer);
+      case 'Temperature':
+        this._icon = Icon(FontAwesome5Solid.thermometer_half);
         break;
-      case 'humidity':
-        this._icon = Icon(Typicons.weather_shower);
+      case 'Humidity':
+        this._icon = Icon(Ionicons.ios_water);
+        break;
+      case 'Speed':
+        this._icon = Icon(Ionicons.ios_speedometer);
         break;
     }
   }

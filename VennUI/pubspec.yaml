@@ -35,6 +35,7 @@ dependencies:
   typicons_flutter: ^0.4.2
   smooth_page_indicator: ^0.2.0
   drag_and_drop_gridview: ^1.0.8
+  flutter_icons: ^1.1.0
   intl: ^0.16.1
   async: ^2.4.2
   auto_size_text: ^2.1.0

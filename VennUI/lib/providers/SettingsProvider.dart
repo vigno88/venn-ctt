@@ -42,7 +42,6 @@ class SettingsProvider with ChangeNotifier {
   void initiate() async {
     // Retrieve the initial settings
     var defaultRecipe = await settingService.readRecipe('default');
-    print(defaultRecipe.settings);
     settings = List.of(defaultRecipe.settings);
     oldSettings =
         List.generate(settings.length, (index) => settings[index].value);

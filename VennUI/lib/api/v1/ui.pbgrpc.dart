@@ -617,3 +617,85 @@ abstract class ControlServiceBase extends $grpc.Service {
   $async.Stream<$0.ControlEvent> subscribe(
       $grpc.ServiceCall call, $0.Empty request);
 }
+
+class MotorControlServiceClient extends $grpc.Client {
+  static final _$home = $grpc.ClientMethod<$0.Empty, $0.Empty>(
+      '/v1.MotorControlService/Home',
+      ($0.Empty value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) => $0.Empty.fromBuffer(value));
+  static final _$startCycle = $grpc.ClientMethod<$0.Empty, $0.Empty>(
+      '/v1.MotorControlService/StartCycle',
+      ($0.Empty value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) => $0.Empty.fromBuffer(value));
+  static final _$stopCycle = $grpc.ClientMethod<$0.Empty, $0.Empty>(
+      '/v1.MotorControlService/StopCycle',
+      ($0.Empty value) => value.writeToBuffer(),
+      ($core.List<$core.int> value) => $0.Empty.fromBuffer(value));
+
+  MotorControlServiceClient($grpc.ClientChannel channel,
+      {$grpc.CallOptions options,
+      $core.Iterable<$grpc.ClientInterceptor> interceptors})
+      : super(channel, options: options, interceptors: interceptors);
+
+  $grpc.ResponseFuture<$0.Empty> home($0.Empty request,
+      {$grpc.CallOptions options}) {
+    return $createUnaryCall(_$home, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.Empty> startCycle($0.Empty request,
+      {$grpc.CallOptions options}) {
+    return $createUnaryCall(_$startCycle, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.Empty> stopCycle($0.Empty request,
+      {$grpc.CallOptions options}) {
+    return $createUnaryCall(_$stopCycle, request, options: options);
+  }
+}
+
+abstract class MotorControlServiceBase extends $grpc.Service {
+  $core.String get $name => 'v1.MotorControlService';
+
+  MotorControlServiceBase() {
+    $addMethod($grpc.ServiceMethod<$0.Empty, $0.Empty>(
+        'Home',
+        home_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
+        ($0.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.Empty, $0.Empty>(
+        'StartCycle',
+        startCycle_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
+        ($0.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.Empty, $0.Empty>(
+        'StopCycle',
+        stopCycle_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
+        ($0.Empty value) => value.writeToBuffer()));
+  }
+
+  $async.Future<$0.Empty> home_Pre(
+      $grpc.ServiceCall call, $async.Future<$0.Empty> request) async {
+    return home(call, await request);
+  }
+
+  $async.Future<$0.Empty> startCycle_Pre(
+      $grpc.ServiceCall call, $async.Future<$0.Empty> request) async {
+    return startCycle(call, await request);
+  }
+
+  $async.Future<$0.Empty> stopCycle_Pre(
+      $grpc.ServiceCall call, $async.Future<$0.Empty> request) async {
+    return stopCycle(call, await request);
+  }
+
+  $async.Future<$0.Empty> home($grpc.ServiceCall call, $0.Empty request);
+  $async.Future<$0.Empty> startCycle($grpc.ServiceCall call, $0.Empty request);
+  $async.Future<$0.Empty> stopCycle($grpc.ServiceCall call, $0.Empty request);
+}

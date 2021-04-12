@@ -76,11 +76,6 @@ class MetricPanel_ extends StatelessWidget {
                 controller: PageController(viewportFraction: 0.999),
                 children: <Widget>[
                   MetricPage(4, 8),
-                  MetricPage(4, 8),
-                  MetricPage(4, 8),
-                  MetricPage(4, 8),
-                  MetricPage(4, 8),
-                  MetricPage(4, 8),
                 ],
               ),
             ),

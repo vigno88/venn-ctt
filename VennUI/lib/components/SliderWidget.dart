@@ -89,6 +89,7 @@ class SliderWidget extends StatelessWidget {
             width: sliderHeight,
             height: sliderHeight,
             decoration: new BoxDecoration(
+              border: blueBorderDecoration,
               borderRadius: new BorderRadius.all(
                 Radius.circular(30),
               ),
@@ -152,6 +153,9 @@ class SliderWidget extends StatelessWidget {
                           //valueIndicatorColor: Colors.white,
                           activeTickMarkColor: Color(0xff121212),
                           inactiveTickMarkColor: Colors.red.withOpacity(.7),
+                          overlayShape: RoundSliderOverlayShape(
+                            overlayRadius: 35,
+                          ),
                         ),
                         child: Slider(
                             value: computeSliderValue(value),
@@ -190,6 +194,7 @@ class SliderWidget extends StatelessWidget {
             width: sliderHeight,
             height: sliderHeight,
             decoration: new BoxDecoration(
+              border: blueBorderDecoration,
               borderRadius: new BorderRadius.all(
                 Radius.circular(30),
               ),

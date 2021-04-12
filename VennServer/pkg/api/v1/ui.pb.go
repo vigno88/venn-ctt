@@ -2079,8 +2079,16 @@ var file_ui_proto_rawDesc = []byte{
 	0x70, 0x74, 0x79, 0x22, 0x00, 0x12, 0x2c, 0x0a, 0x09, 0x53, 0x75, 0x62, 0x73, 0x63, 0x72, 0x69,
 	0x62, 0x65, 0x12, 0x09, 0x2e, 0x76, 0x31, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x1a, 0x10, 0x2e,
 	0x76, 0x31, 0x2e, 0x43, 0x6f, 0x6e, 0x74, 0x72, 0x6f, 0x6c, 0x45, 0x76, 0x65, 0x6e, 0x74, 0x22,
-	0x00, 0x30, 0x01, 0x42, 0x09, 0x5a, 0x07, 0x2e, 0x3b, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x06,
-	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x00, 0x30, 0x01, 0x32, 0x80, 0x01, 0x0a, 0x13, 0x4d, 0x6f, 0x74, 0x6f, 0x72, 0x43, 0x6f, 0x6e,
+	0x74, 0x72, 0x6f, 0x6c, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x1e, 0x0a, 0x04, 0x48,
+	0x6f, 0x6d, 0x65, 0x12, 0x09, 0x2e, 0x76, 0x31, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x1a, 0x09,
+	0x2e, 0x76, 0x31, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x22, 0x00, 0x12, 0x24, 0x0a, 0x0a, 0x53,
+	0x74, 0x61, 0x72, 0x74, 0x43, 0x79, 0x63, 0x6c, 0x65, 0x12, 0x09, 0x2e, 0x76, 0x31, 0x2e, 0x45,
+	0x6d, 0x70, 0x74, 0x79, 0x1a, 0x09, 0x2e, 0x76, 0x31, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x22,
+	0x00, 0x12, 0x23, 0x0a, 0x09, 0x53, 0x74, 0x6f, 0x70, 0x43, 0x79, 0x63, 0x6c, 0x65, 0x12, 0x09,
+	0x2e, 0x76, 0x31, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x1a, 0x09, 0x2e, 0x76, 0x31, 0x2e, 0x45,
+	0x6d, 0x70, 0x74, 0x79, 0x22, 0x00, 0x42, 0x09, 0x5a, 0x07, 0x2e, 0x3b, 0x70, 0x72, 0x6f, 0x74,
+	0x6f, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -2167,30 +2175,36 @@ var file_ui_proto_depIdxs = []int32{
 	18, // 31: v1.NetworkService.ConnectWifi:input_type -> v1.WifiCredentials
 	21, // 32: v1.ControlService.Send:input_type -> v1.Action
 	23, // 33: v1.ControlService.Subscribe:input_type -> v1.Empty
-	4,  // 34: v1.MetricService.GetAll:output_type -> v1.MetricUpdates
-	4,  // 35: v1.MetricService.Subscribe:output_type -> v1.MetricUpdates
-	2,  // 36: v1.MetricService.ReadConfig:output_type -> v1.MetricConfigs
-	23, // 37: v1.MetricService.UpdateConfig:output_type -> v1.Empty
-	14, // 38: v1.SettingService.CreateRecipe:output_type -> v1.Recipe
-	15, // 39: v1.SettingService.ReadRecipesUUID:output_type -> v1.UUIDS
-	14, // 40: v1.SettingService.ReadRecipe:output_type -> v1.Recipe
-	11, // 41: v1.SettingService.ReadSelectorList:output_type -> v1.Selectors
-	23, // 42: v1.SettingService.UpdateSetting:output_type -> v1.Empty
-	23, // 43: v1.SettingService.UpdateUncertainty:output_type -> v1.Empty
-	23, // 44: v1.SettingService.UpdateSelectedChoice:output_type -> v1.Empty
-	23, // 45: v1.SettingService.UpdateChoice:output_type -> v1.Empty
-	23, // 46: v1.SettingService.UpdateCurrentRecipe:output_type -> v1.Empty
-	23, // 47: v1.SettingService.UpdateRecipe:output_type -> v1.Empty
-	17, // 48: v1.AuthentificationService.ReadUserList:output_type -> v1.Users
-	23, // 49: v1.AuthentificationService.UpdateCurrentUser:output_type -> v1.Empty
-	16, // 50: v1.AuthentificationService.GetCurrentUser:output_type -> v1.User
-	20, // 51: v1.NetworkService.ReadStatus:output_type -> v1.WifiStatus
-	19, // 52: v1.NetworkService.ReadWifiList:output_type -> v1.WifiNames
-	23, // 53: v1.NetworkService.ConnectWifi:output_type -> v1.Empty
-	23, // 54: v1.ControlService.Send:output_type -> v1.Empty
-	22, // 55: v1.ControlService.Subscribe:output_type -> v1.ControlEvent
-	34, // [34:56] is the sub-list for method output_type
-	12, // [12:34] is the sub-list for method input_type
+	23, // 34: v1.MotorControlService.Home:input_type -> v1.Empty
+	23, // 35: v1.MotorControlService.StartCycle:input_type -> v1.Empty
+	23, // 36: v1.MotorControlService.StopCycle:input_type -> v1.Empty
+	4,  // 37: v1.MetricService.GetAll:output_type -> v1.MetricUpdates
+	4,  // 38: v1.MetricService.Subscribe:output_type -> v1.MetricUpdates
+	2,  // 39: v1.MetricService.ReadConfig:output_type -> v1.MetricConfigs
+	23, // 40: v1.MetricService.UpdateConfig:output_type -> v1.Empty
+	14, // 41: v1.SettingService.CreateRecipe:output_type -> v1.Recipe
+	15, // 42: v1.SettingService.ReadRecipesUUID:output_type -> v1.UUIDS
+	14, // 43: v1.SettingService.ReadRecipe:output_type -> v1.Recipe
+	11, // 44: v1.SettingService.ReadSelectorList:output_type -> v1.Selectors
+	23, // 45: v1.SettingService.UpdateSetting:output_type -> v1.Empty
+	23, // 46: v1.SettingService.UpdateUncertainty:output_type -> v1.Empty
+	23, // 47: v1.SettingService.UpdateSelectedChoice:output_type -> v1.Empty
+	23, // 48: v1.SettingService.UpdateChoice:output_type -> v1.Empty
+	23, // 49: v1.SettingService.UpdateCurrentRecipe:output_type -> v1.Empty
+	23, // 50: v1.SettingService.UpdateRecipe:output_type -> v1.Empty
+	17, // 51: v1.AuthentificationService.ReadUserList:output_type -> v1.Users
+	23, // 52: v1.AuthentificationService.UpdateCurrentUser:output_type -> v1.Empty
+	16, // 53: v1.AuthentificationService.GetCurrentUser:output_type -> v1.User
+	20, // 54: v1.NetworkService.ReadStatus:output_type -> v1.WifiStatus
+	19, // 55: v1.NetworkService.ReadWifiList:output_type -> v1.WifiNames
+	23, // 56: v1.NetworkService.ConnectWifi:output_type -> v1.Empty
+	23, // 57: v1.ControlService.Send:output_type -> v1.Empty
+	22, // 58: v1.ControlService.Subscribe:output_type -> v1.ControlEvent
+	23, // 59: v1.MotorControlService.Home:output_type -> v1.Empty
+	23, // 60: v1.MotorControlService.StartCycle:output_type -> v1.Empty
+	23, // 61: v1.MotorControlService.StopCycle:output_type -> v1.Empty
+	37, // [37:62] is the sub-list for method output_type
+	12, // [12:37] is the sub-list for method input_type
 	12, // [12:12] is the sub-list for extension type_name
 	12, // [12:12] is the sub-list for extension extendee
 	0,  // [0:12] is the sub-list for field type_name
@@ -2595,7 +2609,7 @@ func file_ui_proto_init() {
 			NumEnums:      1,
 			NumMessages:   32,
 			NumExtensions: 0,
-			NumServices:   6,
+			NumServices:   7,
 		},
 		GoTypes:           file_ui_proto_goTypes,
 		DependencyIndexes: file_ui_proto_depIdxs,
@@ -3713,5 +3727,149 @@ var _ControlService_serviceDesc = grpc.ServiceDesc{
 			ServerStreams: true,
 		},
 	},
+	Metadata: "ui.proto",
+}
+
+// MotorControlServiceClient is the client API for MotorControlService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
+type MotorControlServiceClient interface {
+	Home(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error)
+	StartCycle(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error)
+	StopCycle(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error)
+}
+
+type motorControlServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewMotorControlServiceClient(cc grpc.ClientConnInterface) MotorControlServiceClient {
+	return &motorControlServiceClient{cc}
+}
+
+func (c *motorControlServiceClient) Home(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error) {
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, "/v1.MotorControlService/Home", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *motorControlServiceClient) StartCycle(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error) {
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, "/v1.MotorControlService/StartCycle", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *motorControlServiceClient) StopCycle(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*Empty, error) {
+	out := new(Empty)
+	err := c.cc.Invoke(ctx, "/v1.MotorControlService/StopCycle", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// MotorControlServiceServer is the server API for MotorControlService service.
+type MotorControlServiceServer interface {
+	Home(context.Context, *Empty) (*Empty, error)
+	StartCycle(context.Context, *Empty) (*Empty, error)
+	StopCycle(context.Context, *Empty) (*Empty, error)
+}
+
+// UnimplementedMotorControlServiceServer can be embedded to have forward compatible implementations.
+type UnimplementedMotorControlServiceServer struct {
+}
+
+func (*UnimplementedMotorControlServiceServer) Home(context.Context, *Empty) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Home not implemented")
+}
+func (*UnimplementedMotorControlServiceServer) StartCycle(context.Context, *Empty) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method StartCycle not implemented")
+}
+func (*UnimplementedMotorControlServiceServer) StopCycle(context.Context, *Empty) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method StopCycle not implemented")
+}
+
+func RegisterMotorControlServiceServer(s *grpc.Server, srv MotorControlServiceServer) {
+	s.RegisterService(&_MotorControlService_serviceDesc, srv)
+}
+
+func _MotorControlService_Home_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MotorControlServiceServer).Home(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/v1.MotorControlService/Home",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MotorControlServiceServer).Home(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MotorControlService_StartCycle_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MotorControlServiceServer).StartCycle(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/v1.MotorControlService/StartCycle",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MotorControlServiceServer).StartCycle(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MotorControlService_StopCycle_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MotorControlServiceServer).StopCycle(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/v1.MotorControlService/StopCycle",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MotorControlServiceServer).StopCycle(ctx, req.(*Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+var _MotorControlService_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "v1.MotorControlService",
+	HandlerType: (*MotorControlServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Home",
+			Handler:    _MotorControlService_Home_Handler,
+		},
+		{
+			MethodName: "StartCycle",
+			Handler:    _MotorControlService_StartCycle_Handler,
+		},
+		{
+			MethodName: "StopCycle",
+			Handler:    _MotorControlService_StopCycle_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
 	Metadata: "ui.proto",
 }

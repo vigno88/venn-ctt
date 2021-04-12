@@ -140,6 +140,7 @@ class RecipeItem extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(20)),
               color: _isSelected ? paleBlue.withOpacity(0.2) : Colors.white,
+              border: _isSelected ? blueBorderDecoration : null,
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,

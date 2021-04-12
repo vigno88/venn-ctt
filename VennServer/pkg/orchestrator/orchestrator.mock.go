@@ -8,7 +8,6 @@ import (
 	"os"
 
 	proto "github.com/vigno88/Venn/VennServer/pkg/api/v1"
-	authentifaction "github.com/vigno88/Venn/VennServer/pkg/authentification"
 	configuration "github.com/vigno88/Venn/VennServer/pkg/configuration"
 	metrics "github.com/vigno88/Venn/VennServer/pkg/metrics"
 	recipes "github.com/vigno88/Venn/VennServer/pkg/recipes"
@@ -17,9 +16,9 @@ import (
 
 func Run(ctx context.Context, c chan *proto.MetricUpdate) {
 	// Initialize all the module
-	err := authentifaction.Init(ctx, util.PathAuth)
-	handle(err)
-	err = configuration.Init(ctx, util.PathConfig)
+	// err := authentifaction.Init(ctx, util.PathAuth)
+	// handle(err)
+	err := configuration.Init(ctx, util.PathConfig)
 	handle(err)
 	// err = serial.Init(ctx, c)
 	// handle(err)

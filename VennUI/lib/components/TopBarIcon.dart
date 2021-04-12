@@ -26,14 +26,15 @@ class TopBarIcon extends StatelessWidget {
                   transition: TransitionType.native);
             },
             child: Container(
-              child: IconButton(
-                  icon: _icon,
-                  onPressed: () {
-                    RouterVenn.router.navigateTo(context, _route,
-                        transition: TransitionType.native);
-                  },
-                  iconSize: _size,
-                  color: baseColor),
+              child: Center(
+                  child: IconButton(
+                      icon: _icon,
+                      onPressed: () {
+                        RouterVenn.router.navigateTo(context, _route,
+                            transition: TransitionType.native);
+                      },
+                      iconSize: _size,
+                      color: baseColor)),
               height: 60,
               width: 60,
             )));

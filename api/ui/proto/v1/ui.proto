@@ -151,7 +151,6 @@ service SettingService {
   // ReadSelectorList returns a list of all the Selectors in the backend 
   rpc ReadSelectorList(Empty) returns (Selectors) {}
 
-
   // UpdateSetting updates the value of a setting according to its name
   rpc UpdateSetting(SettingUpdate) returns (Empty) {}
   
@@ -259,6 +258,16 @@ service ControlService {
   rpc Subscribe(Empty) returns (stream ControlEvent) {} 
 }
 
+
+//=============================================================================
+// Motor Control Service 
+//=============================================================================
+
+service MotorControlService {
+  rpc Home(Empty) returns (Empty) {}
+  rpc StartCycle(Empty) returns (Empty) {}
+  rpc StopCycle(Empty) returns (Empty) {}
+}
 //=============================================================================
 // Types definition 
 //=============================================================================
