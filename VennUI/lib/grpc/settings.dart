@@ -1,39 +1,18 @@
 import 'package:grpc/grpc.dart';
-import 'package:VennUI/api/v1/ui.pbgrpc.dart' as grpc;
-import 'package:VennUI/api/v1/ui.pb.dart' as proto;
+import 'package:VennUI/grpc/v1/ui.pbgrpc.dart' as grpc;
+import 'package:VennUI/grpc/v1/ui.pb.dart' as proto;
 import 'package:VennUI/utilies.dart';
 
 import 'utilities.dart';
 
 class Credentials {}
 
-/// RecipeService client implementation
-class SettingService {
+class SettingGrpcAPI {
   // Flag is indicating that client is shutting down
   bool _isShutdown = false;
 
   // gRPC client channel to send messages to the server
   ClientChannel _clientSend;
-
-  // grpc.MetricServiceClient _metricService;
-
-  // // Event is raised when message has been sent to the server successfully
-  // final void Function(Credentials cred) onSentSuccess;
-
-  // /// Event is raised when message sending is failed
-  // final void Function(Credentials message, String error) onSentError;
-
-  // /// Event is raised when message has been received from the server
-  // final void Function() onReceivedSuccess;
-
-  // /// Event is raised when message receiving is failed
-  // final void Function(String error) onReceivedError;
-
-  // NetworkService(
-  //     {this.onSentSuccess,
-  //     this.onSentError,
-  //     this.onReceivedError,
-  //     this.onReceivedSuccess});
 
   // Shutdown client
   Future<void> shutdown() async {

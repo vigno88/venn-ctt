@@ -1,10 +1,10 @@
-import 'package:VennUI/api/utilities.dart';
+import 'package:VennUI/grpc/utilities.dart';
 import 'package:grpc/grpc.dart';
-import 'package:VennUI/api/v1/ui.pbgrpc.dart' as grpc;
-import 'package:VennUI/api/v1/ui.pb.dart' as proto;
+import 'package:VennUI/grpc/v1/ui.pbgrpc.dart' as grpc;
+import 'package:VennUI/grpc/v1/ui.pb.dart' as proto;
 import 'package:VennUI/utilies.dart';
 
-class MetricService {
+class MetricGrpcAPI {
   // Flag is indicating that client is shutting down
   bool _isShutdown = false;
 
@@ -14,7 +14,7 @@ class MetricService {
   // gRPC client channel to receive messages from the server
   ClientChannel _clientReceive;
 
-  MetricService() {
+  MetricGrpcAPI() {
     _clientSend = newClient(serverIP, serverPort);
   }
 

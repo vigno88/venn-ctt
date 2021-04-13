@@ -1,12 +1,12 @@
 import 'package:grpc/grpc.dart';
-import 'package:VennUI/api/v1/ui.pbgrpc.dart' as grpc;
-import 'package:VennUI/api/v1/ui.pb.dart' as proto;
+import 'package:VennUI/grpc/v1/ui.pbgrpc.dart' as grpc;
+import 'package:VennUI/grpc/v1/ui.pb.dart' as proto;
 import 'package:VennUI/utilies.dart';
 
 import 'utilities.dart';
 
 /// ConfigurationService client implementation
-class ConfigurationService {
+class ConfigurationGrpcAPI {
   /// Flag is indicating that client is shutting down
   bool _isShutdown = false;
 
@@ -14,7 +14,7 @@ class ConfigurationService {
   ClientChannel _clientSend;
 
   // Contstructor
-  ConfigurationService() {
+  ConfigurationGrpcAPI() {
     // Create a new client
     _clientSend = ClientChannel(
       serverIP,

@@ -1,31 +1,31 @@
-import 'package:VennUI/api/authentification_service.dart';
+import 'package:VennUI/grpc/authentification.dart';
 import 'package:flutter/material.dart';
-import 'package:VennUI/api/v1/ui.pb.dart' as proto;
+import 'package:VennUI/grpc/v1/ui.pb.dart' as proto;
 
 // Network provider is used to connect the raspberry PI to the internet
 class UserProvider with ChangeNotifier {
-  AuthentificationService authService;
+  AuthentificationGrpcAPI _authAPI;
 
   List<proto.User> userList = [];
   int hoverUser = -1;
   bool isLoading = true;
   proto.User currentUser;
 
-  UserProvider(AuthentificationService a) {
-    authService = a;
+  UserProvider(AuthentificationGrpcAPI a) {
+    _authAPI = a;
     initiate();
   }
 
   void initiate() async {
-    currentUser = await authService.getCurrentUser();
-    var users = await authService.readUserList();
+    currentUser = await _authAPI.getCurrentUser();
+    var users = await _authAPI.readUserList();
     userList = users.users;
     isLoading = false;
     notifyListeners();
   }
 
   void updateCurrentUser(int i) {
-    authService.updateCurrentUser(userList[i]);
+    _authAPI.updateCurrentUser(userList[i]);
     currentUser = userList[i];
   }
 

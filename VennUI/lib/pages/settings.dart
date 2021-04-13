@@ -12,7 +12,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:tuple/tuple.dart';
 import 'package:typicons_flutter/typicons_flutter.dart';
 import 'package:VennUI/components/SliderWidget.dart';
-import 'package:VennUI/api/v1/ui.pb.dart' as proto;
+import 'package:VennUI/grpc/v1/ui.pb.dart' as proto;
 import 'package:provider/provider.dart';
 
 class SettingsPage extends StatelessWidget {

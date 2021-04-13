@@ -1,4 +1,4 @@
-import 'package:VennUI/providers/MetricProvider.dart';
+import 'package:VennUI/providers/dashboard_services/Metrics.dart';
 import 'package:VennUI/utilies.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
@@ -134,7 +134,7 @@ class MetricChip extends StatelessWidget {
     this.opacityValue,
   ) : super(key: key);
 
-  final MetricTile tile;
+  final MetricData tile;
   final double opacityValue;
 
   @override
@@ -246,9 +246,34 @@ class MetricChip extends StatelessWidget {
                           )),
                         ],
                       )))
-              // )
             ],
           ),
         ));
+  }
+}
+
+class ControlContainer extends StatelessWidget {
+  final List<Widget> widgets;
+
+  ControlContainer(this.widgets);
+
+  @override
+  Widget build(BuildContext context) {
+    if (widgets.length == 1) {
+      return Container(
+        padding: EdgeInsets.all(20),
+        child: widgets[0],
+      );
+    } else {
+      return Container(
+          padding: EdgeInsets.all(20),
+          child: GridView.count(
+            crossAxisCount: 2,
+            scrollDirection: Axis.horizontal,
+            crossAxisSpacing: 70,
+            mainAxisSpacing: 70,
+            children: widgets,
+          ));
+    }
   }
 }

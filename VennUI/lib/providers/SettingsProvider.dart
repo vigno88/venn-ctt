@@ -1,8 +1,7 @@
-import 'package:VennUI/api/metric_service.dart';
-import 'package:VennUI/api/v1/ui.pbgrpc.dart';
+import 'package:VennUI/grpc/metric.dart';
+import 'package:VennUI/grpc/settings.dart';
 import 'package:flutter/material.dart';
-import 'package:VennUI/api/setting_service.dart';
-import 'package:VennUI/api/v1/ui.pb.dart' as proto;
+import 'package:VennUI/grpc/v1/ui.pb.dart' as proto;
 import 'package:VennUI/utilies.dart';
 
 class SettingsProvider with ChangeNotifier {
@@ -30,25 +29,26 @@ class SettingsProvider with ChangeNotifier {
   int selectedRecipe = 0;
   List<proto.Recipe> recipes = [];
 
-  SettingService settingService;
-  MetricService metricService;
+  SettingGrpcAPI _settingAPI;
+  MetricGrpcAPI _metricAPI;
 
-  SettingsProvider(SettingService r, MetricService s) {
-    settingService = r;
-    metricService = s;
+  SettingsProvider(SettingGrpcAPI r, MetricGrpcAPI s) {
+    _settingAPI = r;
+    _metricAPI = s;
     initiate();
   }
 
   void initiate() async {
     // Retrieve the initial settings
-    var defaultRecipe = await settingService.readRecipe('default');
+    var defaultRecipe = await _settingAPI.readRecipe('default');
+
     settings = List.of(defaultRecipe.settings);
     oldSettings =
         List.generate(settings.length, (index) => settings[index].value);
     numPagesSliders = (settings.length / sliderPerPage).ceil();
 
     // Retrieve the set of selector
-    var s = await settingService.readSelectorList();
+    var s = await _settingAPI.readSelectorList();
     selectors = List.of(s.selectors);
     numPagesSelectors = (selectors.length / selectorPerPage).ceil();
     for (var selector in selectors) {
@@ -60,9 +60,9 @@ class SettingsProvider with ChangeNotifier {
     }
 
     // Retrieve Initial Set of recipe
-    var uuids = await settingService.readRecipesUUID();
+    var uuids = await _settingAPI.readRecipesUUID();
     for (var uuid in List.of(uuids.uuids)) {
-      var r = await settingService.readRecipe(uuid);
+      var r = await _settingAPI.readRecipe(uuid);
       recipes.add(r);
     }
 
@@ -103,7 +103,7 @@ class SettingsProvider with ChangeNotifier {
   }
 
   void loadRecipe() async {
-    var recipe = await settingService.readRecipe('default');
+    var recipe = await _settingAPI.readRecipe('default');
     settings = recipe.settings;
     oldSettings =
         List.generate(settings.length, (index) => settings[index].value);
@@ -116,7 +116,7 @@ class SettingsProvider with ChangeNotifier {
         if (settings[i].hasTarget()) {
           updateTarget(settings[i]);
         }
-        settingService.updateSetting(proto.SettingUpdate(
+        _settingAPI.updateSetting(proto.SettingUpdate(
             name: settings[i].name, value: settings[i].value));
         oldSettings[i] = settings[i].value;
       }
@@ -124,11 +124,11 @@ class SettingsProvider with ChangeNotifier {
   }
 
   void updateTarget(proto.Setting setting) async {
-    proto.MetricConfigs M = await metricService.readConfig();
+    proto.MetricConfigs M = await _metricAPI.readConfig();
     for (int i = 0; i < M.configs.length; i++) {
       if (M.configs[i].name == setting.target.name) {
         M.configs[i].target = setting.value;
-        metricService.updateConfig(M);
+        _metricAPI.updateConfig(M);
         return;
       }
     }

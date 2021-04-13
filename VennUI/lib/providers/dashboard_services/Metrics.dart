@@ -1,20 +1,27 @@
-import 'package:VennUI/api/metric_service.dart';
-import 'package:flutter/material.dart';
-import 'package:VennUI/api/v1/ui.pb.dart' as proto;
-import 'package:flutter_icons/flutter_icons.dart';
-import 'package:typicons_flutter/typicons_flutter.dart';
+import 'dart:async';
 
-// Metric provider is used to track data about the metric dashboard
-class MetricProvider with ChangeNotifier {
-  // isLoading is used as a flag to tell when loading of initial data is done
-  bool isLoading = true;
+import 'package:VennUI/components/Grid.dart';
+import 'package:VennUI/grpc/metric.dart';
+import 'package:VennUI/pages/dashboard.dart';
+import 'package:flutter/material.dart';
+import 'package:VennUI/grpc/v1/ui.pb.dart' as proto;
+import 'package:flutter_icons/flutter_icons.dart';
+
+// Metric serive is used to track data about the metrics
+class MetricService {
+  // _updates is used to tell the provider which widget needs to be updated
+  StreamController<int> _updates;
+  Stream<int> get updateStream => _updates.stream;
+
+  // List of tiles provided by metric service, the dashboard provider reads
+  // them each time the metric service tells it a tile was modified. This
+  // should be the only thing that the dashboard provider has access other than
+  // the update stream.
+  List<Tile> _tiles = [];
+  List<Tile> get tiles => _tiles;
 
   // isAlert is used as a flag to tell when one of the metric tiles is in alert
   bool isAlert = false;
-
-  // modifiedTile is used to compare during widget tree rebuilding to rebuild
-  // only the tile that has been modified
-  int modifiedTileIndex = 0;
 
   // config is constant information about each metric tiles
   List<proto.MetricConfig> config = [];
@@ -23,22 +30,22 @@ class MetricProvider with ChangeNotifier {
   List<MetricTile> metricTiles = [];
 
   // Configuration and metric service API object
-  MetricService metricService;
+  MetricGrpcAPI _metricAPI;
 
-  MetricProvider(MetricService m) {
-    metricService = m;
+  MetricService(MetricGrpcAPI m) {
+    _metricAPI = m;
     initiate();
   }
 
   void initiate() async {
     // Get the config from the server
-    var c = await metricService.readConfig();
+    var c = await _metricAPI.readConfig();
     config = c.configs;
 
     // Create the set of tile providers
-    var m = await metricService.getMetrics();
+    var m = await _metricAPI.getMetrics();
     for (int i = 0; i < m.updates.length; i++) {
-      var t = MetricTile(
+      var t = MetricData(
         m.updates[i].name,
         m.updates[i].value,
         config[0].unit,
@@ -47,13 +54,12 @@ class MetricProvider with ChangeNotifier {
         m.updates[i].target,
         config[0].hasTarget_6,
       );
-      metricTiles.add(t);
+      metricTiles.add(MetricTile(Key(i.toString()), t, 1.0));
     }
-    isLoading = false;
-    notifyListeners();
+    // notifyListeners();
 
     // Listen for new metrics from the backend
-    var stream = metricService.getMetricStream();
+    var stream = _metricAPI.getMetricStream();
     await for (var metric in stream) {
       processNewMetric(metric);
     }
@@ -62,28 +68,28 @@ class MetricProvider with ChangeNotifier {
   void processNewMetric(proto.MetricUpdate update) {
     // Update the required tile
     metricTiles.forEach((tile) {
-      if (tile.name == update.name) {
-        tile.update(update);
-        modifiedTileIndex = metricTiles.indexOf(tile);
-        notifyListeners();
+      if (tile.data.name == update.name) {
+        tile.data.update(update);
+        // modifiedTileIndex = metricTiles.indexOf(tile);
+        // notifyListeners();
       }
     });
     // Look if any tile is in alert
     bool alert = false;
     metricTiles.forEach((tile) {
-      if (tile._isAlert) {
-        alert = true;
-      }
+      // if (tile._isAlert) {
+      //   alert = true;
+      // }
     });
     // Only notifier listeners if alert state is different from previous
     if (isAlert != alert) {
       isAlert = alert;
-      notifyListeners();
+      // notifyListeners();
     }
   }
 }
 
-class MetricTile {
+class MetricData {
   double _value;
   String _name;
   String _unit;
@@ -95,7 +101,7 @@ class MetricTile {
   bool _isAlert;
   double _uncertainty = 2;
 
-  MetricTile(
+  MetricData(
     String name,
     double value,
     String unit,

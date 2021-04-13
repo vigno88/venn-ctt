@@ -1,10 +1,11 @@
-import 'package:VennUI/api/utilities.dart';
+import 'package:VennUI/grpc/utilities.dart';
 import 'package:grpc/grpc.dart';
-import 'package:VennUI/api/v1/ui.pbgrpc.dart' as grpc;
-import 'package:VennUI/api/v1/ui.pb.dart' as proto;
+import 'package:VennUI/grpc/v1/ui.pbgrpc.dart' as grpc;
+import 'package:VennUI/grpc/v1/ui.pb.dart' as proto;
 import 'package:VennUI/utilies.dart';
 
-class AuthentificationService {
+/// NetworkService client implementation
+class NetworkGrpcAPI {
   // Flag is indicating that client is shutting down
   bool _isShutdown = false;
 
@@ -14,7 +15,7 @@ class AuthentificationService {
   // gRPC client channel to receive messages from the server
   ClientChannel _clientReceive;
 
-  AuthentificationService() {
+  NetworkGrpcAPI() {
     _clientSend = newClient(serverIP, serverPort);
   }
 
@@ -41,16 +42,16 @@ class AuthentificationService {
     }
   }
 
-  // Asynchronous function to read the list of user from the backend
-  Future<proto.Users> readUserList() async {
+  // Asynchronous function to read the list of wifi ssids from the backend
+  Future<proto.WifiNames> readWifiList() async {
     if (_clientSend == null) {
       _clientSend = newClient(serverIP, serverPort);
     }
     try {
       var request = grpc.Empty().createEmptyInstance();
-      var users = await grpc.AuthentificationServiceClient(_clientSend)
-          .readUserList(request);
-      return users;
+      var names =
+          await grpc.NetworkServiceClient(_clientSend).readWifiList(request);
+      return names;
     } catch (e) {
       if (!_isShutdown) {
         // Invalidate current client
@@ -58,20 +59,19 @@ class AuthentificationService {
         print(e.toString());
         // Try again
         Future.delayed(retryDelay, () {
-          return readUserList();
+          return readWifiList();
         });
       }
     }
   }
 
-  // Asynchronous function to read the list of user from the backend
-  void updateCurrentUser(proto.User u) async {
+  // Asynchronous function to connect to the wifi
+  void connectWifi(proto.WifiCredentials c) async {
     if (_clientSend == null) {
       _clientSend = newClient(serverIP, serverPort);
     }
     try {
-      await grpc.AuthentificationServiceClient(_clientSend)
-          .updateCurrentUser(u);
+      await grpc.NetworkServiceClient(_clientSend).connectWifi(c);
     } catch (e) {
       if (!_isShutdown) {
         // Invalidate current client
@@ -79,21 +79,21 @@ class AuthentificationService {
         print(e.toString());
         // Try again
         Future.delayed(retryDelay, () {
-          return updateCurrentUser(u);
+          return connectWifi(c);
         });
       }
     }
   }
 
-  Future<proto.User> getCurrentUser() async {
+  Future<proto.WifiStatus> readStatus() async {
     if (_clientSend == null) {
       _clientSend = newClient(serverIP, serverPort);
     }
     try {
       var request = grpc.Empty().createEmptyInstance();
-      var user = await grpc.AuthentificationServiceClient(_clientSend)
-          .getCurrentUser(request);
-      return user;
+      var status =
+          await grpc.NetworkServiceClient(_clientSend).readStatus(request);
+      return status;
     } catch (e) {
       if (!_isShutdown) {
         // Invalidate current client
@@ -101,7 +101,7 @@ class AuthentificationService {
         print(e.toString());
         // Try again
         Future.delayed(retryDelay, () {
-          return getCurrentUser();
+          return readStatus();
         });
       }
     }
