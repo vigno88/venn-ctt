@@ -1,22 +1,20 @@
-import 'package:VennUI/components/ActionButton.dart';
 import 'package:VennUI/components/Grid.dart';
 import 'package:VennUI/providers/dashboard_services/Control.dart';
 import 'package:VennUI/providers/dashboard_services/Metrics.dart';
 import 'package:flutter/material.dart';
-
 import 'package:VennUI/utilies.dart';
 import 'package:tuple/tuple.dart';
 
-final chipTemp = MetricChip(Key("0"),
-    MetricData("Water", 40.5, "°c", "Temperature", "Temp", 0, false), 1.0);
-final chipSpeed = MetricChip(
-    Key("1"), MetricData("Motor 1", 20, "RPM", "Speed", "Temp", 0, false), 1.0);
-final chipSpeed2 = MetricChip(Key("2"),
-    MetricData("Massage 1", 20, "C/s", "Speed", "Temp", 0, false), 1.0);
-
+// DashboardProvider act as a proxy between the different dashboard services
+// and the UI. It gathers widgets from the services to display them and updates
+// them when required through update received in the service update stream.
+// This way the UI is always up to date
 class DashboardProvider with ChangeNotifier {
   // grid contains information about our current grid setup
   final grid = Grid();
+  MetricService metricService;
+  ControlService controlService;
+
   // modifiedTileIndex tells to the Selector (of this provider) which tiles needs to be updated
   int modifiedTileIndex;
   // numPages tells the number of pages there is in the dashboard
@@ -28,48 +26,13 @@ class DashboardProvider with ChangeNotifier {
   // isAlert tells when a tile is in alert state
   bool isAlert = false;
 
-  List<Widget> dragTargets = [];
-  List<Widget> tiles = [
-    Tile(chipTemp, false, 2, 1),
-    Tile(chipSpeed, false, 2, 1),
-    Tile(chipSpeed, false, 2, 1),
-    Tile(chipSpeed, false, 2, 1),
-    Tile(chipSpeed2, false, 2, 1),
-    Tile(chipSpeed2, false, 2, 1),
-    Tile(chipSpeed2, false, 2, 1),
-    Tile(
-        ControlContainer([
-          ActionButton("Pistons 1", "OPEN", null),
-          ActionButton("Pistons 2", "OPEN", null),
-          ActionButton("Pistons 3", "OPEN", null),
-          ActionButton("Pistons 4", "OPEN", null),
-          ActionButton("Pistons 5", "OPEN", null),
-          ActionButton("Pistons 6", "OPEN", null),
-          ActionButton("All Pistons", "OPEN", null)
-        ]),
-        false,
-        4,
-        2),
-    Tile(
-        ControlContainer(
-          [
-            ActionButton("Home", "START", null),
-            ActionButton("Cycle", "START", null)
-          ],
-        ),
-        false,
-        1,
-        2),
-    Tile(
-        ControlContainer([
-          ActionButton("Water", "START", null),
-        ]),
-        false,
-        1,
-        1),
-  ];
+  // dragTargets are placeholder for tiles that will be used when tiles are movable
+  List<Widget> _dragTargets = [];
 
-  List<Tuple2> tilePositions = [
+  List<Widget> widgets = [];
+
+  // tilePositions are the position of each of the widget on the grid
+  List<Tuple2> _tilePositions = [
     Tuple2(0, 0),
     Tuple2(0, 1),
     Tuple2(2, 0),
@@ -82,7 +45,45 @@ class DashboardProvider with ChangeNotifier {
     Tuple2(5, 2),
   ];
 
-  DashboardProvider(MetricService m, ControlService c) {}
+  DashboardProvider(MetricService m, ControlService c) {
+    metricService = m;
+    controlService = c;
+    initiate();
+  }
+
+  void initiate() async {
+    // Wait until both service initiate
+    await metricService.initiate();
+    await controlService.initiate();
+    _dragTargets = getDragTargets();
+    isLoading = false;
+    // Get the list of widgets to display on dashboard
+    widgets = getWidgets();
+    notifyListeners();
+
+    // Listen to the update stream of the metric service
+    metricService.updateStream.listen((update) {
+      modifiedTileIndex = _dragTargets.length + update;
+      // Get the updated list of widgets
+      widgets = getWidgets();
+      notifyListeners();
+    });
+
+    // Listen to the update stream of the control service
+    controlService.updateStream.listen((update) {
+      modifiedTileIndex =
+          _dragTargets.length + metricService.numberOfTiles + update;
+      // Get the updated list of widgets
+      widgets = getWidgets();
+      notifyListeners();
+    });
+  }
+
+  List<Tile> getTiles() {
+    List<Tile> tiles = metricService.getTiles();
+    tiles.addAll(controlService.getTiles());
+    return tiles;
+  }
 
   void setActivePageIndex(int i) {
     if (i < 0 || i > numPages) {
@@ -93,7 +94,7 @@ class DashboardProvider with ChangeNotifier {
   }
 
   List<Widget> getWidgets() {
-    List<Widget> widgets = getDragTargets();
+    List<Widget> widgets = _dragTargets;
     widgets.addAll(getDashboardWidgets());
     return widgets;
   }
@@ -108,11 +109,16 @@ class DashboardProvider with ChangeNotifier {
   }
 
   List<Widget> getDashboardWidgets() {
+    List<Tile> tiles = getTiles();
     List<Widget> dashboardWidgets = [];
     for (int i = 0; i < tiles.length; i++) {
       dashboardWidgets.add(DashboardWidget(
-          tilePositions[i].item1, tilePositions[i].item2, grid, tiles[i]));
+          _tilePositions[i].item1, _tilePositions[i].item2, grid, tiles[i]));
     }
     return dashboardWidgets;
+  }
+
+  void pressButton(int i) {
+    controlService.pressButton(i);
   }
 }

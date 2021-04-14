@@ -1,8 +1,6 @@
 import 'dart:async';
-
 import 'package:VennUI/components/Grid.dart';
 import 'package:VennUI/grpc/metric.dart';
-import 'package:VennUI/pages/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:VennUI/grpc/v1/ui.pb.dart' as proto;
 import 'package:flutter_icons/flutter_icons.dart';
@@ -10,15 +8,17 @@ import 'package:flutter_icons/flutter_icons.dart';
 // Metric serive is used to track data about the metrics
 class MetricService {
   // _updates is used to tell the provider which widget needs to be updated
-  StreamController<int> _updates;
+  StreamController<int> _updates = StreamController<int>();
   Stream<int> get updateStream => _updates.stream;
 
   // List of tiles provided by metric service, the dashboard provider reads
   // them each time the metric service tells it a tile was modified. This
   // should be the only thing that the dashboard provider has access other than
   // the update stream.
-  List<Tile> _tiles = [];
-  List<Tile> get tiles => _tiles;
+  // List<Tile> _tiles = [];
+  // List<Tile> get tiles => {
+  //   return _metricData.map((e) => null);
+  // };
 
   // isAlert is used as a flag to tell when one of the metric tiles is in alert
   bool isAlert = false;
@@ -26,15 +26,14 @@ class MetricService {
   // config is constant information about each metric tiles
   List<proto.MetricConfig> config = [];
 
-  // metricTiles is the list of MetricTile widget
-  List<MetricTile> metricTiles = [];
+  // metricChip is the list of metricChip widget
+  List<MetricData> _metricData = [];
 
   // Configuration and metric service API object
   MetricGrpcAPI _metricAPI;
 
   MetricService(MetricGrpcAPI m) {
     _metricAPI = m;
-    initiate();
   }
 
   void initiate() async {
@@ -54,39 +53,45 @@ class MetricService {
         m.updates[i].target,
         config[0].hasTarget_6,
       );
-      metricTiles.add(MetricTile(Key(i.toString()), t, 1.0));
+      _metricData.add(t);
     }
-    // notifyListeners();
 
     // Listen for new metrics from the backend
-    var stream = _metricAPI.getMetricStream();
-    await for (var metric in stream) {
+    _metricAPI.getMetricStream().listen((metric) {
       processNewMetric(metric);
-    }
+    });
   }
 
   void processNewMetric(proto.MetricUpdate update) {
     // Update the required tile
-    metricTiles.forEach((tile) {
-      if (tile.data.name == update.name) {
-        tile.data.update(update);
-        // modifiedTileIndex = metricTiles.indexOf(tile);
-        // notifyListeners();
+    for (int i = 0; i < _metricData.length; i++) {
+      if (_metricData[i].name == update.name) {
+        _metricData[i].update(update);
+        _updates.add(i);
       }
-    });
-    // Look if any tile is in alert
-    bool alert = false;
-    metricTiles.forEach((tile) {
-      // if (tile._isAlert) {
-      //   alert = true;
-      // }
-    });
-    // Only notifier listeners if alert state is different from previous
-    if (isAlert != alert) {
-      isAlert = alert;
-      // notifyListeners();
     }
+    // Look if any tile is in alert
+    // bool alert = false;
+    // metricTiles.forEach((tile) {
+    //   if (tile._isAlert) {
+    //     alert = true;
+    //   }
+    // });
+    // // Only notifier listeners if alert state is different from previous
+    // if (isAlert != alert) {
+    //   isAlert = alert;
+    // }
   }
+
+  List<Tile> getTiles() {
+    return _metricData
+        .map((data) => MetricChip(data, 1.0))
+        .toList()
+        .map((chip) => Tile(chip, false, 2, 1))
+        .toList();
+  }
+
+  int get numberOfTiles => _metricData.length;
 }
 
 class MetricData {

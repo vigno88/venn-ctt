@@ -1,13 +1,15 @@
+import 'package:VennUI/providers/DashboardProvider.dart';
 import 'package:VennUI/utilies.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ActionButton extends StatefulWidget {
   final String text;
-  final Function f;
   final String title;
+  final int index;
 
-  ActionButton(this.title, this.text, this.f);
+  ActionButton(this.title, this.text, this.index);
 
   @override
   _ActionButtonState createState() => _ActionButtonState();
@@ -46,7 +48,8 @@ class _ActionButtonState extends State<ActionButton> {
           GestureDetector(
               onTapDown: _tapDown,
               onTapUp: _tapUp,
-              onTap: () => widget.f(context),
+              onTap: () =>
+                  context.read<DashboardProvider>().pressButton(widget.index),
               child: Container(
                   height: 110,
                   width: 110,

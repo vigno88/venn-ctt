@@ -129,24 +129,23 @@ class Tile extends StatelessWidget {
 
 class MetricChip extends StatelessWidget {
   MetricChip(
-    Key key,
-    this.tile,
+    this.data,
     this.opacityValue,
-  ) : super(key: key);
+  );
 
-  final MetricData tile;
+  final MetricData data;
   final double opacityValue;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
         onTap: () {
-          showModal(context, "Information of" + tile.name, tile.info);
+          showModal(context, "Information of" + data.name, data.info);
         },
         child: Container(
           decoration: BoxDecoration(
             color:
-                tile.isAlert ? Colors.redAccent.withOpacity(0.6) : Colors.white,
+                data.isAlert ? Colors.redAccent.withOpacity(0.6) : Colors.white,
             borderRadius: BorderRadius.all(Radius.circular(10)),
           ),
           padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
@@ -162,10 +161,10 @@ class MetricChip extends StatelessWidget {
                       borderRadius: BorderRadius.all(Radius.circular(10))),
                   child: Center(
                     child: IconButton(
-                        icon: tile.icon,
+                        icon: data.icon,
                         onPressed: () {
-                          showModal(context, "Information of " + tile.name,
-                              tile.info);
+                          showModal(context, "Information of " + data.name,
+                              data.info);
                         },
                         iconSize: 70.0,
                         color: Colors.white),
@@ -182,32 +181,32 @@ class MetricChip extends StatelessWidget {
                             TextSpan(
                               children: [
                                 TextSpan(
-                                    text: tile.value.toStringAsFixed(1) + " ",
+                                    text: data.value.toStringAsFixed(1) + " ",
                                     style: TextStyle(
                                       fontSize: 160,
                                     )),
                                 TextSpan(
-                                    text: tile.unit,
+                                    text: data.unit,
                                     style: TextStyle(
                                       fontSize: 125,
                                     )),
                                 TextSpan(
                                     text: ' (' +
-                                        tile.target.toString() +
+                                        data.target.toString() +
                                         ' ' +
-                                        tile.unit +
+                                        data.unit +
                                         ')',
                                     style: TextStyle(
                                         fontSize: 85,
-                                        color: tile.hasTarget
-                                            ? (tile.isAlert
+                                        color: data.hasTarget
+                                            ? (data.isAlert
                                                 ? Colors.white
                                                 : paleColor.withOpacity(0.7))
                                             : Colors.transparent)),
                               ],
                             ),
                             style: TextStyle(
-                              color: tile.isAlert ? Colors.white : baseColor,
+                              color: data.isAlert ? Colors.white : baseColor,
                               fontWeight: FontWeight.bold,
                               fontSize: 150,
                             ),
@@ -221,18 +220,18 @@ class MetricChip extends StatelessWidget {
                               child: AutoSizeText.rich(
                             TextSpan(children: [
                               TextSpan(
-                                  text: tile.type + " ",
+                                  text: data.type + " ",
                                   style: TextStyle(
                                       fontSize: 30,
-                                      color: tile.isAlert
+                                      color: data.isAlert
                                           ? Colors.white.withOpacity(0.6)
                                           : infoColor)),
                               TextSpan(
-                                text: tile.name,
+                                text: data.name,
                                 style: TextStyle(
                                     fontSize: 30,
                                     fontWeight: FontWeight.bold,
-                                    color: tile.isAlert
+                                    color: data.isAlert
                                         ? Colors.white
                                         : infoColor),
                               )
