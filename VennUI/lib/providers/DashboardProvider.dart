@@ -43,6 +43,7 @@ class DashboardProvider with ChangeNotifier {
     Tuple2(0, 2),
     Tuple2(4, 2),
     Tuple2(5, 2),
+    Tuple2(6, 1), // Pression widget
   ];
 
   DashboardProvider(MetricService m, ControlService c) {
@@ -82,6 +83,7 @@ class DashboardProvider with ChangeNotifier {
   List<Tile> getTiles() {
     List<Tile> tiles = metricService.getTiles();
     tiles.addAll(controlService.getTiles());
+    tiles.add(Tile(PressionChip([]), false, 2, 1));
     return tiles;
   }
 

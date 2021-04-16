@@ -11,15 +11,6 @@ class MetricService {
   StreamController<int> _updates = StreamController<int>();
   Stream<int> get updateStream => _updates.stream;
 
-  // List of tiles provided by metric service, the dashboard provider reads
-  // them each time the metric service tells it a tile was modified. This
-  // should be the only thing that the dashboard provider has access other than
-  // the update stream.
-  // List<Tile> _tiles = [];
-  // List<Tile> get tiles => {
-  //   return _metricData.map((e) => null);
-  // };
-
   // isAlert is used as a flag to tell when one of the metric tiles is in alert
   bool isAlert = false;
 
@@ -47,11 +38,11 @@ class MetricService {
       var t = MetricData(
         m.updates[i].name,
         m.updates[i].value,
-        config[0].unit,
-        config[0].type,
-        config[0].info,
+        config[i].unit,
+        config[i].type,
+        config[i].info,
         m.updates[i].target,
-        config[0].hasTarget_6,
+        config[i].hasTarget_6,
       );
       _metricData.add(t);
     }

@@ -15,50 +15,50 @@ class ControlService {
       "OPEN",
       "CLOSE"
     ], [
-      proto.Action(name: "p1", payload: "open"),
-      proto.Action(name: "p1", payload: "close")
+      proto.Action(name: "piston", payload: "p1#open"),
+      proto.Action(name: "piston", payload: "p1#close")
     ]),
     ButtonData("Pistons 2", [
       "OPEN",
       "CLOSE"
     ], [
-      proto.Action(name: "p2", payload: "open"),
-      proto.Action(name: "p2", payload: "close")
+      proto.Action(name: "piston", payload: "p2#open"),
+      proto.Action(name: "piston", payload: "p2#close")
     ]),
     ButtonData("Pistons 3", [
       "OPEN",
       "CLOSE"
     ], [
-      proto.Action(name: "p3", payload: "open"),
-      proto.Action(name: "p3", payload: "close")
+      proto.Action(name: "piston", payload: "p3#open"),
+      proto.Action(name: "piston", payload: "p3#close")
     ]),
     ButtonData("Pistons 4", [
       "OPEN",
       "CLOSE"
     ], [
-      proto.Action(name: "p4", payload: "open"),
-      proto.Action(name: "p4", payload: "close")
+      proto.Action(name: "piston", payload: "p4#open"),
+      proto.Action(name: "piston", payload: "p4#close")
     ]),
     ButtonData("Pistons 5", [
       "OPEN",
       "CLOSE"
     ], [
-      proto.Action(name: "p5", payload: "open"),
-      proto.Action(name: "p5", payload: "close")
+      proto.Action(name: "piston", payload: "p5#open"),
+      proto.Action(name: "piston", payload: "p5#close")
     ]),
     ButtonData("Pistons 6", [
       "OPEN",
       "CLOSE"
     ], [
-      proto.Action(name: "p6", payload: "open"),
-      proto.Action(name: "p6", payload: "close")
+      proto.Action(name: "piston", payload: "p6#open"),
+      proto.Action(name: "piston", payload: "p6#close")
     ]),
     ButtonData("All Pistons", [
       "OPEN",
       "CLOSE"
     ], [
-      proto.Action(name: "ps", payload: "open"),
-      proto.Action(name: "ps", payload: "close")
+      proto.Action(name: "piston", payload: "ps#open"),
+      proto.Action(name: "piston", payload: "ps#close")
     ]),
     ButtonData("Home", [
       "START",
@@ -78,8 +78,8 @@ class ControlService {
       "START",
       "STOP"
     ], [
-      proto.Action(name: "water", payload: "start"),
-      proto.Action(name: "water", payload: "stop")
+      proto.Action(name: "water", payload: "w#start"),
+      proto.Action(name: "water", payload: "w#stop")
     ]),
   ];
 

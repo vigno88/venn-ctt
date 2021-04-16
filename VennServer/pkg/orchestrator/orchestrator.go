@@ -10,7 +10,6 @@ import (
 	proto "github.com/vigno88/Venn/VennServer/pkg/api/v1"
 	authentifaction "github.com/vigno88/Venn/VennServer/pkg/authentification"
 	metrics "github.com/vigno88/Venn/VennServer/pkg/metrics"
-	"github.com/vigno88/Venn/VennServer/pkg/motors"
 	recipes "github.com/vigno88/Venn/VennServer/pkg/recipes"
 	"github.com/vigno88/Venn/VennServer/pkg/serial"
 	"github.com/vigno88/Venn/VennServer/pkg/util"
@@ -19,12 +18,12 @@ import (
 
 func Run(ctx context.Context, c chan *proto.MetricUpdates) {
 	// Verify validity software
-	err := validate(util.PathKey)
-	if err != nil {
-		log.Fatalf(err.Error())
-	}
+	// err := validate(util.PathKey)
+	// if err != nil {
+	// 	log.Fatalf(err.Error())
+	// }
 	// Initialize all the modules
-	err = authentifaction.Init(ctx, util.PathAuth)
+	err := authentifaction.Init(ctx, util.PathAuth)
 	handle(err)
 	err = serial.Init(ctx, c)
 	handle(err)
@@ -32,8 +31,8 @@ func Run(ctx context.Context, c chan *proto.MetricUpdates) {
 	handle(err)
 	err = wifi.Init(ctx, util.PathWifi)
 	handle(err)
-	err = motors.Init()
-	handle(err)
+	// err = motors.Init()
+	// handle(err)
 	exit := make(chan string)
 	go serial.Run(ctx, exit)
 	go wifi.Run()

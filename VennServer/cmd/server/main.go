@@ -15,13 +15,16 @@ import (
 func main() {
 	// metricChannel is used to send stream data to gRPC API
 	metricChan := make(chan *proto.MetricUpdates, 200)
+	controlChan := make(chan *proto.ControlEvent, 200)
 	go orchestrator.Run(context.Background(), metricChan)
 	if err := grpc.RunServer(context.Background(),
 		service.NewMetricServiceServer(metricChan),
 		service.NewSettingServiceServer(),
 		service.NewAuthentificationServiceServer(),
 		service.NewNetworkServiceServer(),
-		service.NewConfigurationServiceServer(), "3000"); err != nil {
+		service.NewConfigurationServiceServer(),
+		service.NewControlServiceServer(controlChan),
+		"3000"); err != nil {
 		fmt.Fprintf(os.Stderr, "%v\n", err)
 		debug.PrintStack()
 		os.Exit(1)

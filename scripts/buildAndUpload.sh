@@ -2,7 +2,7 @@
 
 USER=pi
 PASSWORD=pi
-IP=192.168.0.108
+IP=192.168.0.118
 
 # Build proto files
 ./compileProto.sh
@@ -26,9 +26,9 @@ sshpass -p $PASSWORD \
   rsync -a --info=progress2 \
   ./VennServer/configs/config.yaml \
   $USER@$IP:/home/pi/config/config.yaml
-sshpass -p $PASSWORD \
-  rsync -a --info=progress2 \
-  ./VennServer/configs/key \
-  $USER@$IP:/home/pi/config/key
+# sshpass -p $PASSWORD \
+#   rsync -a --info=progress2 \
+#   ./VennServer/configs/key \
+#   $USER@$IP:/home/pi/config/key
 echo 'Uploaded config file'
 

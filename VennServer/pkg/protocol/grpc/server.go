@@ -12,7 +12,8 @@ import (
 // RunServer registers gRPC service and run server
 func RunServer(ctx context.Context, metric proto.MetricServiceServer,
 	setting proto.SettingServiceServer, auth proto.AuthentificationServiceServer,
-	network proto.NetworkServiceServer, config proto.ConfigurationServiceServer, port string) error {
+	network proto.NetworkServiceServer, config proto.ConfigurationServiceServer,
+	control proto.ControlServiceServer, port string) error {
 	listen, err := net.Listen("tcp", ":"+port)
 	if err != nil {
 		return err
@@ -25,6 +26,7 @@ func RunServer(ctx context.Context, metric proto.MetricServiceServer,
 	proto.RegisterAuthentificationServiceServer(server, auth)
 	proto.RegisterNetworkServiceServer(server, network)
 	proto.RegisterConfigurationServiceServer(server, config)
+	proto.RegisterControlServiceServer(server, control)
 
 	// start gRPC server
 	log.Printf("starting gRPC server on port: %s\n", port)

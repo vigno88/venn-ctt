@@ -251,6 +251,136 @@ class MetricChip extends StatelessWidget {
   }
 }
 
+class PressionChip extends StatelessWidget {
+  PressionChip(
+    this.pressions,
+  );
+
+  final List<int> pressions;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+        onTap: () {
+          showModal(context, "Information of recorded pressions", "Empty");
+        },
+        child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+            ),
+            padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+            height: 230,
+            width: 460,
+            child: Column(
+              children: [
+                Container(
+                    child: Text(
+                  "Recorded Pressions",
+                  style: TextStyle(
+                      color: baseColor,
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold),
+                )),
+                Expanded(
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
+                            flex: 3,
+                            child: Center(
+                                child: AutoSizeText(
+                              "P1: 20 psi",
+                              maxLines: 1,
+                              style: TextStyle(
+                                fontSize: 23,
+                                color: baseColor.withOpacity(0.8),
+                              ),
+                            ))),
+                        Expanded(flex: 1, child: Container()),
+                        Expanded(
+                            flex: 3,
+                            child: Center(
+                                child: AutoSizeText(
+                              "P2: 20 psi",
+                              maxLines: 1,
+                              style: TextStyle(
+                                fontSize: 23,
+                                color: baseColor.withOpacity(0.8),
+                              ),
+                            ))),
+                      ]),
+                ),
+                Expanded(
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
+                            flex: 3,
+                            child: Center(
+                                child: AutoSizeText(
+                              "P3: 20 psi",
+                              maxLines: 1,
+                              style: TextStyle(
+                                fontSize: 23,
+                                color: baseColor.withOpacity(0.8),
+                              ),
+                            ))),
+                        Expanded(flex: 1, child: Container()),
+                        Expanded(
+                            flex: 3,
+                            child: Center(
+                                child: AutoSizeText(
+                              "P4: 20 psi",
+                              maxLines: 1,
+                              style: TextStyle(
+                                fontSize: 23,
+                                color: baseColor.withOpacity(0.8),
+                              ),
+                            ))),
+                      ]),
+                ),
+                Expanded(
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
+                            flex: 3,
+                            child: Center(
+                                child: AutoSizeText.rich(
+                              TextSpan(children: [
+                                TextSpan(
+                                    text: "P5: ",
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.bold)),
+                                TextSpan(text: "20 psi"),
+                              ]),
+                              // "P5: 20 psi",
+                              maxLines: 1,
+                              style: TextStyle(
+                                fontSize: 23,
+                                color: baseColor.withOpacity(0.8),
+                              ),
+                            ))),
+                        Expanded(flex: 1, child: Container()),
+                        Expanded(
+                            flex: 3,
+                            child: Center(
+                                child: AutoSizeText(
+                              "P6: 20 psi",
+                              maxLines: 1,
+                              style: TextStyle(
+                                fontSize: 23,
+                                color: baseColor.withOpacity(0.8),
+                              ),
+                            ))),
+                      ]),
+                ),
+              ],
+            )));
+  }
+}
+
 class ControlContainer extends StatelessWidget {
   final List<Widget> widgets;
 

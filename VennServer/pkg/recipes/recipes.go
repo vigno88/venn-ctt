@@ -31,10 +31,10 @@ func Init(ctx context.Context, path string) error {
 	if err != nil {
 		return err
 	}
-	err = db.Init(&Recipe{})
-	if err != nil {
-		return err
-	}
+	// err = db.Init(&Recipe{})
+	// if err != nil {
+	// 	return err
+	// }
 	db.Close()
 	return err
 }

@@ -672,7 +672,7 @@ class SliderContainer extends StatelessWidget {
                 setting.name,
                 style: TextStyle(
                   color: baseColor,
-                  fontSize: 27,
+                  fontSize: 24,
                   fontWeight: FontWeight.bold,
                 ),
               ),

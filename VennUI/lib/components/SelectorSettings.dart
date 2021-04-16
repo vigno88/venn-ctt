@@ -17,6 +17,7 @@ class SelectorSettings extends StatefulWidget {
 class _SelectorSettingsState extends State<SelectorSettings> {
   String _selectedItem;
   List<String> _items;
+  String _name;
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +26,7 @@ class _SelectorSettingsState extends State<SelectorSettings> {
         .selectors[widget._index]
         .selectedChoice
         .name;
+    _name = context.watch<SettingsProvider>().selectors[widget._index].name;
     _items =
         context.watch<SettingsProvider>().selectorChoicesName[widget._index];
     return Container(
@@ -42,9 +44,9 @@ class _SelectorSettingsState extends State<SelectorSettings> {
           children: [
             Container(
               child: Text(
-                "Title",
+                _name,
                 style: TextStyle(
-                    fontSize: 32,
+                    fontSize: 30,
                     fontWeight: FontWeight.bold,
                     color: baseColor),
               ),

@@ -1,7 +1,7 @@
 #!/bin/bash
 echo 'Compile proto files'
 # Compile dart proto
-protoc --dart_out=grpc:../VennUI/lib/api/v1 \
+protoc --dart_out=grpc:../VennUI/lib/grpc/v1 \
   -I../api/ui/proto/v1/ \
   ../api/ui/proto/v1/ui.proto
 

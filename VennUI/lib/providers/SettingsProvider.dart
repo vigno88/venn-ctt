@@ -6,7 +6,7 @@ import 'package:VennUI/utilies.dart';
 
 class SettingsProvider with ChangeNotifier {
   // Sliders
-  final int sliderPerPage = 5;
+  final int sliderPerPage = 4;
 
   bool isLoading = true;
   int numPagesSliders = 3;

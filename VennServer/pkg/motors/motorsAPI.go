@@ -1,7 +1,7 @@
 package motors
 
-// #cgo CFLAGS: -I./include
-// #cgo LDFLAGS: ./include/libLibMotors.a
+// #cgo CFLAGS: -I/home/nathan/dev/venn-ctt/VennServer/include
+// #cgo LDFLAGS: /home/nathan/dev/venn-ctt/VennServer/include/libLibMotors.a
 // #cgo LDFLAGS: -lstdc++
 // #cgo LDFLAGS: -lm
 // #cgo LDFLAGS: -ldl

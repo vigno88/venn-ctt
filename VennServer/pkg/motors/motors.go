@@ -1,3 +1,5 @@
+// +build production
+
 package motors
 
 import "log"
@@ -13,7 +15,7 @@ type NodeConfig struct {
 }
 
 func Init() error {
-	motors.init()
+	// motors.init()
 	// If there is no motor connected, retry
 	if motors.Count == 0 {
 		motors.init()
