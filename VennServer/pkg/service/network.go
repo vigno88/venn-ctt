@@ -4,6 +4,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	proto "github.com/vigno88/Venn/VennServer/pkg/api/v1"
@@ -35,7 +36,7 @@ func (s *networkServiceServer) ConnectWifi(ctx context.Context, cred *proto.Wifi
 	err := wifi.Connect(cred.SSID, cred.Password)
 	if err != nil {
 		log.Printf("Error while trying to connect to wifi: %s\n", err.Error())
-		return nil, err
+		return nil, fmt.Errorf("Error while trying to connect to wifi: %s", cred.SSID)
 	}
 	return &proto.Empty{}, nil
 }

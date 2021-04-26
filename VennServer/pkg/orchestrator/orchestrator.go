@@ -10,6 +10,7 @@ import (
 	proto "github.com/vigno88/Venn/VennServer/pkg/api/v1"
 	authentifaction "github.com/vigno88/Venn/VennServer/pkg/authentification"
 	metrics "github.com/vigno88/Venn/VennServer/pkg/metrics"
+	motors "github.com/vigno88/Venn/VennServer/pkg/motors"
 	recipes "github.com/vigno88/Venn/VennServer/pkg/recipes"
 	"github.com/vigno88/Venn/VennServer/pkg/serial"
 	"github.com/vigno88/Venn/VennServer/pkg/util"
@@ -31,11 +32,12 @@ func Run(ctx context.Context, c chan *proto.MetricUpdates) {
 	handle(err)
 	err = wifi.Init(ctx, util.PathWifi)
 	handle(err)
-	// err = motors.Init()
-	// handle(err)
+	err = motors.Init()
+	handle(err)
 	exit := make(chan string)
 	go serial.Run(ctx, exit)
 	go wifi.Run()
+	go motors.Run()
 	err = recipes.Init(ctx, util.PathRecipe)
 	handle(err)
 	log.Printf("Orchestrator is running..\n")

@@ -41,7 +41,7 @@ dependencies:
   auto_size_text: ^2.1.0
   tuple: ^1.0.3
   flavor: ^1.0.1
-  # virtual_keyboard: ^0.1.4
+  overlay_support: ^1.2.1
 
 
 

@@ -4,6 +4,9 @@ import 'package:VennUI/components/ActionButton.dart';
 import 'package:VennUI/components/Grid.dart';
 import 'package:VennUI/grpc/control.dart';
 import 'package:VennUI/grpc/v1/ui.pb.dart' as proto;
+import 'package:VennUI/providers/NotificationProvider.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ControlService {
   // _updates is used to tell the provider which widget needs to be updated
@@ -83,6 +86,8 @@ class ControlService {
     ]),
   ];
 
+  List<Tile> tiles = [];
+
   ControlGrpcAPI _controlAPI;
 
   ControlService(ControlGrpcAPI s) {
@@ -101,19 +106,19 @@ class ControlService {
       Tile(
           ControlContainer([
             ActionButton(buttonsData[0].title,
-                buttonsData[0].texts[buttonsData[0].state], 0),
+                buttonsData[0].texts[buttonsData[0].state], 0, 0),
             ActionButton(buttonsData[1].title,
-                buttonsData[1].texts[buttonsData[1].state], 1),
+                buttonsData[1].texts[buttonsData[1].state], 1, 0),
             ActionButton(buttonsData[2].title,
-                buttonsData[2].texts[buttonsData[2].state], 2),
+                buttonsData[2].texts[buttonsData[2].state], 2, 0),
             ActionButton(buttonsData[3].title,
-                buttonsData[3].texts[buttonsData[3].state], 3),
+                buttonsData[3].texts[buttonsData[3].state], 3, 0),
             ActionButton(buttonsData[4].title,
-                buttonsData[4].texts[buttonsData[4].state], 4),
+                buttonsData[4].texts[buttonsData[4].state], 4, 0),
             ActionButton(buttonsData[5].title,
-                buttonsData[5].texts[buttonsData[5].state], 5),
+                buttonsData[5].texts[buttonsData[5].state], 5, 0),
             ActionButton(buttonsData[6].title,
-                buttonsData[6].texts[buttonsData[6].state], 6),
+                buttonsData[6].texts[buttonsData[6].state], 6, 0),
           ]),
           false,
           4,
@@ -122,9 +127,9 @@ class ControlService {
           ControlContainer(
             [
               ActionButton(buttonsData[7].title,
-                  buttonsData[7].texts[buttonsData[7].state], 7),
+                  buttonsData[7].texts[buttonsData[7].state], 7, 1),
               ActionButton(buttonsData[8].title,
-                  buttonsData[8].texts[buttonsData[8].state], 8),
+                  buttonsData[8].texts[buttonsData[8].state], 8, 1),
             ],
           ),
           false,
@@ -133,7 +138,7 @@ class ControlService {
       Tile(
           ControlContainer([
             ActionButton(buttonsData[9].title,
-                buttonsData[9].texts[buttonsData[9].state], 9),
+                buttonsData[9].texts[buttonsData[9].state], 9, 2),
           ]),
           false,
           1,
@@ -141,13 +146,14 @@ class ControlService {
     ];
   }
 
-  void pressButton(int i) {
-    // Switch the button data to the other state
-    buttonsData[i].switchState();
+  void pressButton(BuildContext context, int buttonIndex, int tileIndex) async {
     // Send the button press to the API
-    _controlAPI.send(buttonsData[i].actions[buttonsData[i].state]);
+    await _controlAPI.send(context,
+        buttonsData[buttonIndex].actions[buttonsData[buttonIndex].state]);
+    // Switch the button data to the other state
+    buttonsData[buttonIndex].switchState();
     // Send the update to the dashboard provider
-    _updates.add(i);
+    _updates.add(tileIndex);
   }
 }
 

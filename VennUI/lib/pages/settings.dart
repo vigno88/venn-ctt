@@ -84,7 +84,7 @@ class RecipePanel extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.all(Radius.circular(20)),
-                boxShadow: tileShadows(3, 1, 3),
+                boxShadow: tileShadows(3, 1, 3, paleColor),
               ),
               padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
               child: ListView.separated(
@@ -193,7 +193,7 @@ class SelectorPanel extends StatelessWidget {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.all(Radius.circular(20)),
-              boxShadow: tileShadows(3, 1, 3),
+              boxShadow: tileShadows(3, 1, 3, paleColor),
             ),
             child: PageView(
               controller: PageController(
@@ -400,7 +400,7 @@ class SettingsPanel extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.all(Radius.circular(20)),
-                    boxShadow: tileShadows(3, 1, 3),
+                    boxShadow: tileShadows(3, 1, 3, paleColor),
                   ),
                   height: 460,
                   width: 1000,
@@ -606,7 +606,8 @@ class _SettingButtonState extends State<SettingButton>
         decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.all(Radius.circular(10)),
-            boxShadow: tileShadows(5 * _scale, 1 * _scale, 3 * _scale)),
+            boxShadow:
+                tileShadows(5 * _scale, 1 * _scale, 3 * _scale, paleColor)),
         child: Material(
             color: Colors.transparent,
             // child: GestureDetector(

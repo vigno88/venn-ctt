@@ -1,3 +1,5 @@
+typedef void CMotors;
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -5,8 +7,9 @@ extern "C" {
 void Initialize();
 int NodeCount();
 
-void HomeNode(int indexNode);
-void StartMoveNode(int indexNode, int numSteps);
+void HomeNodes();
+void StartMovePosNode(int indexNode, int numSteps);
+void StartMoveVelNode(int indexNode, int velocity);
 int IsMoveDoneNode(int indexNode);
 int ReadPosNode(int indexNode); 
 int ReadPosCommandedNode(int indexNode);

@@ -59,14 +59,14 @@ class DashboardProvider with ChangeNotifier {
     _dragTargets = getDragTargets();
     isLoading = false;
     // Get the list of widgets to display on dashboard
-    widgets = getWidgets();
+    widgets = new List<Widget>.from(getWidgets());
     notifyListeners();
 
     // Listen to the update stream of the metric service
     metricService.updateStream.listen((update) {
       modifiedTileIndex = _dragTargets.length + update;
       // Get the updated list of widgets
-      widgets = getWidgets();
+      widgets[modifiedTileIndex] = getWidgets()[modifiedTileIndex];
       notifyListeners();
     });
 
@@ -75,13 +75,13 @@ class DashboardProvider with ChangeNotifier {
       modifiedTileIndex =
           _dragTargets.length + metricService.numberOfTiles + update;
       // Get the updated list of widgets
-      widgets = getWidgets();
+      widgets[modifiedTileIndex] = getWidgets()[modifiedTileIndex];
       notifyListeners();
     });
   }
 
   List<Tile> getTiles() {
-    List<Tile> tiles = metricService.getTiles();
+    List<Tile> tiles = new List<Tile>.from(metricService.getTiles());
     tiles.addAll(controlService.getTiles());
     tiles.add(Tile(PressionChip([]), false, 2, 1));
     return tiles;
@@ -96,9 +96,9 @@ class DashboardProvider with ChangeNotifier {
   }
 
   List<Widget> getWidgets() {
-    List<Widget> widgets = _dragTargets;
-    widgets.addAll(getDashboardWidgets());
-    return widgets;
+    List<Widget> w = new List<Widget>.from(_dragTargets);
+    w.addAll(getDashboardWidgets());
+    return w;
   }
 
   List<Widget> getDragTargets() {
@@ -111,7 +111,7 @@ class DashboardProvider with ChangeNotifier {
   }
 
   List<Widget> getDashboardWidgets() {
-    List<Tile> tiles = getTiles();
+    List<Tile> tiles = new List<Tile>.from(getTiles());
     List<Widget> dashboardWidgets = [];
     for (int i = 0; i < tiles.length; i++) {
       dashboardWidgets.add(DashboardWidget(
@@ -120,7 +120,7 @@ class DashboardProvider with ChangeNotifier {
     return dashboardWidgets;
   }
 
-  void pressButton(int i) {
-    controlService.pressButton(i);
+  void pressButton(BuildContext context, int buttonIndex, int tileIndex) {
+    controlService.pressButton(context, buttonIndex, tileIndex);
   }
 }

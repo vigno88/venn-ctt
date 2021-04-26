@@ -72,7 +72,8 @@ func Run(ctx context.Context, exit chan<- string) {
 				return
 			}
 		case received := <-manager.Received:
-			manager.process(ctx, received)
+			fmt.Printf("Received: %s\n", received)
+			// manager.process(ctx, received)
 		case err := <-manager.ErrChan:
 			log.Printf("Error: %v\n", err)
 		}

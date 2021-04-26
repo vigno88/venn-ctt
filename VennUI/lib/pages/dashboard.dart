@@ -1,14 +1,13 @@
 import 'package:VennUI/components/BottomBar.dart';
-import 'package:VennUI/dialogs/user_dialog.dart';
+import 'package:VennUI/components/Notification.dart';
 import 'package:VennUI/dialogs/wifi_dialog.dart';
 import 'package:VennUI/providers/NetworkProvider.dart';
-import 'package:VennUI/providers/UserProvider.dart';
 import 'package:VennUI/providers/DashboardProvider.dart';
+import 'package:VennUI/providers/NotificationProvider.dart';
 import 'package:VennUI/utilies.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:tuple/tuple.dart';
 import 'package:typicons_flutter/typicons_flutter.dart';
 import 'package:VennUI/components/StatusBar.dart';
 import 'package:VennUI/components/TopBarIcon.dart';
@@ -45,6 +44,9 @@ class _DashboardPageState extends State<DashboardPage> {
         PageIndicator(),
         StatusBar(),
         BottomBar(),
+        // Display notification object in the dashboard stack
+        context
+            .select((NotificationProvider provider) => provider.notification),
       ],
     ));
   }
@@ -179,14 +181,14 @@ class MetricTitleBar extends StatelessWidget {
                 child: IconButton(
                     icon: Icon(Typicons.user),
                     onPressed: () {
-                      final provider =
-                          Provider.of<UserProvider>(context, listen: false);
-                      showDialog(
-                          context: context,
-                          builder: (_) {
-                            return ChangeNotifierProvider.value(
-                                value: provider, child: UserDialogBox());
-                          });
+                      // final provider =
+                      //     Provider.of<UserProvider>(context, listen: false);
+                      // showDialog(
+                      //     context: context,
+                      //     builder: (_) {
+                      //       return ChangeNotifierProvider.value(
+                      //           value: provider, child: UserDialogBox());
+                      //     });
                     },
                     iconSize: 50.0,
                     color: baseColor),

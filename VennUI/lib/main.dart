@@ -1,11 +1,13 @@
 import 'dart:async';
 
+import 'package:VennUI/components/Notification.dart';
 import 'package:VennUI/grpc/authentification.dart';
 import 'package:VennUI/grpc/control.dart';
 import 'package:VennUI/grpc/metric.dart';
 import 'package:VennUI/grpc/network.dart';
 import 'package:VennUI/grpc/settings.dart';
 import 'package:VennUI/providers/NetworkProvider.dart';
+import 'package:VennUI/providers/NotificationProvider.dart';
 import 'package:VennUI/providers/SettingsProvider.dart';
 import 'package:VennUI/providers/UserProvider.dart';
 import 'package:VennUI/providers/DashboardProvider.dart';
@@ -25,6 +27,10 @@ void main() {
       print('-----');
       print(errorDetails.stack);
     };
+    // // Notifications stream. Services can send notifications into it, the notification
+    // // provide will consume and display them to the user
+    StreamController<NotificationData> notificationStream =
+        StreamController<NotificationData>();
 
     // Launch GRPC clients
     // var cAPI = ConfigurationGrpcAPI();
@@ -32,7 +38,7 @@ void main() {
     var aAPI = AuthentificationGrpcAPI();
     var nAPI = NetworkGrpcAPI();
     var rAPI = SettingGrpcAPI();
-    var ctlAPI = ControlGrpcAPI();
+    var ctlAPI = ControlGrpcAPI(notificationStream);
 
     // Launch dashboard services
     var mService = MetricService(mAPI);
@@ -46,6 +52,8 @@ void main() {
           create: (_) => DashboardProvider(mService, cService)),
       ChangeNotifierProvider(create: (_) => NetworkProvider(nAPI)),
       ChangeNotifierProvider(create: (_) => UserProvider(aAPI)),
+      ChangeNotifierProvider(
+          create: (_) => NotificationProvider(notificationStream.stream)),
     ], child: MyApp()));
   }, (error, stackTrace) {
     print('This is a pure Dart error');

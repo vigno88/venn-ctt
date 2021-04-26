@@ -7,9 +7,10 @@ import 'package:provider/provider.dart';
 class ActionButton extends StatefulWidget {
   final String text;
   final String title;
-  final int index;
+  final int tileIndex;
+  final int buttonIndex;
 
-  ActionButton(this.title, this.text, this.index);
+  ActionButton(this.title, this.text, this.buttonIndex, this.tileIndex);
 
   @override
   _ActionButtonState createState() => _ActionButtonState();
@@ -48,8 +49,9 @@ class _ActionButtonState extends State<ActionButton> {
           GestureDetector(
               onTapDown: _tapDown,
               onTapUp: _tapUp,
-              onTap: () =>
-                  context.read<DashboardProvider>().pressButton(widget.index),
+              onTap: () => context
+                  .read<DashboardProvider>()
+                  .pressButton(context, widget.buttonIndex, widget.tileIndex),
               child: Container(
                   height: 110,
                   width: 110,
@@ -66,9 +68,10 @@ class _ActionButtonState extends State<ActionButton> {
                       widget.text,
                       style: TextStyle(
                           color: darkBlue,
-                          fontSize: 60,
+                          fontSize: 55,
                           fontWeight: FontWeight.bold),
                       minFontSize: 5,
+                      maxFontSize: 55,
                       maxLines: 1,
                     ),
                   )))

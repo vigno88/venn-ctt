@@ -18,30 +18,32 @@ func (m *CMotors) init() {
 	m.Count = int(C.NodeCount())
 }
 
-func (m *CMotors) homeNode(i int) error {
-	if i < 0 || i >= m.Count {
-		return fmt.Errorf("Invalid node index: %d", i)
-	}
-	C.HomeNode(C.int(i))
+func (m *CMotors) homeNodes() error {
+	C.HomeNodes()
 	return nil
 }
 
-func (m *CMotors) startMoveNode(i int, numSteps int) error {
+func (m *CMotors) startMovePosNode(i int, numSteps int) error {
 	if i < 0 || i >= m.Count {
 		return fmt.Errorf("Invalid node index: %d", i)
 	}
-	C.StartMoveNode(C.int(i), C.int(numSteps))
+	C.StartMovePosNode(C.int(i), C.int(numSteps))
 	return nil
 }
 
-func (m *CMotors) isMoveDoneNode(i int) (bool, error) {
+func (m *CMotors) startMoveVelNode(i int, vel int) error {
 	if i < 0 || i >= m.Count {
-		return false, fmt.Errorf("Invalid node index: %d", i)
+		return fmt.Errorf("Invalid node index: %d", i)
 	}
+	C.StartMoveVelNode(C.int(i), C.int(vel))
+	return nil
+}
+
+func (m *CMotors) isMoveDoneNode(i int) bool {
 	if int(C.IsMoveDoneNode(C.int(i))) == 1 {
-		return true, nil
+		return true
 	}
-	return false, nil
+	return false
 }
 
 func (m *CMotors) readPosNode(i int) (int, error) {

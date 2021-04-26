@@ -556,10 +556,10 @@ abstract class ConfigurationServiceBase extends $grpc.Service {
 }
 
 class ControlServiceClient extends $grpc.Client {
-  static final _$send = $grpc.ClientMethod<$0.Action, $0.Empty>(
+  static final _$send = $grpc.ClientMethod<$0.Action, $0.SendResponse>(
       '/v1.ControlService/Send',
       ($0.Action value) => value.writeToBuffer(),
-      ($core.List<$core.int> value) => $0.Empty.fromBuffer(value));
+      ($core.List<$core.int> value) => $0.SendResponse.fromBuffer(value));
   static final _$subscribe = $grpc.ClientMethod<$0.Empty, $0.ControlEvent>(
       '/v1.ControlService/Subscribe',
       ($0.Empty value) => value.writeToBuffer(),
@@ -570,7 +570,7 @@ class ControlServiceClient extends $grpc.Client {
       $core.Iterable<$grpc.ClientInterceptor> interceptors})
       : super(channel, options: options, interceptors: interceptors);
 
-  $grpc.ResponseFuture<$0.Empty> send($0.Action request,
+  $grpc.ResponseFuture<$0.SendResponse> send($0.Action request,
       {$grpc.CallOptions options}) {
     return $createUnaryCall(_$send, request, options: options);
   }
@@ -587,13 +587,13 @@ abstract class ControlServiceBase extends $grpc.Service {
   $core.String get $name => 'v1.ControlService';
 
   ControlServiceBase() {
-    $addMethod($grpc.ServiceMethod<$0.Action, $0.Empty>(
+    $addMethod($grpc.ServiceMethod<$0.Action, $0.SendResponse>(
         'Send',
         send_Pre,
         false,
         false,
         ($core.List<$core.int> value) => $0.Action.fromBuffer(value),
-        ($0.Empty value) => value.writeToBuffer()));
+        ($0.SendResponse value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.Empty, $0.ControlEvent>(
         'Subscribe',
         subscribe_Pre,
@@ -603,7 +603,7 @@ abstract class ControlServiceBase extends $grpc.Service {
         ($0.ControlEvent value) => value.writeToBuffer()));
   }
 
-  $async.Future<$0.Empty> send_Pre(
+  $async.Future<$0.SendResponse> send_Pre(
       $grpc.ServiceCall call, $async.Future<$0.Action> request) async {
     return send(call, await request);
   }
@@ -613,7 +613,8 @@ abstract class ControlServiceBase extends $grpc.Service {
     yield* subscribe(call, await request);
   }
 
-  $async.Future<$0.Empty> send($grpc.ServiceCall call, $0.Action request);
+  $async.Future<$0.SendResponse> send(
+      $grpc.ServiceCall call, $0.Action request);
   $async.Stream<$0.ControlEvent> subscribe(
       $grpc.ServiceCall call, $0.Empty request);
 }

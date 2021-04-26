@@ -119,8 +119,9 @@ class Tile extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.all(Radius.circular(10)),
-        boxShadow:
-            this.isFeedBack ? tileShadows(10, 1, 3) : tileShadows(3, 1, 3),
+        boxShadow: this.isFeedBack
+            ? tileShadows(10, 1, 3, paleColor)
+            : tileShadows(3, 1, 3, paleColor),
       ),
       child: content,
     );
@@ -286,98 +287,58 @@ class PressionChip extends StatelessWidget {
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Expanded(
-                            flex: 3,
-                            child: Center(
-                                child: AutoSizeText(
-                              "P1: 20 psi",
-                              maxLines: 1,
-                              style: TextStyle(
-                                fontSize: 23,
-                                color: baseColor.withOpacity(0.8),
-                              ),
-                            ))),
+                        PressionDisplay("P1", 21),
                         Expanded(flex: 1, child: Container()),
-                        Expanded(
-                            flex: 3,
-                            child: Center(
-                                child: AutoSizeText(
-                              "P2: 20 psi",
-                              maxLines: 1,
-                              style: TextStyle(
-                                fontSize: 23,
-                                color: baseColor.withOpacity(0.8),
-                              ),
-                            ))),
+                        PressionDisplay("P2", 29),
                       ]),
                 ),
                 Expanded(
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Expanded(
-                            flex: 3,
-                            child: Center(
-                                child: AutoSizeText(
-                              "P3: 20 psi",
-                              maxLines: 1,
-                              style: TextStyle(
-                                fontSize: 23,
-                                color: baseColor.withOpacity(0.8),
-                              ),
-                            ))),
+                        PressionDisplay("P3", 7),
                         Expanded(flex: 1, child: Container()),
-                        Expanded(
-                            flex: 3,
-                            child: Center(
-                                child: AutoSizeText(
-                              "P4: 20 psi",
-                              maxLines: 1,
-                              style: TextStyle(
-                                fontSize: 23,
-                                color: baseColor.withOpacity(0.8),
-                              ),
-                            ))),
+                        PressionDisplay("P4", 18)
                       ]),
                 ),
                 Expanded(
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Expanded(
-                            flex: 3,
-                            child: Center(
-                                child: AutoSizeText.rich(
-                              TextSpan(children: [
-                                TextSpan(
-                                    text: "P5: ",
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.bold)),
-                                TextSpan(text: "20 psi"),
-                              ]),
-                              // "P5: 20 psi",
-                              maxLines: 1,
-                              style: TextStyle(
-                                fontSize: 23,
-                                color: baseColor.withOpacity(0.8),
-                              ),
-                            ))),
+                        PressionDisplay("P5", 21),
                         Expanded(flex: 1, child: Container()),
-                        Expanded(
-                            flex: 3,
-                            child: Center(
-                                child: AutoSizeText(
-                              "P6: 20 psi",
-                              maxLines: 1,
-                              style: TextStyle(
-                                fontSize: 23,
-                                color: baseColor.withOpacity(0.8),
-                              ),
-                            ))),
+                        PressionDisplay("P6", 14),
                       ]),
                 ),
               ],
             )));
+  }
+}
+
+class PressionDisplay extends StatelessWidget {
+  final String title;
+  final int pression;
+
+  PressionDisplay(this.title, this.pression);
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+        flex: 3,
+        child: Center(
+            child: AutoSizeText.rich(
+          TextSpan(children: [
+            TextSpan(
+                text: title + ": ",
+                style: TextStyle(fontWeight: FontWeight.bold)),
+            TextSpan(text: pression.toString() + " psi"),
+          ]),
+          maxLines: 1,
+          style: TextStyle(
+            fontSize: 23,
+            color: baseColor.withOpacity(0.8),
+          ),
+        )));
   }
 }
 

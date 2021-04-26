@@ -43,10 +43,10 @@ int getXCoord(int i, int width) {
 }
 
 List<BoxShadow> tileShadows(
-    double offset, double spreadRadius, double blurRadius) {
+    double offset, double spreadRadius, double blurRadius, Color color) {
   return [
     BoxShadow(
-      color: paleColor.withOpacity(0.3),
+      color: color.withOpacity(0.3),
       spreadRadius: spreadRadius,
       blurRadius: blurRadius,
       offset: Offset(0, offset),

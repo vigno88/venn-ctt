@@ -1,4 +1,8 @@
+import 'dart:async';
+
+import 'package:VennUI/components/Notification.dart';
 import 'package:VennUI/grpc/utilities.dart';
+import 'package:flutter/material.dart';
 import 'package:grpc/grpc.dart';
 import 'package:VennUI/grpc/v1/ui.pb.dart' as proto;
 import 'package:VennUI/grpc/v1/ui.pbgrpc.dart' as grpc;
@@ -14,8 +18,11 @@ class ControlGrpcAPI {
   // gRPC client channel to receive messages from the server
   ClientChannel _clientReceive;
 
-  ControlGrpcAPI() {
+  StreamController<NotificationData> _notifStream;
+
+  ControlGrpcAPI(StreamController<NotificationData> stream) {
     _clientSend = newClient(serverIP, serverPort);
+    _notifStream = stream;
   }
 
   // Shutdown client
@@ -66,12 +73,21 @@ class ControlGrpcAPI {
   }
 
   // Asynchronous function to read the list of user from the backend
-  void send(proto.Action a) async {
+  void send(BuildContext context, proto.Action a) async {
     if (_clientSend == null) {
       _clientSend = newClient(serverIP, serverPort);
     }
     try {
-      await grpc.ControlServiceClient(_clientSend).send(a);
+      proto.SendResponse response =
+          await grpc.ControlServiceClient(_clientSend).send(a);
+      if (response.error != "") {
+        print(response.error);
+        _notifStream
+            .add(NotificationData(NotificationType.Warning, response.error));
+        print("Added a notif to the stream");
+        // context.read()<NotificationProvider>().displayNotification(
+        //     NotificationData(NotificationType.Warning, response.error));
+      }
     } catch (e) {
       if (!_isShutdown) {
         // Invalidate current client
@@ -79,7 +95,7 @@ class ControlGrpcAPI {
         print(e.toString());
         // Try again
         Future.delayed(retryDelay, () {
-          return send(a);
+          return send(context, a);
         });
       }
     }

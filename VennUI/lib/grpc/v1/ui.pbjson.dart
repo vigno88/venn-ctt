@@ -199,6 +199,13 @@ const ControlEvent$json = const {
   ],
 };
 
+const SendResponse$json = const {
+  '1': 'SendResponse',
+  '2': const [
+    const {'1': 'error', '3': 1, '4': 1, '5': 9, '10': 'error'},
+  ],
+};
+
 const Empty$json = const {
   '1': 'Empty',
 };

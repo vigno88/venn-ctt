@@ -249,7 +249,8 @@ class _UserButtonState extends State<UserButton>
         decoration: BoxDecoration(
             color: paleBlue.withOpacity(0.4),
             borderRadius: BorderRadius.all(Radius.circular(10)),
-            boxShadow: tileShadows(5 * _scale, 1 * _scale, 3 * _scale)),
+            boxShadow:
+                tileShadows(5 * _scale, 1 * _scale, 3 * _scale, paleColor)),
         child: Material(
             color: Colors.transparent,
             child: Center(

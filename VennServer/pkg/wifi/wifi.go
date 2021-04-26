@@ -34,7 +34,15 @@ func Init(ctx context.Context, path string) error {
 	if err != nil {
 		return err
 	}
+	// Look if already connected to wifi
+	connected, err := IsConnected()
+	if connected {
+		isConnected = true
+		currentSSID = "Unknown"
+		return nil
+	}
 	if len(credentials) != 0 {
+		log.Printf("Trying to connect to: %s\n", credentials[0].SSID)
 		_, err := wifi.ConnectManager.Connect(credentials[0].SSID, credentials[0].Password, time.Second*60)
 		if err != nil {
 			return err
@@ -53,20 +61,31 @@ func Init(ctx context.Context, path string) error {
 // Each 30 seconds check if wifi active
 func Run() {
 	for range time.Tick(time.Second * 30) {
-		pinger, err := ping.NewPinger("www.google.com")
+		connected, err := IsConnected()
 		if err != nil {
 			panic(err)
 		}
-		pinger.SetPrivileged(true)
-		pinger.Count = 3
-		err = pinger.Run() // Blocks until finished.
-		if err != nil {
-			panic(err)
-		}
-		if pinger.Statistics().PacketsRecv == 0 {
+		if !connected {
 			ConnectMostRecent()
 		}
 	}
+}
+
+func IsConnected() (bool, error) {
+	pinger, err := ping.NewPinger("www.google.com")
+	if err != nil {
+		return false, nil
+	}
+	pinger.SetPrivileged(true)
+	pinger.Count = 3
+	err = pinger.Run() // Blocks until finished.
+	if err != nil {
+		return false, err
+	}
+	if pinger.Statistics().PacketsRecv == 3 {
+		return true, nil
+	}
+	return false, nil
 }
 
 func Connect(ssid string, password string) error {

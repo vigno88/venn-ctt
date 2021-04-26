@@ -253,8 +253,12 @@ message ControlEvent {
   string payload = 2;
 }
 
+message SendResponse {
+  string error = 1;
+}
+
 service ControlService {
-  rpc Send(Action) returns (Empty) {}
+  rpc Send(Action) returns (SendResponse) {}
   rpc Subscribe(Empty) returns (stream ControlEvent) {} 
 }
 
@@ -271,6 +275,7 @@ service MotorControlService {
 //=============================================================================
 // Types definition 
 //=============================================================================
+
 
 // A generic empty message that you can re-use to avoid defining duplicated
 // empty messages in your APIs. A typical example is to use it as the request
