@@ -19,8 +19,26 @@ type Recipe struct {
 	UUID      string `storm:"id"`
 	Name      string
 	Info      string
-	Selectors map[string]*proto.Selector
-	Sliders   map[string]*proto.Setting
+	Selectors []*proto.Selector
+	Sliders   []*proto.Setting
+}
+
+func (r *Recipe) GetIndexSelector(name string) int {
+	for i, s := range r.Selectors {
+		if s.Name == name {
+			return i
+		}
+	}
+	return 0
+}
+
+func (r *Recipe) GetIndexSlider(name string) int {
+	for i, s := range r.Sliders {
+		if s.Name == name {
+			return i
+		}
+	}
+	return 0
 }
 
 // Init opens the badgerDB
@@ -40,38 +58,22 @@ func Init(ctx context.Context, path string) error {
 }
 
 func ToRecipe(r *proto.Recipe) *Recipe {
-	sliderMap := make(map[string]*proto.Setting)
-	for _, v := range r.Settings {
-		sliderMap[v.Name] = v
-	}
-	selectorMap := make(map[string]*proto.Selector)
-	for _, v := range r.Selectors {
-		selectorMap[v.Name] = v
-	}
 	return &Recipe{
 		UUID:      r.Uuid,
 		Name:      r.Title,
 		Info:      r.Info,
-		Selectors: selectorMap,
-		Sliders:   sliderMap,
+		Selectors: r.Selectors,
+		Sliders:   r.Settings,
 	}
 }
 
 func ToProto(r *Recipe) *proto.Recipe {
-	sliders := []*proto.Setting{}
-	for _, v := range r.Sliders {
-		sliders = append(sliders, v)
-	}
-	selectors := []*proto.Selector{}
-	for _, v := range r.Selectors {
-		selectors = append(selectors, v)
-	}
 	return &proto.Recipe{
 		Uuid:      r.UUID,
 		Title:     r.Name,
 		Info:      r.Info,
-		Settings:  sliders,
-		Selectors: selectors,
+		Settings:  r.Sliders,
+		Selectors: r.Selectors,
 	}
 }
 

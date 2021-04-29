@@ -17,6 +17,7 @@ message MetricConfig {
   string name = 4;
   string info = 5;
   bool hasTarget = 6;
+  string smallName = 7;
 }
 
 // MetricConfigs is one or many MetricConfig
@@ -60,13 +61,19 @@ service MetricService {
 // Setting represents everything required to display a setting as a slider in
 // the UI 
 message Setting {
-  string type = 1;
+  enum Destination {
+    NONE = 0;
+    MOTOR = 1;
+    MICROCONTROLLER = 2;
+  }
+  Destination destination = 1;
   double value = 2;
   double max = 3;
   double min = 4;
   string name = 5;
   string info = 6;
   Target target = 7;
+  string smallName = 8;
 }
 
 // Target is an optional field that is used when the setting is used as a target

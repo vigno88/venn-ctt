@@ -9,6 +9,23 @@
 import 'dart:core' as $core;
 import 'package:protobuf/protobuf.dart' as $pb;
 
+class Setting_Destination extends $pb.ProtobufEnum {
+  static const Setting_Destination NONE = Setting_Destination._(0, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'NONE');
+  static const Setting_Destination MOTOR = Setting_Destination._(1, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'MOTOR');
+  static const Setting_Destination MICROCONTROLLER = Setting_Destination._(2, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'MICROCONTROLLER');
+
+  static const $core.List<Setting_Destination> values = <Setting_Destination> [
+    NONE,
+    MOTOR,
+    MICROCONTROLLER,
+  ];
+
+  static final $core.Map<$core.int, Setting_Destination> _byValue = $pb.ProtobufEnum.initByValue(values);
+  static Setting_Destination valueOf($core.int value) => _byValue[value];
+
+  const Setting_Destination._($core.int v, $core.String n) : super(v, n);
+}
+
 class User_Roles extends $pb.ProtobufEnum {
   static const User_Roles USER = User_Roles._(0, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'USER');
   static const User_Roles ADMIN = User_Roles._(1, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'ADMIN');

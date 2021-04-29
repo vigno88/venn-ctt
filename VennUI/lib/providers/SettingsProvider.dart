@@ -95,7 +95,7 @@ class SettingsProvider with ChangeNotifier {
   void showInfoModal(BuildContext context) {
     var text = "";
     settings.forEach((element) {
-      text += "${element.name}: ${element.info}\n";
+      text += "${element.name}: ${element.info}\n\n";
     });
     Future.delayed(const Duration(milliseconds: 250), () {
       showModal(context, 'Settings Information', text);

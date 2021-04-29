@@ -7,7 +7,9 @@ import (
 	"log"
 
 	proto "github.com/vigno88/Venn/VennServer/pkg/api/v1"
+	motors "github.com/vigno88/Venn/VennServer/pkg/motors"
 	recipe "github.com/vigno88/Venn/VennServer/pkg/recipes"
+	"github.com/vigno88/Venn/VennServer/pkg/serial"
 	"github.com/vigno88/Venn/VennServer/pkg/util"
 )
 
@@ -45,14 +47,24 @@ func (s *settingServiceServer) ReadRecipe(ctx context.Context, uuid *proto.Strin
 func (s *settingServiceServer) UpdateCurrentRecipe(ctx context.Context, uuid *proto.StringValue) (*proto.Empty, error) {
 	return &proto.Empty{}, recipe.UpdateCurrentRecipe(uuid.GetValue())
 }
-
 func (s *settingServiceServer) UpdateSetting(ctx context.Context, u *proto.SettingUpdate) (*proto.Empty, error) {
 	r, err := recipe.ReadCurrentRecipe()
 	if err != nil {
 		log.Printf("Error while reading this recipe %s: %s ", r.Name, err.Error())
 		return &proto.Empty{}, err
 	}
-	r.Sliders[u.Name].Value = u.Value
+	index := r.GetIndexSlider(u.Name)
+	r.Sliders[index].Value = u.Value
+	switch r.Sliders[index].Destination {
+	case proto.Setting_NONE:
+		break
+	case proto.Setting_MICROCONTROLLER:
+		serial.SendSetting(r.Sliders[index])
+		break
+	case proto.Setting_MOTOR:
+		motors.ProcessNewSetting(r.Sliders[index], int(u.Value))
+		break
+	}
 	return &proto.Empty{}, recipe.UpdateRecipe(r)
 }
 
@@ -62,7 +74,8 @@ func (s *settingServiceServer) UpdateUncertainty(ctx context.Context, u *proto.T
 		log.Printf("Error while reading this recipe %s: %s ", r.Name, err.Error())
 		return &proto.Empty{}, err
 	}
-	r.Sliders[u.GetName()].Target.Uncertainty = u.GetValue()
+	index := r.GetIndexSlider(u.Name)
+	r.Sliders[index].Target.Uncertainty = u.GetValue()
 	return &proto.Empty{}, recipe.UpdateRecipe(r)
 }
 
@@ -73,13 +86,14 @@ func (s *settingServiceServer) UpdateSelectedChoice(ctx context.Context, u *prot
 		return &proto.Empty{}, err
 	}
 	var choice *proto.Choice
-	for _, v := range r.Selectors[u.GetName()].PossibleChoices {
+	index := r.GetIndexSelector(u.Name)
+	for _, v := range r.Selectors[index].PossibleChoices {
 		if v.Name == u.ChoiceName {
 			choice = v
 			break
 		}
 	}
-	r.Selectors[u.GetName()].SelectedChoice = choice
+	r.Selectors[index].SelectedChoice = choice
 	return &proto.Empty{}, recipe.UpdateRecipe(r)
 }
 
@@ -89,13 +103,14 @@ func (s *settingServiceServer) UpdateChoice(ctx context.Context, u *proto.Choice
 		log.Printf("Error while reading this recipe %s: %s ", r.Name, err.Error())
 		return &proto.Empty{}, err
 	}
-	for i, v := range r.Selectors[u.NameSelector].PossibleChoices {
+	index := r.GetIndexSelector(u.NameSelector)
+	for i, v := range r.Selectors[index].PossibleChoices {
 		if v.Name == u.NewChoice.Name {
 			// Update the possible choice
-			r.Selectors[u.NameSelector].PossibleChoices[i] = u.NewChoice
+			r.Selectors[index].PossibleChoices[i] = u.NewChoice
 			// Update the selected choice if it is also the one
-			if r.Selectors[u.NameSelector].SelectedChoice.Name == u.NewChoice.Name {
-				r.Selectors[u.NameSelector].SelectedChoice = u.NewChoice
+			if r.Selectors[index].SelectedChoice.Name == u.NewChoice.Name {
+				r.Selectors[index].SelectedChoice = u.NewChoice
 			}
 			break
 		}

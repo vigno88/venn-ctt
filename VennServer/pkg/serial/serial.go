@@ -81,7 +81,7 @@ func Run(ctx context.Context, exit chan<- string) {
 }
 
 func SendSetting(setting *proto.Setting) {
-	SendString(fmt.Sprintf("p#%s#%d", config.SettingsSmallNames[setting.GetName()], int(setting.GetValue())))
+	SendString(fmt.Sprintf("p#%s#%d", setting.SmallName, int(setting.GetValue())))
 }
 
 func SendString(s string) {
@@ -125,7 +125,7 @@ func (m *serialManager) process(ctx context.Context, packet string) error {
 			return err
 		}
 		metric := &proto.MetricUpdate{}
-		metric.Name = config.SettingLongName[parts[1]]
+		metric.Name = config.GetMetricName(parts[1])
 		metric.Target = float64(config.GetTarget(metric.Name))
 		metric.Value = f
 		manager.gRPCChan <- &proto.MetricUpdates{Updates: []*proto.MetricUpdate{metric}}

@@ -1,4 +1,4 @@
-// +build production
+// +build production mock
 
 package authentifaction
 

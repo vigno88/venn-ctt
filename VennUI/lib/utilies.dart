@@ -5,6 +5,9 @@ void showModal(BuildContext context, String title, String content) {
     scrollable: true,
     title: Text(title),
     content: Text(content),
+    titleTextStyle:
+        TextStyle(color: baseColor, fontWeight: FontWeight.bold, fontSize: 40),
+    contentTextStyle: TextStyle(color: baseColor, fontSize: 23),
   );
   showDialog(
     context: context,
@@ -27,8 +30,8 @@ final Color paleBlue = Color(0xff54a0ff);
 final Color blueBorder = Color(0xffb3d4ff);
 final Color darkBlue = Color(0xff2e86de);
 
-const serverIP = "127.0.0.1";
-// const serverIP = "10.0.2.2";
+// const serverIP = "127.0.0.1";
+const serverIP = "10.0.2.2";
 
 int get1DCoord(int x, int y, int width) {
   return x + width * y;

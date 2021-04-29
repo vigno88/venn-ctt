@@ -22,6 +22,7 @@ class MetricConfig extends $pb.GeneratedMessage {
     ..aOS(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'name')
     ..aOS(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'info')
     ..aOB(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'hasTarget', protoName: 'hasTarget')
+    ..aOS(7, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'smallName', protoName: 'smallName')
     ..hasRequiredFields = false
   ;
 
@@ -33,6 +34,7 @@ class MetricConfig extends $pb.GeneratedMessage {
     $core.String name,
     $core.String info,
     $core.bool hasTarget_6,
+    $core.String smallName,
   }) {
     final _result = create();
     if (unit != null) {
@@ -52,6 +54,9 @@ class MetricConfig extends $pb.GeneratedMessage {
     }
     if (hasTarget_6 != null) {
       _result.hasTarget_6 = hasTarget_6;
+    }
+    if (smallName != null) {
+      _result.smallName = smallName;
     }
     return _result;
   }
@@ -129,6 +134,15 @@ class MetricConfig extends $pb.GeneratedMessage {
   $core.bool hasHasTarget_6() => $_has(5);
   @$pb.TagNumber(6)
   void clearHasTarget_6() => clearField(6);
+
+  @$pb.TagNumber(7)
+  $core.String get smallName => $_getSZ(6);
+  @$pb.TagNumber(7)
+  set smallName($core.String v) { $_setString(6, v); }
+  @$pb.TagNumber(7)
+  $core.bool hasSmallName() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearSmallName() => clearField(7);
 }
 
 class MetricConfigs extends $pb.GeneratedMessage {
@@ -290,29 +304,31 @@ class MetricUpdates extends $pb.GeneratedMessage {
 
 class Setting extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'Setting', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'v1'), createEmptyInstance: create)
-    ..aOS(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'type')
+    ..e<Setting_Destination>(1, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'destination', $pb.PbFieldType.OE, defaultOrMaker: Setting_Destination.NONE, valueOf: Setting_Destination.valueOf, enumValues: Setting_Destination.values)
     ..a<$core.double>(2, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'value', $pb.PbFieldType.OD)
     ..a<$core.double>(3, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'max', $pb.PbFieldType.OD)
     ..a<$core.double>(4, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'min', $pb.PbFieldType.OD)
     ..aOS(5, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'name')
     ..aOS(6, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'info')
     ..aOM<Target>(7, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'target', subBuilder: Target.create)
+    ..aOS(8, const $core.bool.fromEnvironment('protobuf.omit_field_names') ? '' : 'smallName', protoName: 'smallName')
     ..hasRequiredFields = false
   ;
 
   Setting._() : super();
   factory Setting({
-    $core.String type,
+    Setting_Destination destination,
     $core.double value,
     $core.double max,
     $core.double min,
     $core.String name,
     $core.String info,
     Target target,
+    $core.String smallName,
   }) {
     final _result = create();
-    if (type != null) {
-      _result.type = type;
+    if (destination != null) {
+      _result.destination = destination;
     }
     if (value != null) {
       _result.value = value;
@@ -331,6 +347,9 @@ class Setting extends $pb.GeneratedMessage {
     }
     if (target != null) {
       _result.target = target;
+    }
+    if (smallName != null) {
+      _result.smallName = smallName;
     }
     return _result;
   }
@@ -356,13 +375,13 @@ class Setting extends $pb.GeneratedMessage {
   static Setting _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.String get type => $_getSZ(0);
+  Setting_Destination get destination => $_getN(0);
   @$pb.TagNumber(1)
-  set type($core.String v) { $_setString(0, v); }
+  set destination(Setting_Destination v) { setField(1, v); }
   @$pb.TagNumber(1)
-  $core.bool hasType() => $_has(0);
+  $core.bool hasDestination() => $_has(0);
   @$pb.TagNumber(1)
-  void clearType() => clearField(1);
+  void clearDestination() => clearField(1);
 
   @$pb.TagNumber(2)
   $core.double get value => $_getN(1);
@@ -419,6 +438,15 @@ class Setting extends $pb.GeneratedMessage {
   void clearTarget() => clearField(7);
   @$pb.TagNumber(7)
   Target ensureTarget() => $_ensure(6);
+
+  @$pb.TagNumber(8)
+  $core.String get smallName => $_getSZ(7);
+  @$pb.TagNumber(8)
+  set smallName($core.String v) { $_setString(7, v); }
+  @$pb.TagNumber(8)
+  $core.bool hasSmallName() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearSmallName() => clearField(8);
 }
 
 class Target extends $pb.GeneratedMessage {

@@ -15,6 +15,7 @@ var pathDB string
 
 type Metric struct {
 	Name      string `storm:"id"`
+	SmallName string
 	Unit      string
 	Target    float32
 	Type      string
@@ -29,6 +30,7 @@ func ToProto(m *Metric) *proto.MetricConfig {
 		Target:    m.Target,
 		Type:      m.Type,
 		Name:      m.Name,
+		SmallName: m.SmallName,
 		Info:      m.Info,
 		HasTarget: m.HasTarget,
 	}
@@ -37,6 +39,7 @@ func ToProto(m *Metric) *proto.MetricConfig {
 func ToMetric(m *proto.MetricConfig) *Metric {
 	return &Metric{
 		Name:      m.Name,
+		SmallName: m.SmallName,
 		Unit:      m.Unit,
 		Target:    m.Target,
 		Type:      m.Type,

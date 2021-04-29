@@ -4,6 +4,8 @@ package motors
 
 import (
 	"log"
+
+	proto "github.com/vigno88/Venn/VennServer/pkg/api/v1"
 )
 
 type CMotors struct {
@@ -16,6 +18,42 @@ type CMotors struct {
 type NodeConfig struct {
 	Acceleration int
 	Velocity     int
+	Travel       int
+}
+
+func initNodeConfig() {
+	motors.nodes = []NodeConfig{
+		{
+			Acceleration: 12000,
+			Velocity:     4100,
+			Travel:       0,
+		},
+		{
+			Acceleration: 0,
+			Velocity:     400,
+			Travel:       0,
+		},
+		{
+			Acceleration: 12000,
+			Velocity:     4100,
+			Travel:       0,
+		},
+		{
+			Acceleration: 0,
+			Velocity:     400,
+			Travel:       0,
+		},
+		{
+			Acceleration: 12000,
+			Velocity:     4100,
+			Travel:       0,
+		},
+		{
+			Acceleration: 0,
+			Velocity:     400,
+			Travel:       0,
+		},
+	}
 }
 
 func Init() error {
@@ -24,12 +62,12 @@ func Init() error {
 	if motors.Count == 0 {
 		motors.init()
 	}
-	motors.setVelNode(0, 4100)
-	motors.setAccelNode(0, 12000)
-	motors.setVelNode(2, 4100)
-	motors.setAccelNode(2, 12000)
-	motors.setVelNode(4, 4100)
-	motors.setAccelNode(4, 12000)
+	motors.setVelNode(0, motors.nodes[0].Velocity)
+	motors.setAccelNode(0, motors.nodes[0].Acceleration)
+	motors.setVelNode(2, motors.nodes[2].Velocity)
+	motors.setAccelNode(2, motors.nodes[2].Acceleration)
+	motors.setVelNode(4, motors.nodes[4].Velocity)
+	motors.setAccelNode(4, motors.nodes[4].Acceleration)
 	log.Printf("There are %d nodes connected\n", motors.Count)
 	motors.isCycling = false
 	motors.isHoming = false
@@ -39,27 +77,26 @@ func Init() error {
 }
 
 func Run() {
-	// motors.startMoveVelNode(1, 400)
-	travel1 := 4000
+	inverseFactor := 1
 	for {
 		if motors.isCycling {
 			if motors.isMoveDoneNode(0) {
-				travel1 = -travel1
-				motors.startMovePosNode(0, travel1)
-				motors.startMovePosNode(2, -travel1)
-				motors.startMovePosNode(4, travel1)
+				inverseFactor = -inverseFactor
+				motors.startMovePosNode(0, inverseFactor*motors.nodes[0].Travel)
+				motors.startMovePosNode(2, -inverseFactor*motors.nodes[2].Travel)
+				motors.startMovePosNode(4, inverseFactor*motors.nodes[4].Travel)
 			}
 		}
 	}
 }
 
 func StartCycle() error {
-	motors.startMoveVelNode(1, 400)
-	motors.startMoveVelNode(3, 400)
-	motors.startMoveVelNode(5, 400)
-	motors.startMovePosNode(0, 4000)
-	motors.startMovePosNode(2, -4000)
-	motors.startMovePosNode(4, 4000)
+	motors.startMoveVelNode(1, motors.nodes[1].Velocity)
+	motors.startMoveVelNode(3, motors.nodes[3].Velocity)
+	motors.startMoveVelNode(5, motors.nodes[5].Velocity)
+	motors.startMovePosNode(0, motors.nodes[0].Travel)
+	motors.startMovePosNode(2, -motors.nodes[2].Travel)
+	motors.startMovePosNode(4, motors.nodes[4].Travel)
 	motors.isCycling = true
 	return nil
 }
@@ -82,12 +119,51 @@ func Home() error {
 	return nil
 }
 
-func SetVelocity(index int, vel int) {
-	motors.nodes[index].Velocity = vel
-}
-
-func SetAcceleration(index int, accel int) {
-	motors.nodes[index].Acceleration = accel
+func ProcessNewSetting(s *proto.Setting, newValue int) {
+	switch s.SmallName {
+	case "sm1":
+		// Update the velocity of the first masseur and send the new velocity to the engine
+		motors.nodes[0].Velocity = newValue
+		motors.setVelNode(0, motors.nodes[0].Velocity)
+		break
+	case "tm1":
+		// Update the travel distance of the first masseur
+		motors.nodes[0].Travel = newValue
+		break
+	case "sm2":
+		// Update the velocity of the second masseur and send the new velocity to the engine
+		motors.nodes[2].Velocity = newValue
+		motors.setVelNode(2, motors.nodes[2].Velocity)
+		break
+	case "tm2":
+		// Update the travel distance of the second masseur
+		motors.nodes[2].Travel = newValue
+		break
+	case "sm3":
+		// Update the velocity of the third masseur and send the new velocity to the engine
+		motors.nodes[4].Velocity = newValue
+		motors.setVelNode(4, motors.nodes[4].Velocity)
+		break
+	case "tm3":
+		// Update the travel distance of the third masseur
+		motors.nodes[4].Travel = newValue
+		break
+	case "st1":
+		// Update the velocity of the first traction engine and send the new velocity to the engine
+		motors.nodes[1].Velocity = newValue
+		motors.setVelNode(1, motors.nodes[1].Velocity)
+		break
+	case "st2":
+		// Update the velocity of the second traction engine and send the new velocity to the engine
+		motors.nodes[3].Velocity = newValue
+		motors.setVelNode(3, motors.nodes[3].Velocity)
+		break
+	case "st3":
+		// Update the velocity of the third traction engine and send the new velocity to the engine
+		motors.nodes[5].Velocity = newValue
+		motors.setVelNode(5, motors.nodes[5].Velocity)
+		break
+	}
 }
 
 func IsHoming() bool {

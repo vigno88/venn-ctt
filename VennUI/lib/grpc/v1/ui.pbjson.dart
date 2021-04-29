@@ -14,6 +14,7 @@ const MetricConfig$json = const {
     const {'1': 'name', '3': 4, '4': 1, '5': 9, '10': 'name'},
     const {'1': 'info', '3': 5, '4': 1, '5': 9, '10': 'info'},
     const {'1': 'hasTarget', '3': 6, '4': 1, '5': 8, '10': 'hasTarget'},
+    const {'1': 'smallName', '3': 7, '4': 1, '5': 9, '10': 'smallName'},
   ],
 };
 
@@ -43,13 +44,24 @@ const MetricUpdates$json = const {
 const Setting$json = const {
   '1': 'Setting',
   '2': const [
-    const {'1': 'type', '3': 1, '4': 1, '5': 9, '10': 'type'},
+    const {'1': 'destination', '3': 1, '4': 1, '5': 14, '6': '.v1.Setting.Destination', '10': 'destination'},
     const {'1': 'value', '3': 2, '4': 1, '5': 1, '10': 'value'},
     const {'1': 'max', '3': 3, '4': 1, '5': 1, '10': 'max'},
     const {'1': 'min', '3': 4, '4': 1, '5': 1, '10': 'min'},
     const {'1': 'name', '3': 5, '4': 1, '5': 9, '10': 'name'},
     const {'1': 'info', '3': 6, '4': 1, '5': 9, '10': 'info'},
     const {'1': 'target', '3': 7, '4': 1, '5': 11, '6': '.v1.Target', '10': 'target'},
+    const {'1': 'smallName', '3': 8, '4': 1, '5': 9, '10': 'smallName'},
+  ],
+  '4': const [Setting_Destination$json],
+};
+
+const Setting_Destination$json = const {
+  '1': 'Destination',
+  '2': const [
+    const {'1': 'NONE', '2': 0},
+    const {'1': 'MOTOR', '2': 1},
+    const {'1': 'MICROCONTROLLER', '2': 2},
   ],
 };
 
