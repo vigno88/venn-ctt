@@ -45,7 +45,9 @@ func Init(ctx context.Context, path string) error {
 		log.Printf("Trying to connect to: %s\n", credentials[0].SSID)
 		_, err := wifi.ConnectManager.Connect(credentials[0].SSID, credentials[0].Password, time.Second*60)
 		if err != nil {
-			return err
+			log.Printf("Could not connect to %s\n", credentials[0].SSID)
+			isConnected = false
+			currentSSID = ``
 		}
 		isConnected = true
 		currentSSID = credentials[0].SSID

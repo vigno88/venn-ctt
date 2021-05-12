@@ -83,7 +83,7 @@ class DashboardProvider with ChangeNotifier {
   List<Tile> getTiles() {
     List<Tile> tiles = new List<Tile>.from(metricService.getTiles());
     tiles.addAll(controlService.getTiles());
-    tiles.add(Tile(PressionChip([]), false, 2, 1));
+    tiles.add(Tile(PressionChip(), false, 2, 1));
     return tiles;
   }
 

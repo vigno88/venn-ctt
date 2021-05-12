@@ -31,7 +31,7 @@ type ReadableConfig struct {
 
 // This function is to be a human readable config
 func GetDefaultConfig() *ReadableConfig {
-	generalS1 := &proto.Setting{
+	temp := &proto.Setting{
 		Destination: proto.Setting_MICROCONTROLLER,
 		Value:       20,
 		Max:         95,
@@ -39,29 +39,64 @@ func GetDefaultConfig() *ReadableConfig {
 		Name:        "Temperature",
 		Info:        "This slider controls the temperature of the water.",
 		SmallName:   "t",
-		Target:      &proto.Target{Name: "Temperature 1", Uncertainty: 2},
+		Target:      &proto.Target{Name: "Water", Uncertainty: 2},
 	}
 
-	generalS2 := &proto.Setting{
+	tm1 := &proto.Setting{
 		Destination: proto.Setting_MOTOR,
-		Value:       0,
-		Max:         100,
-		Min:         0,
-		Name:        "Speed Masseur 1",
-		SmallName:   "sm1",
-		Info:        "This slider controls the speed of first module's masseur.",
-	}
-
-	generalS3 := &proto.Setting{
-		Destination: proto.Setting_MOTOR,
-		Value:       0,
-		Max:         100,
-		Min:         0,
+		Value:       2000,
+		Max:         5000,
+		Min:         100,
 		Name:        "Travel Masseur 1",
 		SmallName:   "tm1",
 		Info:        "This slider controls the travel distance of first module's masseur.",
 	}
-	generalS4 := &proto.Setting{
+	tm2 := &proto.Setting{
+		Destination: proto.Setting_MOTOR,
+		Value:       2000,
+		Max:         5000,
+		Min:         100,
+		Name:        "Travel Masseur 2",
+		SmallName:   "tm2",
+		Info:        "This slider controls the travel distance of second module's masseur.",
+	}
+	tm3 := &proto.Setting{
+		Destination: proto.Setting_MOTOR,
+		Value:       2000,
+		Max:         5000,
+		Min:         100,
+		Name:        "Travel Masseur 3",
+		SmallName:   "tm3",
+		Info:        "This slider controls the travel distance of third module's masseur.",
+	}
+	dt1 := &proto.Setting{
+		Destination: proto.Setting_MOTOR,
+		Value:       10,
+		Max:         200,
+		Min:         5,
+		Name:        "Divisor Traction 1",
+		SmallName:   "dt1",
+		Info:        "The speed of Traction 1 is the one of Masseur 1 divided by Divisor Traction 1",
+	}
+	dt2 := &proto.Setting{
+		Destination: proto.Setting_MOTOR,
+		Value:       10,
+		Max:         200,
+		Min:         5,
+		Name:        "Divisor Traction 2",
+		SmallName:   "dt2",
+		Info:        "The speed of Traction 2 is the one of Masseur 2 divided by Divisor Traction 2",
+	}
+	dt3 := &proto.Setting{
+		Destination: proto.Setting_MOTOR,
+		Value:       10,
+		Max:         200,
+		Min:         5,
+		Name:        "Divisor Traction 3",
+		SmallName:   "dt3",
+		Info:        "The speed of Traction 3 is the one of Masseur 3 divided by Divisor Traction 3",
+	}
+	pm1 := &proto.Setting{
 		Destination: proto.Setting_NONE,
 		Value:       0,
 		Max:         100,
@@ -70,25 +105,8 @@ func GetDefaultConfig() *ReadableConfig {
 		SmallName:   "pm1",
 		Info:        "This slider records the pression of first module's masseur.",
 	}
-	generalS5 := &proto.Setting{
-		Destination: proto.Setting_MOTOR,
-		Value:       0,
-		Max:         100,
-		Min:         0,
-		Name:        "Speed Masseur 2",
-		SmallName:   "sm2",
-		Info:        "This slider controls the speed of second module's masseur.",
-	}
-	generalS6 := &proto.Setting{
-		Destination: proto.Setting_MOTOR,
-		Value:       0,
-		Max:         100,
-		Min:         0,
-		Name:        "Travel Masseur 2",
-		SmallName:   "tm2",
-		Info:        "This slider controls the travel distance of second module's masseur.",
-	}
-	generalS7 := &proto.Setting{
+
+	pm2 := &proto.Setting{
 		Destination: proto.Setting_NONE,
 		Value:       0,
 		Max:         100,
@@ -97,25 +115,7 @@ func GetDefaultConfig() *ReadableConfig {
 		SmallName:   "pm2",
 		Info:        "This slider records the pression of second module's masseur.",
 	}
-	generalS8 := &proto.Setting{
-		Destination: proto.Setting_MOTOR,
-		Value:       0,
-		Max:         100,
-		Min:         0,
-		Name:        "Speed Masseur 3",
-		SmallName:   "sm3",
-		Info:        "This slider controls the speed of third module's masseur.",
-	}
-	generalS9 := &proto.Setting{
-		Destination: proto.Setting_MOTOR,
-		Value:       0,
-		Max:         100,
-		Min:         0,
-		Name:        "Travel Masseur 3",
-		SmallName:   "tm3",
-		Info:        "This slider controls the travel distance of third module's masseur.",
-	}
-	generalS10 := &proto.Setting{
+	pm3 := &proto.Setting{
 		Destination: proto.Setting_NONE,
 		Value:       0,
 		Max:         100,
@@ -124,16 +124,7 @@ func GetDefaultConfig() *ReadableConfig {
 		SmallName:   "pm3",
 		Info:        "This slider records the pression of third module's masseur.",
 	}
-	generalS11 := &proto.Setting{
-		Destination: proto.Setting_MOTOR,
-		Value:       0,
-		Max:         100,
-		Min:         0,
-		Name:        "Speed Traction 1",
-		SmallName:   "st1",
-		Info:        "This slider controls the speed of first module's traction.",
-	}
-	generalS12 := &proto.Setting{
+	pt1 := &proto.Setting{
 		Destination: proto.Setting_NONE,
 		Value:       0,
 		Max:         100,
@@ -142,16 +133,8 @@ func GetDefaultConfig() *ReadableConfig {
 		SmallName:   "pt1",
 		Info:        "This slider records the pression of first module's traction.",
 	}
-	generalS13 := &proto.Setting{
-		Destination: proto.Setting_MOTOR,
-		Value:       0,
-		Max:         100,
-		Min:         0,
-		Name:        "Speed Traction 2",
-		SmallName:   "st2",
-		Info:        "This slider controls the speed of second module's traction.",
-	}
-	generalS14 := &proto.Setting{
+
+	pt2 := &proto.Setting{
 		Destination: proto.Setting_NONE,
 		Value:       0,
 		Max:         100,
@@ -160,16 +143,7 @@ func GetDefaultConfig() *ReadableConfig {
 		SmallName:   "pt2",
 		Info:        "This slider records the pression of second module's traction.",
 	}
-	generalS15 := &proto.Setting{
-		Destination: proto.Setting_MOTOR,
-		Value:       0,
-		Max:         100,
-		Min:         0,
-		Name:        "Speed Traction 3",
-		SmallName:   "st3",
-		Info:        "This slider controls the speed of third module's traction.",
-	}
-	generalS16 := &proto.Setting{
+	pt3 := &proto.Setting{
 		Destination: proto.Setting_NONE,
 		Value:       0,
 		Max:         100,
@@ -192,7 +166,7 @@ func GetDefaultConfig() *ReadableConfig {
 	return &ReadableConfig{
 		Recipe: recipe.Recipe{
 			UUID: "",
-			Name: "Recipe 1",
+			Name: "Default",
 			Info: "This is the default recipe from config.",
 			Selectors: []*proto.Selector{
 				{
@@ -204,22 +178,19 @@ func GetDefaultConfig() *ReadableConfig {
 				},
 			},
 			Sliders: []*proto.Setting{
-				generalS1,
-				generalS2,
-				generalS3,
-				generalS4,
-				generalS5,
-				generalS6,
-				generalS7,
-				generalS8,
-				generalS9,
-				generalS10,
-				generalS11,
-				generalS12,
-				generalS13,
-				generalS14,
-				generalS15,
-				generalS16,
+				temp,
+				tm1,
+				tm2,
+				tm3,
+				dt1,
+				dt2,
+				dt3,
+				pm1,
+				pm2,
+				pm3,
+				pt1,
+				pt2,
+				pt3,
 			},
 		},
 		Metrics: []metrics.Metric{
@@ -227,6 +198,7 @@ func GetDefaultConfig() *ReadableConfig {
 				Name:      "Water",
 				Unit:      "°c",
 				Type:      "Temperature",
+				SmallName: "t",
 				Info:      "La temperature de l'eau",
 				HasTarget: true,
 				Target:    60,

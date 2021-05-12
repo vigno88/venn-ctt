@@ -139,8 +139,13 @@ class MetricData {
   bool get isAlert => _isAlert;
 
   void update(proto.MetricUpdate u) {
-    _value = u.value;
-    _target = u.target;
+    // The target is not update at the same time as the value
+    if (_value == null) {
+      _target = u.target;
+    } else {
+      _value = u.value;
+      _target = u.target;
+    }
     _isAlert = false;
     if (hasTarget &&
         (value < target - _uncertainty || value > target + _uncertainty)) {

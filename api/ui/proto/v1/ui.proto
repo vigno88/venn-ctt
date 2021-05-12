@@ -154,6 +154,9 @@ service SettingService {
 
   // ReadRecipe returns a single recipe specified by the string argument 
   rpc ReadRecipe(StringValue) returns (Recipe) {}
+
+  // ReadCurrentRecipe returns the recipe that is currently selected by the UI
+  rpc ReadCurrentRecipe(Empty) returns (Recipe) {}
   
   // ReadSelectorList returns a list of all the Selectors in the backend 
   rpc ReadSelectorList(Empty) returns (Selectors) {}
@@ -175,6 +178,8 @@ service SettingService {
 
   // UpdateRecipe update a recipe
   rpc UpdateRecipe(Recipe) returns (Empty) {}
+
+  rpc DeleteRecipe(StringValue) returns (Empty) {}
 }
 
 //=============================================================================

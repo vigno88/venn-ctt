@@ -155,6 +155,27 @@ class SettingGrpcAPI {
     }
   }
 
+  // Asynchronous function read a recipe from the backend
+  Future<proto.Recipe> readCurrentRecipe() async {
+    if (_clientSend == null) {
+      _clientSend = newClient(serverIP, serverPort);
+    }
+    try {
+      return grpc.SettingServiceClient(_clientSend)
+          .readCurrentRecipe(grpc.Empty());
+    } catch (e) {
+      if (!_isShutdown) {
+        // Invalidate current client
+        _shutdownSend();
+        print(e.toString());
+        // Try again
+        Future.delayed(retryDelay, () {
+          return readCurrentRecipe();
+        });
+      }
+    }
+  }
+
   // Asynchronous function get a recipe from the backend
   Future<proto.Recipe> createRecipe() async {
     if (_clientSend == null) {
@@ -212,6 +233,27 @@ class SettingGrpcAPI {
         // Try again
         Future.delayed(retryDelay, () {
           return updateRecipe(r);
+        });
+      }
+    }
+  }
+
+  // Asynchronous function to update a recipe in the backend
+  void deleteRecipe(String uuid) async {
+    if (_clientSend == null) {
+      _clientSend = newClient(serverIP, serverPort);
+    }
+    try {
+      await grpc.SettingServiceClient(_clientSend)
+          .deleteRecipe(grpc.StringValue(value: uuid));
+    } catch (e) {
+      if (!_isShutdown) {
+        // Invalidate current client
+        _shutdownSend();
+        print(e.toString());
+        // Try again
+        Future.delayed(retryDelay, () {
+          return deleteRecipe(uuid);
         });
       }
     }

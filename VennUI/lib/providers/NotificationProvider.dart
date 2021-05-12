@@ -10,9 +10,11 @@ class NotificationProvider with ChangeNotifier {
   Widget notification = Container();
 
   Stream<NotificationData> _notifications;
+  StreamController<NotificationData> _controller;
 
-  NotificationProvider(Stream<NotificationData> s) {
-    _notifications = s;
+  NotificationProvider(StreamController<NotificationData> s) {
+    _controller = s;
+    _notifications = s.stream;
     run();
   }
 
@@ -25,14 +27,12 @@ class NotificationProvider with ChangeNotifier {
   void displayNotification(NotificationData data) async {
     // Display the notfication
     notification = VennNotification(data);
-    print("Add the notif");
     notifyListeners();
     // Wait 5 seconds
     const delay = const Duration(seconds: 5);
     Timer(delay, () {
       notification = Container();
       notifyListeners();
-      print("Remove the notif");
     });
   }
 }

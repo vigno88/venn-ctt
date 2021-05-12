@@ -27,8 +27,8 @@ void main() {
       print('-----');
       print(errorDetails.stack);
     };
-    // // Notifications stream. Services can send notifications into it, the notification
-    // // provide will consume and display them to the user
+    // Notifications stream. Services can send notifications into it, the notification
+    // provide will consume and display them to the user
     StreamController<NotificationData> notificationStream =
         StreamController<NotificationData>();
 
@@ -53,7 +53,7 @@ void main() {
       ChangeNotifierProvider(create: (_) => NetworkProvider(nAPI)),
       ChangeNotifierProvider(create: (_) => UserProvider(aAPI)),
       ChangeNotifierProvider(
-          create: (_) => NotificationProvider(notificationStream.stream)),
+          create: (_) => NotificationProvider(notificationStream)),
     ], child: MyApp()));
   }, (error, stackTrace) {
     print('This is a pure Dart error');

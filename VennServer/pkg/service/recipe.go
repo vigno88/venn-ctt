@@ -30,6 +30,7 @@ func (s *settingServiceServer) CreateRecipe(ctx context.Context, e *proto.Empty)
 	}
 	newRecipe := recipe.ToProto(r)
 	newRecipe.Uuid = util.GetNewUUID(ctx)
+	recipe.SaveRecipe(recipe.ToRecipe(newRecipe))
 	return newRecipe, nil
 }
 
@@ -39,6 +40,15 @@ func (s *settingServiceServer) ReadRecipe(ctx context.Context, uuid *proto.Strin
 	if err != nil {
 		log.Printf("Error while reading this recipe %s: %s ", uuid.GetValue(), err.Error())
 		return &proto.Recipe{}, err
+	}
+	return recipe.ToProto(r), nil
+}
+
+func (s *settingServiceServer) ReadCurrentRecipe(ctx context.Context, e *proto.Empty) (*proto.Recipe, error) {
+	r, err := recipe.ReadCurrentRecipe()
+	if err != nil {
+		log.Printf("Error while reading this recipe %s: %s ", r.Name, err.Error())
+		return nil, err
 	}
 	return recipe.ToProto(r), nil
 }
@@ -145,6 +155,16 @@ func (s *settingServiceServer) UpdateRecipe(ctx context.Context, u *proto.Recipe
 	r.Selectors = newR.Selectors
 	r.Sliders = newR.Sliders
 	return &proto.Empty{}, recipe.UpdateRecipe(r)
+}
+
+func (s *settingServiceServer) DeleteRecipe(ctx context.Context, uuid *proto.StringValue) (*proto.Empty, error) {
+	r, err := recipe.ReadRecipe(uuid.Value)
+	if err != nil {
+		log.Printf("Error while reading this recipe %s: %s ", r.Name, err.Error())
+		return &proto.Empty{}, err
+	}
+	err = recipe.DeleteRecipe(r)
+	return &proto.Empty{}, err
 }
 
 func (s *settingServiceServer) ReadSelectorList(ctx context.Context, e *proto.Empty) (*proto.Selectors, error) {

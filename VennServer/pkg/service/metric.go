@@ -37,7 +37,15 @@ func (s *metricServiceServer) Subscribe(e *proto.Empty, stream proto.MetricServi
 	log.Print("Metrics Subscribe requested")
 	for {
 		m := <-metricsChan
-		// metrics.Put(context.Background(), m)
+		// Update the metrics value on disk
+		for _, m := range m.Updates {
+			o, _ := metrics.Read(m.Name)
+			o.Value = m.Value
+			if o.HasTarget {
+				o.Target = float32(m.Target)
+			}
+			metrics.Update(o)
+		}
 		if err :=
 			stream.Send(&proto.MetricUpdates{Updates: m.Updates}); err != nil {
 			// put message back to the channel
@@ -61,10 +69,18 @@ func (s *metricServiceServer) ReadConfig(ctx context.Context, e *proto.Empty) (*
 }
 
 func (s *metricServiceServer) UpdateConfig(ctx context.Context, e *proto.MetricConfigs) (*proto.Empty, error) {
-	for _, c := range e.Configs {
-		err := metrics.Update(metrics.ToMetric(c))
-		if err != nil {
-			return nil, err
+	// Read old config
+	config, _ := s.ReadConfig(ctx, &proto.Empty{})
+	// Compare both config (we imply they have the same length)
+	for i, c := range e.Configs {
+		// Update the metric config if they differ
+		if config.Configs[i] != c {
+			err := metrics.Update(metrics.ToMetric(c))
+			if err != nil {
+				return nil, err
+			}
+			// Update the target
+			metricsChan <- &proto.MetricUpdates{Updates: []*proto.MetricUpdate{{Name: c.Name, Target: float64(c.Target)}}}
 		}
 	}
 	return nil, nil

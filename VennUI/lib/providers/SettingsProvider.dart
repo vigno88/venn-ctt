@@ -1,8 +1,11 @@
+import 'package:VennUI/components/Notification.dart';
 import 'package:VennUI/grpc/metric.dart';
 import 'package:VennUI/grpc/settings.dart';
+import 'package:VennUI/providers/NotificationProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:VennUI/grpc/v1/ui.pb.dart' as proto;
 import 'package:VennUI/utilies.dart';
+import 'package:provider/provider.dart';
 
 class SettingsProvider with ChangeNotifier {
   // Sliders
@@ -40,12 +43,19 @@ class SettingsProvider with ChangeNotifier {
 
   void initiate() async {
     // Retrieve the initial settings
-    var defaultRecipe = await _settingAPI.readRecipe('default');
+    // var currentRecipe = await _settingAPI.readRecipe('default');
+    var currentRecipe = await _settingAPI.readCurrentRecipe();
 
-    settings = List.of(defaultRecipe.settings);
+    settings = List.of(currentRecipe.settings);
     oldSettings =
         List.generate(settings.length, (index) => settings[index].value);
     numPagesSliders = (settings.length / sliderPerPage).ceil();
+
+    // Send the initial settings to the backend
+    for (var s in settings) {
+      _settingAPI
+          .updateSetting(proto.SettingUpdate(name: s.name, value: s.value));
+    }
 
     // Retrieve the set of selector
     var s = await _settingAPI.readSelectorList();
@@ -65,6 +75,7 @@ class SettingsProvider with ChangeNotifier {
       var r = await _settingAPI.readRecipe(uuid);
       recipes.add(r);
     }
+    selectedRecipe = recipes.indexOf(currentRecipe);
 
     isLoading = false;
     notifyListeners();
@@ -102,15 +113,31 @@ class SettingsProvider with ChangeNotifier {
     });
   }
 
-  void loadRecipe() async {
-    var recipe = await _settingAPI.readRecipe('default');
-    settings = recipe.settings;
-    oldSettings =
-        List.generate(settings.length, (index) => settings[index].value);
+  void loadRecipe(BuildContext context) async {
+    var same = await getCurrentSettings(context);
+    if (same) {
+      context.read<NotificationProvider>().displayNotification(NotificationData(
+          NotificationType.Info,
+          "Nothing to load, all the settings are the same."));
+    } else {
+      context.read<NotificationProvider>().displayNotification(NotificationData(
+          NotificationType.Success,
+          "The previous settings were successfully loaded."));
+    }
     notifyListeners();
   }
 
-  void saveRecipe() async {
+  Future<bool> getCurrentSettings(BuildContext context) async {
+    var recipe = await _settingAPI.readCurrentRecipe();
+    var same = settings == recipe.settings;
+    settings = recipe.settings;
+    oldSettings =
+        List.generate(settings.length, (index) => settings[index].value);
+    return same;
+  }
+
+  void saveRecipe(BuildContext context) async {
+    var modified = false;
     for (int i = 0; i < settings.length; i++) {
       if (settings[i].value != oldSettings[i]) {
         if (settings[i].hasTarget()) {
@@ -119,8 +146,18 @@ class SettingsProvider with ChangeNotifier {
         _settingAPI.updateSetting(proto.SettingUpdate(
             name: settings[i].name, value: settings[i].value));
         oldSettings[i] = settings[i].value;
+        modified = true;
       }
     }
+    if (modified) {
+      context.read<NotificationProvider>().displayNotification(NotificationData(
+          NotificationType.Success, "Sucessfully saved the new settings."));
+    } else {
+      context.read<NotificationProvider>().displayNotification(NotificationData(
+          NotificationType.Info,
+          "Nothing to save, all the settings are the same."));
+    }
+    notifyListeners();
   }
 
   void updateTarget(proto.Setting setting) async {
@@ -128,10 +165,11 @@ class SettingsProvider with ChangeNotifier {
     for (int i = 0; i < M.configs.length; i++) {
       if (M.configs[i].name == setting.target.name) {
         M.configs[i].target = setting.value;
-        _metricAPI.updateConfig(M);
+        await _metricAPI.updateConfig(M);
         return;
       }
     }
+    _
   }
 
   void updateSelectorChoice(int index, String newChoiceName) {
@@ -147,8 +185,77 @@ class SettingsProvider with ChangeNotifier {
   void updateRecipeHover(int i) {
     if (i == hoverRecipe) {
       hoverRecipe = -1;
+    } else {
+      hoverRecipe = i;
     }
-    hoverRecipe = i;
+    notifyListeners();
+  }
+
+  void createRecipe(BuildContext context) async {
+    if (recipes.length >= 99) {
+      context.read<NotificationProvider>().displayNotification(NotificationData(
+          NotificationType.Error, "Cannot add more than 99 recipes."));
+      return;
+    }
+    proto.Recipe newRecipe = await _settingAPI.createRecipe();
+    recipes.add(newRecipe);
+    notifyListeners();
+  }
+
+  void updateRecipe(BuildContext context, proto.Recipe r) async {
+    if (r.title.length > 25) {
+      context.read<NotificationProvider>().displayNotification(NotificationData(
+          NotificationType.Error,
+          r.title + "The new title is too long. (Max 25 char)"));
+      return;
+    }
+    if (r.info.length > 80) {
+      context.read<NotificationProvider>().displayNotification(NotificationData(
+          NotificationType.Error,
+          "The new information text is too long. (Max 80 char)"));
+      return;
+    }
+    await _settingAPI.updateRecipe(r);
+    recipes[hoverRecipe] = r;
+    context.read<NotificationProvider>().displayNotification(NotificationData(
+        NotificationType.Success,
+        "Succesfully updated the recipe's information."));
+    notifyListeners();
+  }
+
+  void deleteRecipe(BuildContext context) async {
+    // Cannot delete a recipe if none is selected
+    if (hoverRecipe == -1) {
+      context.read<NotificationProvider>().displayNotification(NotificationData(
+          NotificationType.Error, "Please press any recipe to delete it."));
+      return;
+    }
+    // Cannot remove the first/default recipe
+    if (recipes.elementAt(hoverRecipe).uuid == "default") {
+      context.read<NotificationProvider>().displayNotification(NotificationData(
+          NotificationType.Error, "Cannot remove the default recipe."));
+      return;
+    }
+    _settingAPI.deleteRecipe(recipes.elementAt(hoverRecipe).uuid);
+    recipes.removeAt(hoverRecipe);
+    hoverRecipe = -1;
+    notifyListeners();
+  }
+
+  void selectRecipe(BuildContext context) async {
+    // Cannot select a recipe if none is selected
+    if (hoverRecipe == -1) {
+      context.read<NotificationProvider>().displayNotification(NotificationData(
+          NotificationType.Error, "Please press any recipe to select it."));
+      return;
+    }
+    // Send the new recipe
+    await _settingAPI.updateCurrentRecipe(recipes.elementAt(hoverRecipe).uuid);
+    selectedRecipe = hoverRecipe;
+    // Load the new recipe settings
+    await getCurrentSettings(context);
+    context.read<NotificationProvider>().displayNotification(NotificationData(
+        NotificationType.Success, "Sucessfully selected the recipe."));
     notifyListeners();
   }
 }

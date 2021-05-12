@@ -23,11 +23,15 @@ func (m *CMotors) homeNodes() error {
 	return nil
 }
 
-func (m *CMotors) startMovePosNode(i int, numSteps int) error {
+func (m *CMotors) startMovePosNode(i int, numSteps int, isTargetAbsolute bool) error {
 	if i < 0 || i >= m.Count {
 		return fmt.Errorf("Invalid node index: %d", i)
 	}
-	C.StartMovePosNode(C.int(i), C.int(numSteps))
+	if isTargetAbsolute {
+		C.StartMovePosNode(C.int(i), C.int(numSteps), C.int(1))
+		return nil
+	}
+	C.StartMovePosNode(C.int(i), C.int(numSteps), C.int(0))
 	return nil
 }
 
@@ -80,14 +84,6 @@ func (m *CMotors) setVelNode(i int, vel int) error {
 		return fmt.Errorf("Invalid node index: %d", i)
 	}
 	C.SetVelNode(C.int(i), C.int(vel))
-	return nil
-}
-
-func (m *CMotors) backAndForthSequence(i int, travelLength int) error {
-	if i < 0 || i >= m.Count {
-		return fmt.Errorf("Invalid node index: %d", i)
-	}
-	C.BackAndForthSequence(C.int(i), C.int(travelLength))
 	return nil
 }
 

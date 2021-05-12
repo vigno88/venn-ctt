@@ -49,10 +49,6 @@ func Init(ctx context.Context, path string) error {
 	if err != nil {
 		return err
 	}
-	// err = db.Init(&Recipe{})
-	// if err != nil {
-	// 	return err
-	// }
 	db.Close()
 	return err
 }
@@ -155,6 +151,16 @@ func SaveRecipe(r *Recipe) error {
 	}
 	defer db.Close()
 	err = db.Save(r)
+	return err
+}
+
+func DeleteRecipe(r *Recipe) error {
+	db, err := storm.Open(pathDB)
+	if err != nil {
+		return err
+	}
+	defer db.Close()
+	err = db.DeleteStruct(r)
 	return err
 }
 

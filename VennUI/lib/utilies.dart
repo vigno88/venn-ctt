@@ -22,6 +22,10 @@ BoxBorder blueBorderDecoration = Border.all(
   width: 2,
 );
 
+BoxBorder transparentBorderDecoration = Border.all(
+  color: Colors.transparent,
+  width: 2,
+);
 const Color baseColor = Color(0xff222f3e);
 const Color infoColor = Color(0xff576574);
 const Color paleColor = Color(0xff8395a7);
@@ -30,8 +34,8 @@ final Color paleBlue = Color(0xff54a0ff);
 final Color blueBorder = Color(0xffb3d4ff);
 final Color darkBlue = Color(0xff2e86de);
 
-// const serverIP = "127.0.0.1";
-const serverIP = "10.0.2.2";
+const serverIP = "127.0.0.1";
+// const serverIP = "10.0.2.2";
 
 int get1DCoord(int x, int y, int width) {
   return x + width * y;

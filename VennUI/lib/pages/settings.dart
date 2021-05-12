@@ -1,9 +1,11 @@
 import 'package:VennUI/components/SelectorSettings.dart';
 import 'package:VennUI/components/StatusBar.dart';
 import 'package:VennUI/components/TopBarIcon.dart';
+import 'package:VennUI/dialogs/edit_recipe_dialog.dart';
 import 'package:VennUI/dialogs/user_dialog.dart';
 import 'package:VennUI/dialogs/wifi_dialog.dart';
 import 'package:VennUI/providers/NetworkProvider.dart';
+import 'package:VennUI/providers/NotificationProvider.dart';
 import 'package:VennUI/providers/SettingsProvider.dart';
 import 'package:VennUI/providers/UserProvider.dart';
 import 'package:VennUI/utilies.dart';
@@ -64,6 +66,8 @@ class SettingsPage extends StatelessWidget {
               }),
         ),
         StatusBar(),
+        context
+            .select((NotificationProvider provider) => provider.notification),
       ],
     ));
   }
@@ -93,21 +97,11 @@ class RecipePanel extends StatelessWidget {
                   padding: const EdgeInsets.all(8),
                   itemCount: context.watch<SettingsProvider>().recipes.length,
                   itemBuilder: (BuildContext context, int index) {
-                    if (index == hoverRecipe) {
-                      return RecipeItem(
-                          index,
-                          context
-                              .watch<SettingsProvider>()
-                              .recipes[index]
-                              .title,
-                          context.watch<SettingsProvider>().recipes[index].info,
-                          true);
-                    }
                     return RecipeItem(
                         index,
                         context.watch<SettingsProvider>().recipes[index].title,
                         context.watch<SettingsProvider>().recipes[index].info,
-                        false);
+                        index == hoverRecipe);
                   }),
             ),
             RecipeButtons(),
@@ -140,7 +134,9 @@ class RecipeItem extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(20)),
               color: _isSelected ? paleBlue.withOpacity(0.2) : Colors.white,
-              border: _isSelected ? blueBorderDecoration : null,
+              border: _isSelected
+                  ? blueBorderDecoration
+                  : transparentBorderDecoration,
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -152,7 +148,7 @@ class RecipeItem extends StatelessWidget {
                       color:
                           _isSelected ? darkBlue : paleColor.withOpacity(0.6),
                       fontWeight: FontWeight.bold,
-                      fontSize: 75),
+                      fontSize: 80),
                 ),
                 SizedBox(
                   width: 10,
@@ -169,7 +165,14 @@ class RecipeItem extends StatelessWidget {
                             fontSize: 25, fontWeight: FontWeight.bold),
                       ),
                     ),
-                    Text(_infoText, style: TextStyle(fontSize: 17)),
+                    Container(
+                      width: _index < 9 ? 330 : 290,
+                      child: Text(
+                        _infoText,
+                        style: TextStyle(fontSize: 17),
+                        maxLines: 2,
+                      ),
+                    )
                   ],
                 )
               ],
@@ -491,25 +494,35 @@ class RecipeButtons extends StatelessWidget {
         child: Column(
           children: [
             SettingButton('Select', (arg) {
-              context.read<SettingsProvider>().saveRecipe();
+              context.read<SettingsProvider>().selectRecipe(context);
             }),
             SizedBox(
               height: 15,
             ),
             SettingButton('Edit', (arg) {
-              context.read<SettingsProvider>().saveRecipe();
+              // context.read<SettingsProvider>().editRecipe();
+              //  onPressed: () {
+              final provider =
+                  Provider.of<SettingsProvider>(context, listen: false);
+              showDialog(
+                  context: context,
+                  builder: (_) {
+                    return ChangeNotifierProvider.value(
+                        value: provider, child: EditDialogBox());
+                  });
+              // },
             }),
             SizedBox(
               height: 15,
             ),
             SettingButton('Create', (arg) {
-              context.read<SettingsProvider>().loadRecipe();
+              context.read<SettingsProvider>().createRecipe(context);
             }),
             SizedBox(
               height: 15,
             ),
             SettingButton('Delete', (arg) {
-              context.read<SettingsProvider>().showInfoModal(arg);
+              context.read<SettingsProvider>().deleteRecipe(context);
             }),
           ],
         ));
@@ -523,9 +536,13 @@ class SelectorButtons extends StatelessWidget {
         padding: EdgeInsets.fromLTRB(20, 15, 0, 0),
         child: Column(
           children: [
-            SettingButton('Edit', (arg) {
-              context.read<SettingsProvider>().saveRecipe();
-            }),
+            Container(
+              height: 60,
+              width: 140,
+            ),
+            // SettingButton('Edit', (arg) {
+            //   context.read<SettingsProvider>().saveRecipe();
+            // }),
           ],
         ));
   }
@@ -539,13 +556,13 @@ class SettingsButtons extends StatelessWidget {
         child: Column(
           children: [
             SettingButton('Save', (arg) {
-              context.read<SettingsProvider>().saveRecipe();
+              context.read<SettingsProvider>().saveRecipe(context);
             }),
             SizedBox(
               height: 15,
             ),
             SettingButton('Load', (arg) {
-              context.read<SettingsProvider>().loadRecipe();
+              context.read<SettingsProvider>().loadRecipe(context);
             }),
             SizedBox(
               height: 15,

@@ -1,7 +1,10 @@
+import 'package:VennUI/grpc/v1/ui.pb.dart';
+import 'package:VennUI/providers/SettingsProvider.dart';
 import 'package:VennUI/providers/dashboard_services/Metrics.dart';
 import 'package:VennUI/utilies.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class Grid {
   final double cellHeight = 230;
@@ -252,15 +255,17 @@ class MetricChip extends StatelessWidget {
   }
 }
 
-class PressionChip extends StatelessWidget {
-  PressionChip(
-    this.pressions,
-  );
+class PressionChip extends StatefulWidget {
+  @override
+  _PressionChipState createState() => _PressionChipState();
+}
 
-  final List<int> pressions;
+class _PressionChipState extends State<PressionChip> {
+  List<int> pressions = [0, 0, 0, 0, 0, 0];
 
   @override
   Widget build(BuildContext context) {
+    getPressions(context);
     return GestureDetector(
         onTap: () {
           showModal(context, "Information of recorded pressions", "Empty");
@@ -287,31 +292,59 @@ class PressionChip extends StatelessWidget {
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        PressionDisplay("P1", 21),
+                        PressionDisplay("P1", pressions[0]),
                         Expanded(flex: 1, child: Container()),
-                        PressionDisplay("P2", 29),
+                        PressionDisplay("P2", pressions[1]),
                       ]),
+                ),
+                Expanded(
+                  child:
+                      Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                    PressionDisplay("P3", pressions[2]),
+                    Expanded(flex: 1, child: Container()),
+                    PressionDisplay("P4", pressions[3])
+                  ]),
                 ),
                 Expanded(
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        PressionDisplay("P3", 7),
+                        PressionDisplay("P5", pressions[4]),
                         Expanded(flex: 1, child: Container()),
-                        PressionDisplay("P4", 18)
-                      ]),
-                ),
-                Expanded(
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        PressionDisplay("P5", 21),
-                        Expanded(flex: 1, child: Container()),
-                        PressionDisplay("P6", 14),
+                        PressionDisplay("P6", pressions[5]),
                       ]),
                 ),
               ],
             )));
+  }
+
+  void getPressions(BuildContext context) {
+    for (var s in context.watch<SettingsProvider>().settings) {
+      if (s.smallName == "pm1") {
+        pressions[0] = s.value.toInt();
+        continue;
+      }
+      if (s.smallName == "pt1") {
+        pressions[1] = s.value.toInt();
+        continue;
+      }
+      if (s.smallName == "pm2") {
+        pressions[2] = s.value.toInt();
+        continue;
+      }
+      if (s.smallName == "pt2") {
+        pressions[3] = s.value.toInt();
+        continue;
+      }
+      if (s.smallName == "pm3") {
+        pressions[4] = s.value.toInt();
+        continue;
+      }
+      if (s.smallName == "pt3") {
+        pressions[5] = s.value.toInt();
+        continue;
+      }
+    }
   }
 }
 
@@ -325,20 +358,21 @@ class PressionDisplay extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
         flex: 3,
-        child: Center(
+        child: Container(
+            padding: EdgeInsets.fromLTRB(30, 0, 0, 0),
             child: AutoSizeText.rich(
-          TextSpan(children: [
-            TextSpan(
-                text: title + ": ",
-                style: TextStyle(fontWeight: FontWeight.bold)),
-            TextSpan(text: pression.toString() + " psi"),
-          ]),
-          maxLines: 1,
-          style: TextStyle(
-            fontSize: 23,
-            color: baseColor.withOpacity(0.8),
-          ),
-        )));
+              TextSpan(children: [
+                TextSpan(
+                    text: title + ": ",
+                    style: TextStyle(fontWeight: FontWeight.bold)),
+                TextSpan(text: pression.toString() + " psi"),
+              ]),
+              maxLines: 1,
+              style: TextStyle(
+                fontSize: 23,
+                color: baseColor.withOpacity(0.8),
+              ),
+            )));
   }
 }
 

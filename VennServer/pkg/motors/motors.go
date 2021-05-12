@@ -19,6 +19,7 @@ type NodeConfig struct {
 	Acceleration int
 	Velocity     int
 	Travel       int
+	Divisor      int
 }
 
 func initNodeConfig() {
@@ -26,37 +27,41 @@ func initNodeConfig() {
 		{
 			Acceleration: 12000,
 			Velocity:     4100,
-			Travel:       0,
+			Travel:       6000,
 		},
 		{
 			Acceleration: 0,
 			Velocity:     400,
 			Travel:       0,
+			Divisor:      10,
 		},
 		{
 			Acceleration: 12000,
 			Velocity:     4100,
-			Travel:       0,
+			Travel:       6000,
 		},
 		{
 			Acceleration: 0,
 			Velocity:     400,
 			Travel:       0,
+			Divisor:      10,
 		},
 		{
 			Acceleration: 12000,
 			Velocity:     4100,
-			Travel:       0,
+			Travel:       6000,
 		},
 		{
 			Acceleration: 0,
 			Velocity:     400,
 			Travel:       0,
+			Divisor:      10,
 		},
 	}
 }
 
 func Init() error {
+	initNodeConfig()
 	motors.init()
 	// If there is no motor connected, retry
 	if motors.Count == 0 {
@@ -71,32 +76,40 @@ func Init() error {
 	log.Printf("There are %d nodes connected\n", motors.Count)
 	motors.isCycling = false
 	motors.isHoming = false
-	// Gather the settings of each node
-
 	return nil
 }
 
 func Run() {
-	inverseFactor := 1
+	inverseFactors := []int{1, 1, 1}
 	for {
 		if motors.isCycling {
 			if motors.isMoveDoneNode(0) {
-				inverseFactor = -inverseFactor
-				motors.startMovePosNode(0, inverseFactor*motors.nodes[0].Travel)
-				motors.startMovePosNode(2, -inverseFactor*motors.nodes[2].Travel)
-				motors.startMovePosNode(4, inverseFactor*motors.nodes[4].Travel)
+				inverseFactors[0] = -inverseFactors[0]
+				motors.startMovePosNode(0, inverseFactors[0]*motors.nodes[0].Travel, true)
+				motors.startMovePosNode(1, motors.nodes[1].Travel, false)
+			}
+			if motors.isMoveDoneNode(2) {
+				inverseFactors[1] = -inverseFactors[1]
+				motors.startMovePosNode(2, -inverseFactors[1]*motors.nodes[2].Travel, true)
+				motors.startMovePosNode(3, motors.nodes[3].Travel, false)
+
+			}
+			if motors.isMoveDoneNode(4) {
+				inverseFactors[2] = -inverseFactors[2]
+				motors.startMovePosNode(4, inverseFactors[2]*motors.nodes[4].Travel, true)
+				motors.startMovePosNode(5, motors.nodes[5].Travel, false)
 			}
 		}
 	}
 }
 
 func StartCycle() error {
-	motors.startMoveVelNode(1, motors.nodes[1].Velocity)
-	motors.startMoveVelNode(3, motors.nodes[3].Velocity)
-	motors.startMoveVelNode(5, motors.nodes[5].Velocity)
-	motors.startMovePosNode(0, motors.nodes[0].Travel)
-	motors.startMovePosNode(2, -motors.nodes[2].Travel)
-	motors.startMovePosNode(4, motors.nodes[4].Travel)
+	motors.startMovePosNode(0, motors.nodes[0].Travel, true)
+	motors.startMovePosNode(1, motors.nodes[1].Travel/2, false)
+	motors.startMovePosNode(2, -motors.nodes[2].Travel, true)
+	motors.startMovePosNode(3, motors.nodes[3].Travel/2, false)
+	motors.startMovePosNode(4, motors.nodes[4].Travel, true)
+	motors.startMovePosNode(5, motors.nodes[5].Travel/2, false)
 	motors.isCycling = true
 	return nil
 }
@@ -121,47 +134,23 @@ func Home() error {
 
 func ProcessNewSetting(s *proto.Setting, newValue int) {
 	switch s.SmallName {
-	case "sm1":
-		// Update the velocity of the first masseur and send the new velocity to the engine
-		motors.nodes[0].Velocity = newValue
-		motors.setVelNode(0, motors.nodes[0].Velocity)
-		break
 	case "tm1":
-		// Update the travel distance of the first masseur
-		motors.nodes[0].Travel = newValue
-		break
-	case "sm2":
-		// Update the velocity of the second masseur and send the new velocity to the engine
-		motors.nodes[2].Velocity = newValue
-		motors.setVelNode(2, motors.nodes[2].Velocity)
+		UpdateTravel(0, newValue)
 		break
 	case "tm2":
-		// Update the travel distance of the second masseur
-		motors.nodes[2].Travel = newValue
-		break
-	case "sm3":
-		// Update the velocity of the third masseur and send the new velocity to the engine
-		motors.nodes[4].Velocity = newValue
-		motors.setVelNode(4, motors.nodes[4].Velocity)
+		UpdateTravel(2, newValue)
 		break
 	case "tm3":
-		// Update the travel distance of the third masseur
-		motors.nodes[4].Travel = newValue
+		UpdateTravel(4, newValue)
 		break
-	case "st1":
-		// Update the velocity of the first traction engine and send the new velocity to the engine
-		motors.nodes[1].Velocity = newValue
-		motors.setVelNode(1, motors.nodes[1].Velocity)
+	case "dt1":
+		UpdateDivisor(1, newValue)
 		break
-	case "st2":
-		// Update the velocity of the second traction engine and send the new velocity to the engine
-		motors.nodes[3].Velocity = newValue
-		motors.setVelNode(3, motors.nodes[3].Velocity)
+	case "dt2":
+		UpdateDivisor(3, newValue)
 		break
-	case "st3":
-		// Update the velocity of the third traction engine and send the new velocity to the engine
-		motors.nodes[5].Velocity = newValue
-		motors.setVelNode(5, motors.nodes[5].Velocity)
+	case "dt3":
+		UpdateDivisor(5, newValue)
 		break
 	}
 }
@@ -172,4 +161,27 @@ func IsHoming() bool {
 
 func IsCycling() bool {
 	return motors.isCycling
+}
+
+func UpdateDivisor(indexMotor int, newValue int) {
+	motors.nodes[indexMotor].Divisor = newValue
+	// Set the new acceleration
+	newAccel := motors.nodes[indexMotor-1].Acceleration / newValue
+	motors.nodes[indexMotor].Acceleration = newAccel
+	motors.setAccelNode(indexMotor, newAccel)
+
+	// Set the new velocity
+	newVel := motors.nodes[indexMotor-1].Velocity / newValue
+	motors.nodes[indexMotor].Velocity = newVel
+	motors.setVelNode(indexMotor, newVel)
+
+	// Set the new travel; 2*[travel of previous motor] divided by 8 (servo resolution) divided by the divisor
+	motors.nodes[indexMotor].Travel = motors.nodes[indexMotor-1].Travel / (4 * newValue)
+}
+
+func UpdateTravel(indexMotor int, newValue int) {
+	// Update the travel distance of the third masseur
+	motors.nodes[indexMotor].Travel = newValue
+	// Update the travel of the traction servo; [new travel masseur]*2 divided by 8(servo resolution) divided by the divisor
+	motors.nodes[indexMotor+1].Travel = newValue / (4 * motors.nodes[indexMotor+1].Divisor)
 }
