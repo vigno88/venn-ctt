@@ -2,7 +2,7 @@
 //  Generated code. Do not modify.
 //  source: ui.proto
 //
-// @dart = 2.7
+// @dart = 2.12
 // ignore_for_file: annotate_overrides,camel_case_types,unnecessary_const,non_constant_identifier_names,library_prefixes,unused_import,unused_shown_name,return_of_invalid_type,unnecessary_this,prefer_final_fields
 
 import 'dart:async' as $async;
@@ -32,29 +32,29 @@ class MetricServiceClient extends $grpc.Client {
       ($core.List<$core.int> value) => $0.Empty.fromBuffer(value));
 
   MetricServiceClient($grpc.ClientChannel channel,
-      {$grpc.CallOptions options,
-      $core.Iterable<$grpc.ClientInterceptor> interceptors})
+      {$grpc.CallOptions? options,
+      $core.Iterable<$grpc.ClientInterceptor>? interceptors})
       : super(channel, options: options, interceptors: interceptors);
 
   $grpc.ResponseFuture<$0.MetricUpdates> getAll($0.Empty request,
-      {$grpc.CallOptions options}) {
+      {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$getAll, request, options: options);
   }
 
   $grpc.ResponseStream<$0.MetricUpdates> subscribe($0.Empty request,
-      {$grpc.CallOptions options}) {
+      {$grpc.CallOptions? options}) {
     return $createStreamingCall(
         _$subscribe, $async.Stream.fromIterable([request]),
         options: options);
   }
 
   $grpc.ResponseFuture<$0.MetricConfigs> readConfig($0.Empty request,
-      {$grpc.CallOptions options}) {
+      {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$readConfig, request, options: options);
   }
 
   $grpc.ResponseFuture<$0.Empty> updateConfig($0.MetricConfigs request,
-      {$grpc.CallOptions options}) {
+      {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$updateConfig, request, options: options);
   }
 }
@@ -177,67 +177,67 @@ class SettingServiceClient extends $grpc.Client {
       ($core.List<$core.int> value) => $0.Empty.fromBuffer(value));
 
   SettingServiceClient($grpc.ClientChannel channel,
-      {$grpc.CallOptions options,
-      $core.Iterable<$grpc.ClientInterceptor> interceptors})
+      {$grpc.CallOptions? options,
+      $core.Iterable<$grpc.ClientInterceptor>? interceptors})
       : super(channel, options: options, interceptors: interceptors);
 
   $grpc.ResponseFuture<$0.Recipe> createRecipe($0.Empty request,
-      {$grpc.CallOptions options}) {
+      {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$createRecipe, request, options: options);
   }
 
   $grpc.ResponseFuture<$0.UUIDS> readRecipesUUID($0.Empty request,
-      {$grpc.CallOptions options}) {
+      {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$readRecipesUUID, request, options: options);
   }
 
   $grpc.ResponseFuture<$0.Recipe> readRecipe($0.StringValue request,
-      {$grpc.CallOptions options}) {
+      {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$readRecipe, request, options: options);
   }
 
   $grpc.ResponseFuture<$0.Recipe> readCurrentRecipe($0.Empty request,
-      {$grpc.CallOptions options}) {
+      {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$readCurrentRecipe, request, options: options);
   }
 
   $grpc.ResponseFuture<$0.Selectors> readSelectorList($0.Empty request,
-      {$grpc.CallOptions options}) {
+      {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$readSelectorList, request, options: options);
   }
 
   $grpc.ResponseFuture<$0.Empty> updateSetting($0.SettingUpdate request,
-      {$grpc.CallOptions options}) {
+      {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$updateSetting, request, options: options);
   }
 
   $grpc.ResponseFuture<$0.Empty> updateUncertainty($0.TargetUpdate request,
-      {$grpc.CallOptions options}) {
+      {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$updateUncertainty, request, options: options);
   }
 
   $grpc.ResponseFuture<$0.Empty> updateSelectedChoice($0.SelectorUpdate request,
-      {$grpc.CallOptions options}) {
+      {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$updateSelectedChoice, request, options: options);
   }
 
   $grpc.ResponseFuture<$0.Empty> updateChoice($0.ChoiceUpdate request,
-      {$grpc.CallOptions options}) {
+      {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$updateChoice, request, options: options);
   }
 
   $grpc.ResponseFuture<$0.Empty> updateCurrentRecipe($0.StringValue request,
-      {$grpc.CallOptions options}) {
+      {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$updateCurrentRecipe, request, options: options);
   }
 
   $grpc.ResponseFuture<$0.Empty> updateRecipe($0.Recipe request,
-      {$grpc.CallOptions options}) {
+      {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$updateRecipe, request, options: options);
   }
 
   $grpc.ResponseFuture<$0.Empty> deleteRecipe($0.StringValue request,
-      {$grpc.CallOptions options}) {
+      {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$deleteRecipe, request, options: options);
   }
 }
@@ -433,22 +433,22 @@ class AuthentificationServiceClient extends $grpc.Client {
       ($core.List<$core.int> value) => $0.User.fromBuffer(value));
 
   AuthentificationServiceClient($grpc.ClientChannel channel,
-      {$grpc.CallOptions options,
-      $core.Iterable<$grpc.ClientInterceptor> interceptors})
+      {$grpc.CallOptions? options,
+      $core.Iterable<$grpc.ClientInterceptor>? interceptors})
       : super(channel, options: options, interceptors: interceptors);
 
   $grpc.ResponseFuture<$0.Users> readUserList($0.Empty request,
-      {$grpc.CallOptions options}) {
+      {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$readUserList, request, options: options);
   }
 
   $grpc.ResponseFuture<$0.Empty> updateCurrentUser($0.User request,
-      {$grpc.CallOptions options}) {
+      {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$updateCurrentUser, request, options: options);
   }
 
   $grpc.ResponseFuture<$0.User> getCurrentUser($0.Empty request,
-      {$grpc.CallOptions options}) {
+      {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$getCurrentUser, request, options: options);
   }
 }
@@ -518,22 +518,22 @@ class NetworkServiceClient extends $grpc.Client {
       ($core.List<$core.int> value) => $0.Empty.fromBuffer(value));
 
   NetworkServiceClient($grpc.ClientChannel channel,
-      {$grpc.CallOptions options,
-      $core.Iterable<$grpc.ClientInterceptor> interceptors})
+      {$grpc.CallOptions? options,
+      $core.Iterable<$grpc.ClientInterceptor>? interceptors})
       : super(channel, options: options, interceptors: interceptors);
 
   $grpc.ResponseFuture<$0.WifiStatus> readStatus($0.Empty request,
-      {$grpc.CallOptions options}) {
+      {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$readStatus, request, options: options);
   }
 
   $grpc.ResponseFuture<$0.WifiNames> readWifiList($0.Empty request,
-      {$grpc.CallOptions options}) {
+      {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$readWifiList, request, options: options);
   }
 
   $grpc.ResponseFuture<$0.Empty> connectWifi($0.WifiCredentials request,
-      {$grpc.CallOptions options}) {
+      {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$connectWifi, request, options: options);
   }
 }
@@ -590,8 +590,8 @@ abstract class NetworkServiceBase extends $grpc.Service {
 
 class ConfigurationServiceClient extends $grpc.Client {
   ConfigurationServiceClient($grpc.ClientChannel channel,
-      {$grpc.CallOptions options,
-      $core.Iterable<$grpc.ClientInterceptor> interceptors})
+      {$grpc.CallOptions? options,
+      $core.Iterable<$grpc.ClientInterceptor>? interceptors})
       : super(channel, options: options, interceptors: interceptors);
 }
 
@@ -612,17 +612,17 @@ class ControlServiceClient extends $grpc.Client {
       ($core.List<$core.int> value) => $0.ControlEvent.fromBuffer(value));
 
   ControlServiceClient($grpc.ClientChannel channel,
-      {$grpc.CallOptions options,
-      $core.Iterable<$grpc.ClientInterceptor> interceptors})
+      {$grpc.CallOptions? options,
+      $core.Iterable<$grpc.ClientInterceptor>? interceptors})
       : super(channel, options: options, interceptors: interceptors);
 
   $grpc.ResponseFuture<$0.SendResponse> send($0.Action request,
-      {$grpc.CallOptions options}) {
+      {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$send, request, options: options);
   }
 
   $grpc.ResponseStream<$0.ControlEvent> subscribe($0.Empty request,
-      {$grpc.CallOptions options}) {
+      {$grpc.CallOptions? options}) {
     return $createStreamingCall(
         _$subscribe, $async.Stream.fromIterable([request]),
         options: options);
@@ -680,22 +680,22 @@ class MotorControlServiceClient extends $grpc.Client {
       ($core.List<$core.int> value) => $0.Empty.fromBuffer(value));
 
   MotorControlServiceClient($grpc.ClientChannel channel,
-      {$grpc.CallOptions options,
-      $core.Iterable<$grpc.ClientInterceptor> interceptors})
+      {$grpc.CallOptions? options,
+      $core.Iterable<$grpc.ClientInterceptor>? interceptors})
       : super(channel, options: options, interceptors: interceptors);
 
   $grpc.ResponseFuture<$0.Empty> home($0.Empty request,
-      {$grpc.CallOptions options}) {
+      {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$home, request, options: options);
   }
 
   $grpc.ResponseFuture<$0.Empty> startCycle($0.Empty request,
-      {$grpc.CallOptions options}) {
+      {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$startCycle, request, options: options);
   }
 
   $grpc.ResponseFuture<$0.Empty> stopCycle($0.Empty request,
-      {$grpc.CallOptions options}) {
+      {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$stopCycle, request, options: options);
   }
 }

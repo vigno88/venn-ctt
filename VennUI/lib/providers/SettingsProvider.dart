@@ -169,7 +169,6 @@ class SettingsProvider with ChangeNotifier {
         return;
       }
     }
-    _
   }
 
   void updateSelectorChoice(int index, String newChoiceName) {

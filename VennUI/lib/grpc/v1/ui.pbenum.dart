@@ -2,7 +2,7 @@
 //  Generated code. Do not modify.
 //  source: ui.proto
 //
-// @dart = 2.7
+// @dart = 2.12
 // ignore_for_file: annotate_overrides,camel_case_types,unnecessary_const,non_constant_identifier_names,library_prefixes,unused_import,unused_shown_name,return_of_invalid_type,unnecessary_this,prefer_final_fields
 
 // ignore_for_file: UNDEFINED_SHOWN_NAME
@@ -21,7 +21,7 @@ class Setting_Destination extends $pb.ProtobufEnum {
   ];
 
   static final $core.Map<$core.int, Setting_Destination> _byValue = $pb.ProtobufEnum.initByValue(values);
-  static Setting_Destination valueOf($core.int value) => _byValue[value];
+  static Setting_Destination? valueOf($core.int value) => _byValue[value];
 
   const Setting_Destination._($core.int v, $core.String n) : super(v, n);
 }
@@ -38,7 +38,7 @@ class User_Roles extends $pb.ProtobufEnum {
   ];
 
   static final $core.Map<$core.int, User_Roles> _byValue = $pb.ProtobufEnum.initByValue(values);
-  static User_Roles valueOf($core.int value) => _byValue[value];
+  static User_Roles? valueOf($core.int value) => _byValue[value];
 
   const User_Roles._($core.int v, $core.String n) : super(v, n);
 }

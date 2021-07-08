@@ -41,34 +41,43 @@ func GetDefaultConfig() *ReadableConfig {
 		SmallName:   "t",
 		Target:      &proto.Target{Name: "Water", Uncertainty: 2},
 	}
+	sm1 := &proto.Setting{
+		Destination: proto.Setting_MOTOR,
+		Value:       200,
+		Max:         1000,
+		Min:         0,
+		Name:        "Speed Masseur 1",
+		SmallName:   "sm1",
+		Info:        "This slider controls the speed in RPM of first module's masseur.",
+	}
 
-	tm1 := &proto.Setting{
-		Destination: proto.Setting_MOTOR,
-		Value:       2000,
-		Max:         5000,
-		Min:         100,
-		Name:        "Travel Masseur 1",
-		SmallName:   "tm1",
-		Info:        "This slider controls the travel distance of first module's masseur.",
-	}
-	tm2 := &proto.Setting{
-		Destination: proto.Setting_MOTOR,
-		Value:       2000,
-		Max:         5000,
-		Min:         100,
-		Name:        "Travel Masseur 2",
-		SmallName:   "tm2",
-		Info:        "This slider controls the travel distance of second module's masseur.",
-	}
-	tm3 := &proto.Setting{
-		Destination: proto.Setting_MOTOR,
-		Value:       2000,
-		Max:         5000,
-		Min:         100,
-		Name:        "Travel Masseur 3",
-		SmallName:   "tm3",
-		Info:        "This slider controls the travel distance of third module's masseur.",
-	}
+	// tm1 := &proto.Setting{
+	// 	Destination: proto.Setting_MOTOR,
+	// 	Value:       2000,
+	// 	Max:         5000,
+	// 	Min:         100,
+	// 	Name:        "Travel Masseur 1",
+	// 	SmallName:   "tm1",
+	// 	Info:        "This slider controls the travel distance of first module's masseur.",
+	// }
+	// tm2 := &proto.Setting{
+	// 	Destination: proto.Setting_MOTOR,
+	// 	Value:       2000,
+	// 	Max:         5000,
+	// 	Min:         100,
+	// 	Name:        "Travel Masseur 2",
+	// 	SmallName:   "tm2",
+	// 	Info:        "This slider controls the travel distance of second module's masseur.",
+	// }
+	// tm3 := &proto.Setting{
+	// 	Destination: proto.Setting_MOTOR,
+	// 	Value:       2000,
+	// 	Max:         5000,
+	// 	Min:         100,
+	// 	Name:        "Travel Masseur 3",
+	// 	SmallName:   "tm3",
+	// 	Info:        "This slider controls the travel distance of third module's masseur.",
+	// }
 	dt1 := &proto.Setting{
 		Destination: proto.Setting_MOTOR,
 		Value:       10,
@@ -179,9 +188,7 @@ func GetDefaultConfig() *ReadableConfig {
 			},
 			Sliders: []*proto.Setting{
 				temp,
-				tm1,
-				tm2,
-				tm3,
+				sm1,
 				dt1,
 				dt2,
 				dt3,

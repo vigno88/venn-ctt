@@ -25,8 +25,8 @@ type NodeConfig struct {
 func initNodeConfig() {
 	motors.nodes = []NodeConfig{
 		{
-			Acceleration: 12000,
-			Velocity:     4100,
+			Acceleration: 1200,
+			Velocity:     100,
 			Travel:       6000,
 		},
 		{
@@ -80,36 +80,41 @@ func Init() error {
 }
 
 func Run() {
-	inverseFactors := []int{1, 1, 1}
-	for {
-		if motors.isCycling {
-			if motors.isMoveDoneNode(0) {
-				inverseFactors[0] = -inverseFactors[0]
-				motors.startMovePosNode(0, inverseFactors[0]*motors.nodes[0].Travel, true)
-				motors.startMovePosNode(1, motors.nodes[1].Travel, false)
-			}
-			if motors.isMoveDoneNode(2) {
-				inverseFactors[1] = -inverseFactors[1]
-				motors.startMovePosNode(2, -inverseFactors[1]*motors.nodes[2].Travel, true)
-				motors.startMovePosNode(3, motors.nodes[3].Travel, false)
+	// inverseFactors := []int{1, 1, 1}
+	// for {
+	// 	if motors.isCycling {
+	// 		if motors.isMoveDoneNode(0) {
+	// 			inverseFactors[0] = -inverseFactors[0]
+	// 			motors.startMovePosNode(0, inverseFactors[0]*motors.nodes[0].Travel, true)
+	// 			motors.startMovePosNode(1, motors.nodes[1].Travel, false)
+	// 		}
+	// 		if motors.isMoveDoneNode(2) {
+	// 			inverseFactors[1] = -inverseFactors[1]
+	// 			motors.startMovePosNode(2, -inverseFactors[1]*motors.nodes[2].Travel, true)
+	// 			motors.startMovePosNode(3, motors.nodes[3].Travel, false)
 
-			}
-			if motors.isMoveDoneNode(4) {
-				inverseFactors[2] = -inverseFactors[2]
-				motors.startMovePosNode(4, inverseFactors[2]*motors.nodes[4].Travel, true)
-				motors.startMovePosNode(5, motors.nodes[5].Travel, false)
-			}
-		}
-	}
+	// 		}
+	// 		if motors.isMoveDoneNode(4) {
+	// 			inverseFactors[2] = -inverseFactors[2]
+	// 			motors.startMovePosNode(4, inverseFactors[2]*motors.nodes[4].Travel, true)
+	// 			motors.startMovePosNode(5, motors.nodes[5].Travel, false)
+	// 		}
+	// 	}
+	// }
 }
 
 func StartCycle() error {
-	motors.startMovePosNode(0, motors.nodes[0].Travel, true)
-	motors.startMovePosNode(1, motors.nodes[1].Travel/2, false)
-	motors.startMovePosNode(2, -motors.nodes[2].Travel, true)
-	motors.startMovePosNode(3, motors.nodes[3].Travel/2, false)
-	motors.startMovePosNode(4, motors.nodes[4].Travel, true)
-	motors.startMovePosNode(5, motors.nodes[5].Travel/2, false)
+	motors.startMoveVelNode(0, motors.nodes[0].Velocity)
+	motors.startMoveVelNode(1, motors.nodes[1].Velocity)
+	motors.startMoveVelNode(3, motors.nodes[3].Velocity)
+	motors.startMoveVelNode(5, motors.nodes[5].Velocity)
+
+	// motors.startMovePosNode(0, motors.nodes[0].Travel, true)
+	// motors.startMovePosNode(1, motors.nodes[1].Travel/2, false)
+	// motors.startMovePosNode(2, -motors.nodes[2].Travel, true)
+	// motors.startMovePosNode(3, motors.nodes[3].Travel/2, false)
+	// motors.startMovePosNode(4, motors.nodes[4].Travel, true)
+	// motors.startMovePosNode(5, motors.nodes[5].Travel/2, false)
 	motors.isCycling = true
 	return nil
 }
@@ -117,9 +122,9 @@ func StartCycle() error {
 func StopCycle() error {
 	motors.stopNodeHard(0)
 	motors.stopNodeHard(1)
-	motors.stopNodeHard(2)
+	// motors.stopNodeHard(2)
 	motors.stopNodeHard(3)
-	motors.stopNodeHard(4)
+	// motors.stopNodeHard(4)
 	motors.stopNodeHard(5)
 	motors.isCycling = false
 	return nil
@@ -134,6 +139,12 @@ func Home() error {
 
 func ProcessNewSetting(s *proto.Setting, newValue int) {
 	switch s.SmallName {
+	case "sm1":
+		motors.nodes[0].Velocity = newValue
+		if motors.isCycling {
+			motors.startMoveVelNode(0, motors.nodes[0].Velocity)
+		}
+		break
 	case "tm1":
 		UpdateTravel(0, newValue)
 		break
@@ -166,17 +177,20 @@ func IsCycling() bool {
 func UpdateDivisor(indexMotor int, newValue int) {
 	motors.nodes[indexMotor].Divisor = newValue
 	// Set the new acceleration
-	newAccel := motors.nodes[indexMotor-1].Acceleration / newValue
+	// newAccel := motors.nodes[indexMotor-1].Acceleration / newValue
+	newAccel := motors.nodes[0].Acceleration / newValue
 	motors.nodes[indexMotor].Acceleration = newAccel
 	motors.setAccelNode(indexMotor, newAccel)
 
 	// Set the new velocity
-	newVel := motors.nodes[indexMotor-1].Velocity / newValue
+	// newVel := motors.nodes[indexMotor-1].Velocity / newValue
+	newVel := motors.nodes[0].Velocity / newValue
 	motors.nodes[indexMotor].Velocity = newVel
 	motors.setVelNode(indexMotor, newVel)
 
 	// Set the new travel; 2*[travel of previous motor] divided by 8 (servo resolution) divided by the divisor
-	motors.nodes[indexMotor].Travel = motors.nodes[indexMotor-1].Travel / (4 * newValue)
+	// motors.nodes[indexMotor].Travel = motors.nodes[indexMotor-1].Travel / (4 * newValue)
+	motors.nodes[indexMotor].Travel = motors.nodes[0].Travel / (4 * newValue)
 }
 
 func UpdateTravel(indexMotor int, newValue int) {
