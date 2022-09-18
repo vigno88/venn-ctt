@@ -42,7 +42,7 @@ class MetricService {
         config[i].type,
         config[i].info,
         m.updates[i].target,
-        config[i].hasTarget_6,
+        false,
       );
       _metricData.add(t);
     }
@@ -144,12 +144,6 @@ class MetricData {
       _target = u.target;
     } else {
       _value = u.value;
-      _target = u.target;
-    }
-    _isAlert = false;
-    if (hasTarget &&
-        (value < target - _uncertainty || value > target + _uncertainty)) {
-      _isAlert = true;
     }
   }
 }

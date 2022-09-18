@@ -50,22 +50,22 @@ class SettingGrpcAPI {
 
   // Asynchronous function to update the uncertainty on a setting target
   void updateUncertainty(proto.TargetUpdate u) async {
-    if (_clientSend == null) {
-      _clientSend = newClient(serverIP, serverPort);
-    }
-    try {
-      await grpc.SettingServiceClient(_clientSend).updateUncertainty(u);
-    } catch (e) {
-      if (!_isShutdown) {
-        // Invalidate current client
-        _shutdownSend();
-        print(e.toString());
-        // Try again
-        Future.delayed(retryDelay, () {
-          return updateUncertainty(u);
-        });
-      }
-    }
+    // if (_clientSend == null) {
+    //   _clientSend = newClient(serverIP, serverPort);
+    // }
+    // try {
+    //   await grpc.SettingServiceClient(_clientSend).updateUncertainty(u);
+    // } catch (e) {
+    //   if (!_isShutdown) {
+    //     // Invalidate current client
+    //     _shutdownSend();
+    //     print(e.toString());
+    //     // Try again
+    //     Future.delayed(retryDelay, () {
+    //       return updateUncertainty(u);
+    //     });
+    //   }
+    // }
   }
 
   // Asynchronous function to Update the selected choice of a selector

@@ -148,8 +148,7 @@ class MetricChip extends StatelessWidget {
         },
         child: Container(
           decoration: BoxDecoration(
-            color:
-                data.isAlert ? Colors.redAccent.withOpacity(0.6) : Colors.white,
+            color: Colors.white,
             borderRadius: BorderRadius.all(Radius.circular(10)),
           ),
           padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
@@ -202,15 +201,11 @@ class MetricChip extends StatelessWidget {
                                         ')',
                                     style: TextStyle(
                                         fontSize: 85,
-                                        color: data.hasTarget
-                                            ? (data.isAlert
-                                                ? Colors.white
-                                                : paleColor.withOpacity(0.7))
-                                            : Colors.transparent)),
+                                        color: Colors.transparent)),
                               ],
                             ),
                             style: TextStyle(
-                              color: data.isAlert ? Colors.white : baseColor,
+                              color: baseColor,
                               fontWeight: FontWeight.bold,
                               fontSize: 150,
                             ),
@@ -226,18 +221,13 @@ class MetricChip extends StatelessWidget {
                               TextSpan(
                                   text: data.type + " ",
                                   style: TextStyle(
-                                      fontSize: 30,
-                                      color: data.isAlert
-                                          ? Colors.white.withOpacity(0.6)
-                                          : infoColor)),
+                                      fontSize: 30, color: infoColor)),
                               TextSpan(
                                 text: data.name,
                                 style: TextStyle(
                                     fontSize: 30,
                                     fontWeight: FontWeight.bold,
-                                    color: data.isAlert
-                                        ? Colors.white
-                                        : infoColor),
+                                    color: infoColor),
                               )
                             ]),
                             maxLines: 1,

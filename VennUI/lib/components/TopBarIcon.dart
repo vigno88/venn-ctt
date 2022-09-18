@@ -22,6 +22,7 @@ class TopBarIcon extends StatelessWidget {
             borderRadius: BorderRadius.all(Radius.circular(10)),
             splashColor: Colors.grey[500],
             onTap: () {
+              RouterVenn.router.pop(context);
               RouterVenn.router.navigateTo(context, _route,
                   transition: TransitionType.native);
             },
@@ -30,6 +31,7 @@ class TopBarIcon extends StatelessWidget {
                   child: IconButton(
                       icon: _icon,
                       onPressed: () {
+                        RouterVenn.router.pop(context);
                         RouterVenn.router.navigateTo(context, _route,
                             transition: TransitionType.native);
                       },

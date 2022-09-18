@@ -15,53 +15,53 @@ class ControlService {
 
   List<ButtonData> buttonsData = [
     ButtonData("Pistons 1", [
-      "OPEN",
-      "CLOSE"
+      "CLOSE",
+      "OPEN"
     ], [
-      proto.Action(name: "piston", payload: "pi#1#open"),
-      proto.Action(name: "piston", payload: "pi#1#close")
+      proto.Action(name: "piston", payload: "pi#1#close"),
+      proto.Action(name: "piston", payload: "pi#1#open")
     ]),
     ButtonData("Pistons 2", [
-      "OPEN",
-      "CLOSE"
+      "CLOSE",
+      "OPEN"
     ], [
-      proto.Action(name: "piston", payload: "pi#2#open"),
-      proto.Action(name: "piston", payload: "pi#2#close")
+      proto.Action(name: "piston", payload: "pi#2#close"),
+      proto.Action(name: "piston", payload: "pi#2#open")
     ]),
     ButtonData("Pistons 3", [
-      "OPEN",
-      "CLOSE"
+      "CLOSE",
+      "OPEN"
     ], [
-      proto.Action(name: "piston", payload: "pi#3#open"),
-      proto.Action(name: "piston", payload: "pi#3#close")
+      proto.Action(name: "piston", payload: "pi#3#close"),
+      proto.Action(name: "piston", payload: "pi#3#open")
     ]),
     ButtonData("Pistons 4", [
-      "OPEN",
-      "CLOSE"
+      "CLOSE",
+      "OPEN"
     ], [
-      proto.Action(name: "piston", payload: "pi#4#open"),
-      proto.Action(name: "piston", payload: "pi#4#close")
+      proto.Action(name: "piston", payload: "pi#4#close"),
+      proto.Action(name: "piston", payload: "pi#4#open")
     ]),
     ButtonData("Pistons 5", [
-      "OPEN",
-      "CLOSE"
+      "CLOSE",
+      "OPEN"
     ], [
-      proto.Action(name: "piston", payload: "pi#5#open"),
-      proto.Action(name: "piston", payload: "pi#5#close")
+      proto.Action(name: "piston", payload: "pi#5#close"),
+      proto.Action(name: "piston", payload: "pi#5#open")
     ]),
     ButtonData("Pistons 6", [
-      "OPEN",
-      "CLOSE"
+      "CLOSE",
+      "OPEN"
     ], [
-      proto.Action(name: "piston", payload: "pi#6#open"),
-      proto.Action(name: "piston", payload: "pi#6#close")
+      proto.Action(name: "piston", payload: "pi#6#close"),
+      proto.Action(name: "piston", payload: "pi#6#open")
     ]),
     ButtonData("All Pistons", [
-      "OPEN",
-      "CLOSE"
+      "CLOSE",
+      "OPEN"
     ], [
-      proto.Action(name: "piston", payload: "pi#s#open"),
-      proto.Action(name: "piston", payload: "pi#s#close")
+      proto.Action(name: "piston", payload: "pi#s#close"),
+      proto.Action(name: "piston", payload: "pi#s#open")
     ]),
     ButtonData("Home", [
       "START",

@@ -140,9 +140,9 @@ class SettingsProvider with ChangeNotifier {
     var modified = false;
     for (int i = 0; i < settings.length; i++) {
       if (settings[i].value != oldSettings[i]) {
-        if (settings[i].hasTarget()) {
-          updateTarget(settings[i]);
-        }
+        // if (settings[i].hasTarget()) {
+        //   updateTarget(settings[i]);
+        // }
         _settingAPI.updateSetting(proto.SettingUpdate(
             name: settings[i].name, value: settings[i].value));
         oldSettings[i] = settings[i].value;

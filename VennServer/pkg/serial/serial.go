@@ -102,6 +102,7 @@ func (m *serialManager) readPort(stop <-chan string) {
 			}
 			payload = payload[:len(payload)-1]
 			m.Received <- payload
+			log.Printf("Payload: %s\n", payload)
 			time.Sleep(time.Millisecond)
 		}
 	}
@@ -125,7 +126,7 @@ func (m *serialManager) process(ctx context.Context, packet string) error {
 		}
 		metric := &proto.MetricUpdate{}
 		metric.Name = config.GetMetricName(parts[1])
-		metric.Target = float64(config.GetTarget(metric.Name))
+		metric.Target = 0
 		metric.Value = f
 		manager.gRPCChan <- &proto.MetricUpdates{Updates: []*proto.MetricUpdate{metric}}
 	}

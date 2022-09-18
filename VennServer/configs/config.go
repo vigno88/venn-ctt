@@ -39,7 +39,6 @@ func GetDefaultConfig() *ReadableConfig {
 		Name:        "Temperature",
 		Info:        "This slider controls the temperature of the water.",
 		SmallName:   "t",
-		Target:      &proto.Target{Name: "Water", Uncertainty: 2},
 	}
 	sm1 := &proto.Setting{
 		Destination: proto.Setting_MOTOR,
@@ -207,8 +206,7 @@ func GetDefaultConfig() *ReadableConfig {
 				Type:      "Temperature",
 				SmallName: "t",
 				Info:      "La temperature de l'eau",
-				HasTarget: true,
-				Target:    60,
+				HasTarget: false,
 				Value:     0,
 			},
 			{

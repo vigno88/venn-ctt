@@ -10,6 +10,6 @@ GOOS=linux \
 
 echo "Building done"
 sshpass -p pi rsync -a --info=progress2 \
-  populate_defaultRecipe pi@192.168.0.119:/home/pi/scripts/.
+  populate_defaultRecipe pi@192.168.0.115:/home/pi/scripts/.
 echo "Upload Done"
 

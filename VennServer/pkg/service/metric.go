@@ -41,9 +41,9 @@ func (s *metricServiceServer) Subscribe(e *proto.Empty, stream proto.MetricServi
 		for _, m := range m.Updates {
 			o, _ := metrics.Read(m.Name)
 			o.Value = m.Value
-			if o.HasTarget {
-				o.Target = float32(m.Target)
-			}
+			// if o.HasTarget {
+			// 	o.Target = float32(m.Target)
+			// }
 			metrics.Update(o)
 		}
 		if err :=
